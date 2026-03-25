@@ -1,6 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "InputManager.hpp"
+
 
 class ScreenView {
 	public:
@@ -8,6 +10,7 @@ class ScreenView {
 
 		void Show();
 		void Hide();
+		virtual void ProcessInput() = 0;
 
 		const std::vector<std::shared_ptr<sf::Drawable>>&
 		GetDrawables() const;
@@ -19,8 +22,5 @@ class ScreenView {
 
 	private:
 
-		bool              enabled;
-		//TODO
-/* 		sf::RenderWindow& mWindow;
-		sf::Time&         mDeltaTime; */
+		bool enabled;
 };

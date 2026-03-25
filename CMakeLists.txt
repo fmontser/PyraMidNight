@@ -27,6 +27,7 @@ set(APP_SOURCES
 	src/main.cpp
 	src/Game.cpp
 	src/RenderManager.cpp
+	src/InputManager.cpp
 	src/ScreenView.cpp
 	src/TitleScreenView.cpp
 )

@@ -1,11 +1,14 @@
 #include "RenderManager.hpp"
 
 //TODO remove hardcoded
-RenderManager::RenderManager(uint16_t width, uint16_t height) :
-	mWindow(sf::VideoMode(width, height), "FranKanoid") {}
+RenderManager::RenderManager() :
+	mWindow(
+	sf::VideoMode(640, 896),
+	"FranKanoid",
+	sf::Style::Titlebar | sf::Style::Close
+	) {}
 
 void RenderManager::RenderFrame(ScreenView& screenView) {
-	mDeltaTime = mClock.restart();
 	mWindow.clear();
 
 	for (const auto& drw : screenView.GetDrawables())
