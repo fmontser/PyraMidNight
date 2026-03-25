@@ -4,17 +4,21 @@
 
 class ScreenView {
 	public:
-
-		ScreenView(sf::RenderWindow& window);
-		virtual ~ScreenView();
+		virtual ~ScreenView() = default;
 
 		void Show();
 		void Hide();
+		//TODO not doing IOC...
 		void Draw();
+
+	protected:
+		ScreenView(sf::RenderWindow& window, sf::Time& deltaTime);
+		
+		std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
 
 	private:
 
-		bool enabled;
+		bool              enabled;
 		sf::RenderWindow& mWindow;
-		std::vector<std::unique_ptr<sf::Drawable>> mDrawables;
+		sf::Time&         mDeltaTime;
 };

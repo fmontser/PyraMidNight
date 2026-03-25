@@ -1,9 +1,10 @@
 #pragma once
 #include "ScreenView.hpp"
 
-class TitleScreenView : ScreenView {
+class TitleScreenView : public ScreenView {
 	public:
-		//TODO
-	private:
+		TitleScreenView(sf::RenderWindow& window, sf::Time& deltaTime);
 
+	private:
+		std::shared_ptr<sf::RectangleShape> background;
 };

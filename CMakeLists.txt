@@ -25,6 +25,9 @@ FetchContent_MakeAvailable(SFML)
 # BINARIES
 set(APP_SOURCES
 	src/main.cpp
+	src/Game.cpp
+	src/ScreenView.cpp
+	src/TitleScreenView.cpp
 )
 
 set(APP_LIBS

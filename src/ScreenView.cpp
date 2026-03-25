@@ -1,10 +1,13 @@
 #include "ScreenView.hpp"
 
-ScreenView::ScreenView(sf::RenderWindow& window) : mWindow(window) {
-	enabled = false;
+//TODO check mDeltaTime init...
+ScreenView::ScreenView(sf::RenderWindow& window, sf::Time& deltaTime) :
+	mWindow(window),
+	mDeltaTime(deltaTime) {
+		enabled = false;
 }
 
-void ScreenView::Show() { enabled =  true; }
+void ScreenView::Show() { enabled = true; }
 
 void ScreenView::Hide() { enabled = false; }
 
