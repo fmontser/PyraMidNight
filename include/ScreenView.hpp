@@ -8,17 +8,19 @@ class ScreenView {
 
 		void Show();
 		void Hide();
-		//TODO not doing IOC...
-		void Draw();
+
+		const std::vector<std::shared_ptr<sf::Drawable>>&
+		GetDrawables() const;
 
 	protected:
-		ScreenView(sf::RenderWindow& window, sf::Time& deltaTime);
+		ScreenView();
 		
 		std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
 
 	private:
 
 		bool              enabled;
-		sf::RenderWindow& mWindow;
-		sf::Time&         mDeltaTime;
+		//TODO
+/* 		sf::RenderWindow& mWindow;
+		sf::Time&         mDeltaTime; */
 };

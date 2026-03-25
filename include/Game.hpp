@@ -19,11 +19,7 @@ class Game {
 		uint8_t  mFinalRound;
 		uint32_t mScore;
 		
-		sf::Clock        mClock;
-		sf::Time         mDeltaTime;
-		sf::RenderWindow mWindow;
 		TitleScreenView  mTitleScreen;
-
 
 		void     ResetScore();
 		void     SetNextRound();

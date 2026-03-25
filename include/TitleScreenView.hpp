@@ -3,7 +3,7 @@
 
 class TitleScreenView : public ScreenView {
 	public:
-		TitleScreenView(sf::RenderWindow& window, sf::Time& deltaTime);
+		TitleScreenView();
 
 	private:
 		std::shared_ptr<sf::RectangleShape> background;
