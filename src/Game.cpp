@@ -4,16 +4,48 @@
 constexpr uint32_t MAX_SCORE = std::numeric_limits<uint32_t>::max();
 constexpr uint32_t MAX_CREDITS = std::numeric_limits<uint8_t>::max();
 
-//TODO remove hardcoded final round value ¿?
+//TODO remove hardcoded values
 Game::Game() :
+	mWindow(sf::VideoMode(640, 896), "FranKanoid"),
+	mTitleScreen(TitleScreenView(mWindow, mDeltaTime)),
 	mState(Game::State::TITLE_SCREEN),
 	mCredits(0),
 	mRound(0),
 	mFinalRound(3),
 	mScore(0) {}
 
-void Game::Update() {
-	//TODO
+
+//TODO to class
+void fetchInput(sf::RenderWindow& window) {
+	sf::Event event;
+	while (window.pollEvent(event)) {
+		if (event.type == sf::Event::Closed)
+			window.close();
+	}
+}
+
+//TODO to class
+void drawFrame(sf::RenderWindow& window) {
+	window.display();
+}
+
+void Game::Run() {
+
+	mTitleScreen.Show();
+	// Main loop
+	while (mWindow.isOpen()) {
+		mDeltaTime = mClock.restart();
+		mWindow.clear();
+
+		fetchInput(mWindow);
+
+		mTitleScreen.Draw();
+
+		drawFrame(mWindow);
+	}
+
+
+/* 	//TODO
 	switch (mState) {
 		case Game::State::TITLE_SCREEN:
 			//TODO run or update SCREEN
@@ -26,7 +58,7 @@ void Game::Update() {
 			break;
 		default:
 			break;
-	}
+	} */
 }
 
 void Game::SetNextRound() { 

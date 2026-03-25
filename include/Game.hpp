@@ -1,6 +1,7 @@
 // Game state machine
 #pragma once
 #include <cstdint>
+#include "TitleScreenView.hpp"
 
 class Game {
 	public:
@@ -8,7 +9,8 @@ class Game {
 			TITLE_SCREEN, ROUND_SCREEN, END_SCREEN
 		};
 
-		void Update();
+		Game();
+		void Run();
 
 	private:
 		State    mState;
@@ -16,6 +18,12 @@ class Game {
 		uint8_t  mRound;
 		uint8_t  mFinalRound;
 		uint32_t mScore;
+		
+		sf::Clock        mClock;
+		sf::Time         mDeltaTime;
+		sf::RenderWindow mWindow;
+		TitleScreenView  mTitleScreen;
+
 
 		void     ResetScore();
 		void     SetNextRound();
