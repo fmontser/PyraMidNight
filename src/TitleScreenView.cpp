@@ -1,8 +1,7 @@
 #include "TitleScreenView.hpp"
 
 //TODO hardcoded values
-TitleScreenView::TitleScreenView(sf::RenderWindow& window, sf::Time& deltaTime) :
-	ScreenView(window, deltaTime) {
+TitleScreenView::TitleScreenView() : ScreenView() {
 	background = std::make_shared<sf::RectangleShape>(
 		sf::RectangleShape(sf::Vector2f(640.0f, 896.0f)));
 

@@ -26,6 +26,7 @@ FetchContent_MakeAvailable(SFML)
 set(APP_SOURCES
 	src/main.cpp
 	src/Game.cpp
+	src/RenderManager.cpp
 	src/ScreenView.cpp
 	src/TitleScreenView.cpp
 )
