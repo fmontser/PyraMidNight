@@ -10,3 +10,7 @@ TitleScreenView::TitleScreenView() : ScreenView() {
 
 	mDrawables.push_back(background);
 }
+
+void TitleScreenView::ProcessInput() {
+	//TODO
+}

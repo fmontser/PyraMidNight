@@ -2,6 +2,9 @@
 #pragma once
 #include <cstdint>
 #include "TitleScreenView.hpp"
+#include "InputManager.hpp"
+#include "RenderManager.hpp"
+
 
 class Game {
 	public:
@@ -18,12 +21,15 @@ class Game {
 		uint8_t  mRound;
 		uint8_t  mFinalRound;
 		uint32_t mScore;
-		
+
+		//sf::RenderWindow mWindow;
+		RenderManager    mRenderManager;
+		InputManager     mInputManager;
 		TitleScreenView  mTitleScreen;
 
-		void     ResetScore();
-		void     SetNextRound();
-		void     AddScore(uint32_t points);
-		void     AddCredit();
-		void     ConsumeCredit();
+		void ResetScore();
+		void SetNextRound();
+		void AddScore(uint32_t points);
+		void AddCredit();
+		void ConsumeCredit();
 };

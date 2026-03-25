@@ -1,6 +1,6 @@
-#include "Game.hpp"
 #include <limits>
-#include <RenderManager.hpp>
+#include "Game.hpp"
+#include "RenderManager.hpp"
 
 constexpr uint32_t MAX_SCORE = std::numeric_limits<uint32_t>::max();
 constexpr uint32_t MAX_CREDITS = std::numeric_limits<uint8_t>::max();
@@ -11,31 +11,29 @@ Game::Game() :
 	mCredits(0),
 	mRound(0),
 	mFinalRound(3),
-	mScore(0) {}
-
-//TODO to class
-void fetchInput(sf::RenderWindow& window) {
-	sf::Event event;
-	while (window.pollEvent(event)) {
-		if (event.type == sf::Event::Closed)
-			window.close();
-	}
-}
+	mScore(0),
+	mRenderManager(),
+	mInputManager(mRenderManager.GetWindow()) {}
 
 void Game::Run() {
-	//TODO delete hardcoded values
-	RenderManager renderManager(640,896);
-	sf::RenderWindow& window = renderManager.GetWindow();
-	
-	// main loop
-	while (window.isOpen()) {
 
-		fetchInput(window);
+
+	//TODO set FPS LIMIT!!
+	// main loop
+	while (mRenderManager.GetWindow().isOpen()) {
+
+		const auto& frameInput = mInputManager.FetchInput();
+		const auto& deltaTime = mRenderManager.GetDeltaTime();
+
+		if (frameInput.close)
+			mRenderManager.GetWindow().close();	//TODO check resources/leaks
 
 		switch (mState) {
 			case Game::State::TITLE_SCREEN:
+				//TODO .show() vestigial?
 				mTitleScreen.Show();
-				renderManager.RenderFrame(mTitleScreen);
+				mTitleScreen.ProcessInput();
+				mRenderManager.RenderFrame(mTitleScreen);
 				break;
 			case Game::State::ROUND_SCREEN:
 				//TODO run or update SCREEN

@@ -5,7 +5,7 @@
 
 class RenderManager {
 	public:
-		RenderManager(uint16_t width, uint16_t height);
+		RenderManager();
 		void RenderFrame(ScreenView& screenView);
 
 		sf::Time GetDeltaTime() const;
