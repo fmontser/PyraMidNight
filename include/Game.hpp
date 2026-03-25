@@ -22,7 +22,6 @@ class Game {
 		uint8_t  mFinalRound;
 		uint32_t mScore;
 
-		//sf::RenderWindow mWindow;
 		RenderManager    mRenderManager;
 		InputManager     mInputManager;
 		TitleScreenView  mTitleScreen;

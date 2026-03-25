@@ -2,7 +2,7 @@
 
 //TODO remove hardcoded
 RenderManager::RenderManager() :
-	mWindow(sf::VideoMode(640, 896),
+	mWindow(sf::VideoMode({640, 896}),
 	"FranKanoid",
 	sf::Style::Titlebar | sf::Style::Close) {
 		mWindow.setFramerateLimit(60);

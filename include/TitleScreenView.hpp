@@ -7,5 +7,6 @@ class TitleScreenView : public ScreenView {
 		void ProcessInput() override;
 
 	private:
-		std::shared_ptr<sf::RectangleShape> background;
+		std::shared_ptr<sf::Sprite> background;
+		std::shared_ptr<sf::Texture> backgroundTex;
 };
