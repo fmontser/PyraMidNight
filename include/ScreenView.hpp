@@ -1,16 +1,14 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
-#include "InputManager.hpp"
 
+class Game;
 
 class ScreenView {
 	public:
 		virtual ~ScreenView() = default;
 
-		void Show();
-		void Hide();
-		virtual void ProcessInput() = 0;
+		virtual void ProcessInput(Game& game) = 0;
 
 		const std::vector<std::shared_ptr<sf::Drawable>>&
 		GetDrawables() const;
@@ -19,8 +17,4 @@ class ScreenView {
 		ScreenView();
 		
 		std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
-
-	private:
-
-		bool enabled;
 };

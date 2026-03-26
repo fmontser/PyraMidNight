@@ -1,27 +1,30 @@
+#include <optional>
+#include <variant>
 #include "InputManager.hpp"
 
 InputManager::InputManager(sf::RenderWindow &window) : mWindow(window) {
 	mFrameInput = {};
 }
 
-//TODO check to simplify trigger events
 InputManager::Input& InputManager::FetchInput() {
-	sf::Event event;
-	
 	ResetInput();
-	while (mWindow.pollEvent(event)) {
-		if (event.type == sf::Event::Closed)
+
+	while (const auto event = mWindow.pollEvent()) {
+		
+		if (event->getIf<sf::Event::Closed>())
 			mFrameInput.close = true;
 
-		switch (event.key.code) {
-			case sf::Keyboard::W: mFrameInput.up = (event.type == sf::Event::KeyPressed); break;
-			case sf::Keyboard::S: mFrameInput.down = (event.type == sf::Event::KeyPressed); break;
-			case sf::Keyboard::A: mFrameInput.left = (event.type == sf::Event::KeyPressed); break;
-			case sf::Keyboard::D: mFrameInput.right = (event.type == sf::Event::KeyPressed); break;
-			case sf::Keyboard::Space:  mFrameInput.action = (event.type == sf::Event::KeyPressed); break;
-			case sf::Keyboard::Num1:   mFrameInput.coin = (event.type == sf::Event::KeyPressed); break;
-			case sf::Keyboard::Escape: mFrameInput.menu = (event.type == sf::Event::KeyPressed); break;
-			default: break;
+		if (const auto* key = event->getIf<sf::Event::KeyReleased>()) {
+			switch (key->code) {
+				case sf::Keyboard::Key::W: mFrameInput.up = true; break;
+				case sf::Keyboard::Key::S: mFrameInput.down = true; break;
+				case sf::Keyboard::Key::A: mFrameInput.left = true; break;
+				case sf::Keyboard::Key::D: mFrameInput.right = true; break;
+				case sf::Keyboard::Key::Space: mFrameInput.action = true; break;
+				case sf::Keyboard::Key::Num1: mFrameInput.coin = true; break;
+				case sf::Keyboard::Key::Escape: mFrameInput.menu = true; break;
+				default: break;
+			}
 		}
 	}
 	return mFrameInput;

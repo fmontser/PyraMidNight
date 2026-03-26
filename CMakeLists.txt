@@ -5,10 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
 if(ENABLE_ASAN)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
 endif()
-option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
 
 include(FetchContent)
 
@@ -17,7 +17,7 @@ include(FetchContent)
 FetchContent_Declare(
 	SFML
 	GIT_REPOSITORY https://github.com/SFML/SFML.git
-	GIT_TAG        2.6.1
+	GIT_TAG        3.0.2
 )
 FetchContent_MakeAvailable(SFML)
 
@@ -46,14 +46,14 @@ target_link_libraries(FranKanoid PRIVATE ${APP_LIBS})
 # MultiPlatform setting
 
 #TODO Must work on Windows.
-# avoid terminal window spawning Windows
 if(WIN32)
+	# avoid terminal window spawning Windows
 	target_link_options(FranKanoid PRIVATE "/SUBSYSTEM:WINDOWS")
-endif()
-
-# This is needed to link SFML statically on windows
-if(WIN32)
+	# This is needed to link SFML statically on windows
 	target_compile_definitions(FranKanoid PUBLIC SFML_STATIC)
 endif()
+
+# Assets copy
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
 #TODO extra MacOS compatible?

@@ -13,7 +13,20 @@ class Game {
 		};
 
 		Game();
+
 		void Run();
+		void AddScore(uint32_t points);
+		void ResetScore();
+		uint32_t GetScore() const;
+
+		void AddCredit();
+		void ConsumeCredit();
+		uint8_t GetCredits() const;
+
+		void SetState(State state);
+		void SetNextRound();
+		RenderManager& GetRenderManager();
+		InputManager&  GetInputManager();
 
 	private:
 		State    mState;
@@ -22,14 +35,8 @@ class Game {
 		uint8_t  mFinalRound;
 		uint32_t mScore;
 
-		//sf::RenderWindow mWindow;
 		RenderManager    mRenderManager;
 		InputManager     mInputManager;
 		TitleScreenView  mTitleScreen;
 
-		void ResetScore();
-		void SetNextRound();
-		void AddScore(uint32_t points);
-		void AddCredit();
-		void ConsumeCredit();
 };

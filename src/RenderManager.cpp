@@ -2,11 +2,11 @@
 
 //TODO remove hardcoded
 RenderManager::RenderManager() :
-	mWindow(
-	sf::VideoMode(640, 896),
+	mWindow(sf::VideoMode({640, 896}),
 	"FranKanoid",
-	sf::Style::Titlebar | sf::Style::Close
-	) {}
+	sf::Style::Titlebar | sf::Style::Close) {
+		mWindow.setFramerateLimit(60);
+}
 
 void RenderManager::RenderFrame(ScreenView& screenView) {
 	mWindow.clear();
@@ -17,6 +17,10 @@ void RenderManager::RenderFrame(ScreenView& screenView) {
 	mWindow.display();
 }
 
-sf::Time RenderManager::GetDeltaTime() const { return sf::Time(); }
+sf::Time& RenderManager::GetDeltaTime() { 
+	mDeltaTime = mClock.restart();
+	return mDeltaTime;
+}
+
 sf::RenderWindow& RenderManager::GetWindow() { return mWindow; }
 

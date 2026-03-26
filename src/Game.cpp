@@ -1,6 +1,5 @@
 #include <limits>
 #include "Game.hpp"
-#include "RenderManager.hpp"
 
 constexpr uint32_t MAX_SCORE = std::numeric_limits<uint32_t>::max();
 constexpr uint32_t MAX_CREDITS = std::numeric_limits<uint8_t>::max();
@@ -17,22 +16,12 @@ Game::Game() :
 
 void Game::Run() {
 
-
-	//TODO set FPS LIMIT!!
 	// main loop
 	while (mRenderManager.GetWindow().isOpen()) {
 
-		const auto& frameInput = mInputManager.FetchInput();
-		const auto& deltaTime = mRenderManager.GetDeltaTime();
-
-		if (frameInput.close)
-			mRenderManager.GetWindow().close();	//TODO check resources/leaks
-
 		switch (mState) {
 			case Game::State::TITLE_SCREEN:
-				//TODO .show() vestigial?
-				mTitleScreen.Show();
-				mTitleScreen.ProcessInput();
+				mTitleScreen.ProcessInput(*this);
 				mRenderManager.RenderFrame(mTitleScreen);
 				break;
 			case Game::State::ROUND_SCREEN:
@@ -47,11 +36,6 @@ void Game::Run() {
 	}
 }
 
-void Game::SetNextRound() { 
-	if (mRound < mFinalRound)
-		mRound++;
-}
-
 void Game::AddScore(uint32_t points) {
 	if (points > (MAX_SCORE - mScore))
 		mScore = MAX_SCORE;
@@ -60,6 +44,8 @@ void Game::AddScore(uint32_t points) {
 }
 
 void Game::ResetScore() { mScore = 0; }
+
+uint32_t Game::GetScore() const { return mScore; }
 
 void Game::AddCredit() {
 	if (mCredits < MAX_CREDITS)
@@ -70,3 +56,15 @@ void Game::ConsumeCredit() {
 	if (mCredits > 0)
 		mCredits--;
 }
+
+uint8_t Game::GetCredits() const { return mCredits; }
+
+void Game::SetState(State state) { mState = state; }
+
+void Game::SetNextRound() {
+	if (mRound < mFinalRound)
+		mRound++;
+}
+
+RenderManager &Game::GetRenderManager() { return mRenderManager; }
+InputManager &Game::GetInputManager() { return mInputManager; }
