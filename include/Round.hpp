@@ -18,4 +18,6 @@ class Round {
 
 		std::shared_ptr<sf::Texture> mBumperTex;
 		std::shared_ptr<Bumper>      mBumper;
+		std::shared_ptr<sf::Texture> mBallTex;
+		std::shared_ptr<Bumper>      mBall;
 };
