@@ -18,5 +18,4 @@ class TitleScreenView : public ScreenView {
 		std::string creditsStr;
 
 		void UpdateCredits(Game& game);
-		void BlinkText(sf::Text& text);
 };

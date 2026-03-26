@@ -65,7 +65,3 @@ void TitleScreenView::UpdateCredits(Game& game) {
 	creditsStr = std::string(CREDITS_STR).append(
 		std::to_string(static_cast<int>(game.GetCredits())));
 }
-
-void TitleScreenView::BlinkText(sf::Text &text) {
-	//TODO
-}

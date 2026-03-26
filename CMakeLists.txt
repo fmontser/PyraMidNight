@@ -30,6 +30,7 @@ set(APP_SOURCES
 	src/InputManager.cpp
 	src/ScreenView.cpp
 	src/TitleScreenView.cpp
+	src/RoundScreenView.cpp
 )
 
 set(APP_LIBS
