@@ -2,5 +2,5 @@
 
 ScreenView::ScreenView() {}
 
-const std::vector<std::shared_ptr<sf::Drawable>>&
-ScreenView::GetDrawables() const { return mDrawables; }
+std::vector<std::shared_ptr<sf::Drawable>>&
+ScreenView::GetDrawables() { return mDrawables; }

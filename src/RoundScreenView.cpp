@@ -1,6 +1,5 @@
 #include "RoundScreenView.hpp"
 #include "Game.hpp"
-#include <iostream>
 
 //TODO remove 
 constexpr std::string_view CREDITS_STR = "CREDITS ";
@@ -51,17 +50,9 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	mDrawables.push_back(wallLeft);
 	mDrawables.push_back(wallRight);
 	mDrawables.push_back(ceil);
+
+	round = std::make_unique<Round>(*this);
 }
-
-
-/* 
-texture.setRepeated(true); // ¡Importante!
-sf::Sprite sprite(texture);
-sprite.setTextureRect({0, 0, 32, 128}); // Ancho 32, Alto 128 (repetirá el patrón)
-
-
-
-*/
 
 void RoundScreenView::ProcessInput(Game& game) {
 	auto& frameInput = game.GetInputManager().FetchInput();
