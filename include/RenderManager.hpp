@@ -8,7 +8,7 @@ class RenderManager {
 		RenderManager();
 		void RenderFrame(ScreenView& screenView);
 
-		sf::Time GetDeltaTime() const;
+		sf::Time& GetDeltaTime();
 		sf::RenderWindow& GetWindow();
 
 	private:

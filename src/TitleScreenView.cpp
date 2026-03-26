@@ -1,7 +1,5 @@
 #include "TitleScreenView.hpp"
-#include <filesystem>
-
-#include <iostream>
+#include "Game.hpp"
 
 //TODO hardcoded values
 TitleScreenView::TitleScreenView() : ScreenView() {
@@ -10,6 +8,13 @@ TitleScreenView::TitleScreenView() : ScreenView() {
 	mDrawables.push_back(background);
 }
 
-void TitleScreenView::ProcessInput() {
-	//TODO
+void TitleScreenView::ProcessInput(Game& game) {
+	auto& frameInput = game.GetInputManager().FetchInput();
+	auto& deltaTime = game.GetRenderManager().GetDeltaTime();
+	auto& window = game.GetRenderManager().GetWindow();
+
+	if (frameInput.close)
+			window.close();
+	if (frameInput.coin)
+			game.AddCredit();
 }

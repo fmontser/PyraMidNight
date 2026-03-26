@@ -13,7 +13,16 @@ class Game {
 		};
 
 		Game();
+
 		void Run();
+		void AddScore(uint32_t points);
+		void ResetScore();
+		void AddCredit();
+		void ConsumeCredit();
+		
+		void SetNextRound();
+		RenderManager& GetRenderManager();
+		InputManager&  GetInputManager();
 
 	private:
 		State    mState;
@@ -26,9 +35,4 @@ class Game {
 		InputManager     mInputManager;
 		TitleScreenView  mTitleScreen;
 
-		void ResetScore();
-		void SetNextRound();
-		void AddScore(uint32_t points);
-		void AddCredit();
-		void ConsumeCredit();
 };

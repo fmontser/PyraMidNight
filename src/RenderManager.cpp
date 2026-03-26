@@ -17,6 +17,10 @@ void RenderManager::RenderFrame(ScreenView& screenView) {
 	mWindow.display();
 }
 
-sf::Time RenderManager::GetDeltaTime() const { return sf::Time(); }
+sf::Time& RenderManager::GetDeltaTime() { 
+	mDeltaTime = mClock.restart();
+	return mDeltaTime;
+}
+
 sf::RenderWindow& RenderManager::GetWindow() { return mWindow; }
 

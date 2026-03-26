@@ -4,7 +4,7 @@
 class TitleScreenView : public ScreenView {
 	public:
 		TitleScreenView();
-		void ProcessInput() override;
+		void ProcessInput(Game& game) override;
 
 	private:
 		std::shared_ptr<sf::Sprite> background;
