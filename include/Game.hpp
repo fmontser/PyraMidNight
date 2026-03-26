@@ -17,9 +17,12 @@ class Game {
 		void Run();
 		void AddScore(uint32_t points);
 		void ResetScore();
+		uint32_t GetScore() const;
+
 		void AddCredit();
 		void ConsumeCredit();
-		
+		uint8_t GetCredits() const;
+
 		void SetNextRound();
 		RenderManager& GetRenderManager();
 		InputManager&  GetInputManager();

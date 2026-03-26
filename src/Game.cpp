@@ -45,6 +45,8 @@ void Game::AddScore(uint32_t points) {
 
 void Game::ResetScore() { mScore = 0; }
 
+uint32_t Game::GetScore() const { return mScore; }
+
 void Game::AddCredit() {
 	if (mCredits < MAX_CREDITS)
 		mCredits++;
@@ -54,6 +56,8 @@ void Game::ConsumeCredit() {
 	if (mCredits > 0)
 		mCredits--;
 }
+
+uint8_t Game::GetCredits() const { return mCredits; }
 
 void Game::SetNextRound() { 
 	if (mRound < mFinalRound)
