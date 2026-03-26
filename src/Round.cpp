@@ -23,12 +23,12 @@ Round::Round(RoundScreenView& screenView) :
 	drawables.push_back(mBumper);
 
 	mBallTex = std::make_shared<sf::Texture>("assets/Ball.png");
-	mBall = std::make_shared<Bumper>(*mBallTex);
+	mBall = std::make_shared<Ball>(*mBallTex);
 	mBall->setScale({0.5f, 0.5f});
-	//TODO temp test position
-	mBall->setPosition({256, 256});
 	drawables.push_back(mBall);
 }
 
 //TODO use weak??
 Bumper& Round::GetBumper() { return *mBumper;}
+
+Ball& Round::GetBall() { return *mBall; }

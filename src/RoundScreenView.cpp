@@ -63,8 +63,9 @@ void RoundScreenView::ProcessInput(Game& game) {
 		window.close();
 	if (frameInput.coin)
 		game.AddCredit();
-	if (frameInput.action && game.GetCredits() > 0)
-		game.SetState(Game::State::ROUND_SCREEN);
+	//TODO test only
+/* 	if (frameInput.action)
+		mRound->GetBall().ResetPos(mRound->GetBumper().getPosition()); */
 	if (frameInput.left)
 		mRound->GetBumper().Move(-1, deltaTime);
 	if (frameInput.right)

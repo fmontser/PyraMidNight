@@ -3,11 +3,19 @@
 
 class Ball : public sf::Sprite {
 	public:
+		enum class State {
+			DOCKED, MOVING
+		};
+
 		Ball(const sf::Texture& texture);
 
-		void Move(int32_t magnitude, sf::Time& deltaTime);
-
-
+		void Launch();
+		void ResetPos(const sf::Vector2f& bumperPos);
+		
 	private:
-		float mSpeed;
-};
+		State        mState;
+		float        mSpeed;
+		sf::Vector2f mLaunchPos;
+
+		void Move(int32_t magnitude, sf::Time& deltaTime);
+	};
