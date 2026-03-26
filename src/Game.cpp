@@ -21,11 +21,11 @@ void Game::Run() {
 
 		switch (mState) {
 			case Game::State::TITLE_SCREEN:
-				mTitleScreen.ProcessInput(*this);
+				mTitleScreen.Update(*this);
 				mRenderManager.RenderFrame(mTitleScreen);
 				break;
 			case Game::State::ROUND_SCREEN:
-				mRoundScreen.ProcessInput(*this);
+				mRoundScreen.Update(*this);
 				mRenderManager.RenderFrame(mRoundScreen);
 				break;
 			case Game::State::END_SCREEN:

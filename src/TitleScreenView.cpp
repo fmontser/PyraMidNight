@@ -43,7 +43,7 @@ TitleScreenView::TitleScreenView() : ScreenView() {
 	mDrawables.push_back(startTxt);
 }
 
-void TitleScreenView::ProcessInput(Game& game) {
+void TitleScreenView::Update(Game& game) {
 	auto& frameInput = game.GetInputManager().FetchInput();
 	auto& deltaTime = game.GetRenderManager().GetDeltaTime();
 	auto& window = game.GetRenderManager().GetWindow();

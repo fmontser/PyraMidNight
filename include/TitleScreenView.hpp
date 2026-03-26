@@ -5,7 +5,7 @@
 class TitleScreenView : public ScreenView {
 	public:
 		TitleScreenView();
-		void ProcessInput(Game& game) override;
+		void Update(Game& game) override;
 
 	private:
 		std::shared_ptr<sf::Font> font;

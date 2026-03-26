@@ -54,8 +54,10 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	mRound = std::make_unique<Round>(*this);
 }
 
-void RoundScreenView::ProcessInput(Game& game) {
+void RoundScreenView::Update(Game& game) {
 	auto& frameInput = game.GetInputManager().FetchInput();
+
+	//TODO @@@@@@ arreglar referencias a deltatime!! tiene que ser un valor unico por cada frame!!!
 	auto& deltaTime = game.GetRenderManager().GetDeltaTime();
 	auto& window = game.GetRenderManager().GetWindow();
 
@@ -63,13 +65,19 @@ void RoundScreenView::ProcessInput(Game& game) {
 		window.close();
 	if (frameInput.coin)
 		game.AddCredit();
-	//TODO test only
-/* 	if (frameInput.action)
-		mRound->GetBall().ResetPos(mRound->GetBumper().getPosition()); */
+	//TODO test only, Round owns it
+ 	if (frameInput.action) {
+		if (mRound->GetBall().GetState() == Ball::State::DOCKED)
+			mRound->GetBall().Launch();
+	}
 	if (frameInput.left)
 		mRound->GetBumper().Move(-1, deltaTime);
 	if (frameInput.right)
 		mRound->GetBumper().Move(1, deltaTime);
+
+	//TODO test only, Round owns it
+	
+	mRound->GetBall().Update(deltaTime);
 
 	UpdateCredits(game);
 	UpdateScore(game);

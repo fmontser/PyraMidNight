@@ -5,7 +5,7 @@
 class RoundScreenView : public ScreenView {
 	public:
 		RoundScreenView();
-		void ProcessInput(Game& game) override;
+		void Update(Game& game) override;
 
 	private:
 		std::shared_ptr<sf::Font> mFont;
