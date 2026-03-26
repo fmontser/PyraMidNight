@@ -24,6 +24,10 @@ void Ball::Update(sf::Time& deltaTime) {
 		Move(deltaTime);
 }
 
+void Ball::Bounce(sf::Rect<float> rect) {
+	//TODO
+}
+
 const Ball::State &Ball::GetState() const { return mState; }
 const sf::Vector2f &Ball::GetPostion() const { return this->getPosition(); }
 const float Ball::GetRadius() const { return mRadius; }

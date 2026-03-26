@@ -12,10 +12,13 @@ class Ball : public sf::Sprite {
 		void Launch();
 		void ResetPos(const sf::Vector2f& bumperPos);
 		void Update(sf::Time& deltaTime);
+		void Bounce(sf::Rect<float> rect);
 
 		const State& GetState() const;
 		const sf::Vector2f& GetPostion() const;
 		const float GetRadius() const;
+
+		void SetDirection(sf::Vector2f direction);
 		
 		private:
 			State           mState;
@@ -24,6 +27,4 @@ class Ball : public sf::Sprite {
 			float           mRadius;
 		
 		void Move(sf::Time& deltaTime);
-		
-		
 	};
