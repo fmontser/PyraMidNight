@@ -25,7 +25,8 @@ void Game::Run() {
 				mRenderManager.RenderFrame(mTitleScreen);
 				break;
 			case Game::State::ROUND_SCREEN:
-				//TODO run or update SCREEN
+				mRoundScreen.ProcessInput(*this);
+				mRenderManager.RenderFrame(mRoundScreen);
 				break;
 			case Game::State::END_SCREEN:
 				//TODO run or update SCREEN

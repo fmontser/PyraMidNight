@@ -2,6 +2,7 @@
 #pragma once
 #include <cstdint>
 #include "TitleScreenView.hpp"
+#include "RoundScreenView.hpp"
 #include "InputManager.hpp"
 #include "RenderManager.hpp"
 
@@ -38,5 +39,6 @@ class Game {
 		RenderManager    mRenderManager;
 		InputManager     mInputManager;
 		TitleScreenView  mTitleScreen;
+		RoundScreenView  mRoundScreen;
 
 };
