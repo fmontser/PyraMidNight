@@ -59,7 +59,9 @@ void Game::ConsumeCredit() {
 
 uint8_t Game::GetCredits() const { return mCredits; }
 
-void Game::SetNextRound() { 
+void Game::SetState(State state) { mState = state; }
+
+void Game::SetNextRound() {
 	if (mRound < mFinalRound)
 		mRound++;
 }

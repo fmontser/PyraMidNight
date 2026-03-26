@@ -23,6 +23,7 @@ class Game {
 		void ConsumeCredit();
 		uint8_t GetCredits() const;
 
+		void SetState(State state);
 		void SetNextRound();
 		RenderManager& GetRenderManager();
 		InputManager&  GetInputManager();
