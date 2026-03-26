@@ -14,12 +14,17 @@ InputManager::Input& InputManager::FetchInput() {
 		if (event->getIf<sf::Event::Closed>())
 			mFrameInput.close = true;
 
-		if (const auto* key = event->getIf<sf::Event::KeyReleased>()) {
+		if (const auto* key = event->getIf<sf::Event::KeyPressed>()) {
 			switch (key->code) {
 				case sf::Keyboard::Key::W: mFrameInput.up = true; break;
 				case sf::Keyboard::Key::S: mFrameInput.down = true; break;
 				case sf::Keyboard::Key::A: mFrameInput.left = true; break;
 				case sf::Keyboard::Key::D: mFrameInput.right = true; break;
+				default: break;
+			}
+		}
+		if (const auto* key = event->getIf<sf::Event::KeyReleased>()) {
+			switch (key->code) {
 				case sf::Keyboard::Key::Space: mFrameInput.action = true; break;
 				case sf::Keyboard::Key::Num1: mFrameInput.coin = true; break;
 				case sf::Keyboard::Key::Escape: mFrameInput.menu = true; break;

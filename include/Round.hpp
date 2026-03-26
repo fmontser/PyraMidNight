@@ -9,6 +9,8 @@ class Round {
 	public:
 		Round(RoundScreenView& screenView);
 
+		Bumper& GetBumper();
+
 	private:
 		RoundScreenView& mScreenView;
 		std::shared_ptr<sf::RectangleShape> mPlayArea;

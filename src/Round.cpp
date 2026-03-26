@@ -8,13 +8,13 @@ Round::Round(RoundScreenView& screenView) :
 	mPlayArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 864.0f}));
 	mPlayArea->setPosition({32,32});
 	//TODO delete, only for debug
-	//mPlayArea->setFillColor(sf::Color::Green);
+	mPlayArea->setFillColor(sf::Color({}));
 	drawables.push_back(mPlayArea);
 
 	mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
 	mDeathArea->setPosition({32, 832});
 	//TODO delete, only for debug
-	//mDeathArea->setFillColor(sf::Color::Red);
+	mDeathArea->setFillColor(sf::Color({}));
 	drawables.push_back(mDeathArea);
 
 	mBumperTex = std::make_shared<sf::Texture>("assets/Bumper.png");
@@ -23,3 +23,6 @@ Round::Round(RoundScreenView& screenView) :
 	mBumper->setPosition({256, 832});
 	drawables.push_back(mBumper);
 }
+
+//TODO use weak??
+Bumper& Round::GetBumper() { return *mBumper;}

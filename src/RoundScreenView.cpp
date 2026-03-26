@@ -65,6 +65,10 @@ void RoundScreenView::ProcessInput(Game& game) {
 		game.AddCredit();
 	if (frameInput.action && game.GetCredits() > 0)
 		game.SetState(Game::State::ROUND_SCREEN);
+	if (frameInput.left)
+		mRound->GetBumper().Move(-1, deltaTime);
+	if (frameInput.right)
+		mRound->GetBumper().Move(1, deltaTime);
 
 	UpdateCredits(game);
 	UpdateScore(game);
