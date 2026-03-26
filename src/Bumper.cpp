@@ -2,7 +2,7 @@
 #include <algorithm>
 
 Bumper::Bumper(const sf::Texture& texture) : sf::Sprite(texture) {
-	mSpeed = 1000;
+	mSpeed = 300;
 }
 
 //TODO soften with lerp?
@@ -10,6 +10,6 @@ Bumper::Bumper(const sf::Texture& texture) : sf::Sprite(texture) {
 void Bumper::Move(int32_t magnitude, sf::Time& deltaTime) {
 	sf::Vector2 position = this->getPosition();
 	position.x += magnitude * mSpeed * deltaTime.asSeconds();
-	position.x = std::clamp(position.x, 32.0f, (640.0f - 32.0f - 128.0f));
+	position.x = std::clamp(position.x, 32.0f, 480.0f);
 	this->setPosition(position);
 }

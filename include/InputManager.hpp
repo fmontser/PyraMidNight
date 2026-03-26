@@ -19,7 +19,7 @@ class InputManager {
 		Input& FetchInput();
 
 	private:
-		void ResetInput();
+		void ResetReleased();
 		
 		sf::RenderWindow& mWindow;
 		Input             mFrameInput;
