@@ -34,10 +34,10 @@ TitleScreenView::TitleScreenView() : ScreenView() {
 	startTxt->setOutlineColor(sf::Color::Yellow);
 	startTxt->setOutlineThickness(3);
 
-	backgroundTex = std::make_shared<sf::Texture>(sf::Texture("assets/Background.png"));
-	background = std::make_shared<sf::Sprite>(sf::Sprite(*backgroundTex));
+	mBackgroundTex = std::make_shared<sf::Texture>(sf::Texture("assets/Background.png"));
+	mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
 
-	mDrawables.push_back(background);
+	mDrawables.push_back(mBackground);
 	mDrawables.push_back(titleTxt);
 	mDrawables.push_back(creditsTxt);
 	mDrawables.push_back(startTxt);

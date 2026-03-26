@@ -10,8 +10,8 @@ class ScreenView {
 
 		virtual void ProcessInput(Game& game) = 0;
 
-		const std::vector<std::shared_ptr<sf::Drawable>>&
-		GetDrawables() const;
+		std::vector<std::shared_ptr<sf::Drawable>>&
+		GetDrawables();
 
 	protected:
 		ScreenView();
