@@ -8,20 +8,20 @@ class RoundScreenView : public ScreenView {
 		void ProcessInput(Game& game) override;
 
 	private:
-		std::shared_ptr<sf::Font> font;
-		std::shared_ptr<sf::Text> creditsTxt;
-		std::shared_ptr<sf::Text> scoreTxt;
-		std::shared_ptr<sf::Texture> backgroundTex;
-		std::shared_ptr<sf::Sprite> background;
+		std::shared_ptr<sf::Font> mFont;
+		std::shared_ptr<sf::Text> mCreditsTxt;
+		std::shared_ptr<sf::Text> mScoreTxt;
+		std::shared_ptr<sf::Texture> mBackgroundTex;
+		std::shared_ptr<sf::Sprite> mBackground;
 
-		std::shared_ptr<sf::Texture> wallTex;
-		std::shared_ptr<sf::Sprite> wallLeft;
-		std::shared_ptr<sf::Sprite> wallRight;
+		std::shared_ptr<sf::Texture> mWallTex;
+		std::shared_ptr<sf::Sprite> mWallLeft;
+		std::shared_ptr<sf::Sprite> mWallRight;
 
-		std::shared_ptr<sf::Texture> ceilTex;
-		std::shared_ptr<sf::Sprite> ceil;
+		std::shared_ptr<sf::Texture> mCeilTex;
+		std::shared_ptr<sf::Sprite> mCeil;
 
-		std::unique_ptr<Round> round;
+		std::unique_ptr<Round> mRound;
 
 		void UpdateCredits(Game& game);
 		void UpdateScore(Game &game);

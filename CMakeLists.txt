@@ -32,6 +32,7 @@ set(APP_SOURCES
 	src/TitleScreenView.cpp
 	src/RoundScreenView.cpp
 	src/Round.cpp
+	src/Bumper.cpp
 )
 
 set(APP_LIBS
