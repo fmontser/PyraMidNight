@@ -33,6 +33,7 @@ set(APP_SOURCES
 	src/RoundScreenView.cpp
 	src/Bumper.cpp
 	src/Ball.cpp
+	src/Block.cpp
 )
 
 set(APP_LIBS
