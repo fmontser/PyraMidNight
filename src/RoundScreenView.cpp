@@ -1,4 +1,5 @@
 #include <cmath>
+#include <algorithm>
 #include "RoundScreenView.hpp"
 #include "Game.hpp"
 
@@ -45,18 +46,17 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	mCeil = std::make_shared<sf::Sprite>(*mCeilTex);
 	mCeil->setTextureRect({{0, 0},{640, 32}});
 
-	
 	mBumperTex = std::make_shared<sf::Texture>("assets/Bumper.png");
 	mBumper = std::make_shared<Bumper>(*mBumperTex);
 	mBumper->setPosition({256, 832});
 	
 	mBallTex = std::make_shared<sf::Texture>("assets/Ball.png");
 	mBall = std::make_shared<Ball>(*mBallTex);
-	mBall->setScale({0.5f, 0.5f});
 
 	//TODO convert to simple rect
 	mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
 	mDeathArea->setPosition({32, 832});
+	mDeathArea->setFillColor({0,0,0,0});
 	
 	mDrawables.push_back(mBackground);
 	mDrawables.push_back(mCreditsTxt);
@@ -68,9 +68,9 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	mDrawables.push_back(mBall);
 	mDrawables.push_back(mDeathArea); //TODO remove on rect convert
 
+	mColdetVector.push_back(mCeil);
 	mColdetVector.push_back(mWallLeft);
 	mColdetVector.push_back(mWallRight);
-	mColdetVector.push_back(mCeil);
 	mColdetVector.push_back(mBumper);
 }
 
@@ -95,25 +95,16 @@ void RoundScreenView::Update(Game& game) {
 
 
 	//TODO coldet #########################
-
-
-	for (const auto& obj : mColdetVector) {
-		
+	
+	if (mBall->GetState() == Ball::State::PLAYING) {
+		for (const auto& obj : mColdetVector) {
+			float distance = GetBallDistance(*obj);
+			if (distance <= mBall->GetRadius()) {
+ 				mBall->Bounce(*obj, distance);
+				break;
+			}
+		}
 	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 	//##########################################
 
@@ -122,6 +113,16 @@ void RoundScreenView::Update(Game& game) {
 
 	UpdateCredits(game);
 	UpdateScore(game);
+}
+
+float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {
+	auto bPos = mBall->getPosition();
+	auto rect = obj.getGlobalBounds();
+	float closestX = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);
+	float closestY = std::clamp(bPos.y, rect.position.y, rect.position.y + rect.size.y);
+	float distX = bPos.x - closestX;
+	float distY = bPos.y - closestY;
+	return std::sqrtf((distX * distX) + (distY * distY));
 }
 
 void RoundScreenView::UpdateCredits(Game& game) {
@@ -137,17 +138,3 @@ void RoundScreenView::UpdateScore(Game& game) {
 		.append(std::to_string(static_cast<int>(game.GetScore()))));
 }
 
-float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {
-	float distance = 0;
-	const auto& rect = obj.getGlobalBounds();
-	auto dVec = sf::Vector2f({});
-	auto rPos = rect.position; //TODO check origin?
-	auto rSize = rect.size;
-	auto bPos = mBall->getPosition();
-	auto bRadius = mBall->GetRadius();
-	
-	dVec.x = std::max(rPos.x, std::min(bPos.x, (rPos.x + rSize.x)));
-	dVec.y = std::max(rPos.x, std::min(bPos.x, (rPos.x + rSize.x)));
-	distance = std::sqrtf(std::powf(dVec.x, 2) + std::powf(dVec.y, 2));
-	return distance;
-}

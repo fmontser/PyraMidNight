@@ -12,7 +12,7 @@ class Ball : public sf::Sprite {
 		void Launch();
 		void ResetPos(const sf::Vector2f& bumperPos);
 		void Update(const sf::Vector2f &bumperPos, sf::Time& deltaTime);
-		void Bounce(sf::Rect<float> rect, float distance);
+		void Bounce(const sf::Sprite &obj, float distance);
 
 		const State& GetState() const;
 		const float GetRadius() const;

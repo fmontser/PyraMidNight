@@ -3,10 +3,10 @@
 #include <cmath>
 
 Ball::Ball(const sf::Texture& texture) : sf::Sprite(texture) {
-	mSpeed = 0.25;
+	mSpeed = 0.4;
 	mDirection = {-1, -1};
-	mRadius = getLocalBounds().size.x / 2;
-	setOrigin({getLocalBounds().size.x / 2, getLocalBounds().size.y / 2});
+	mRadius = 16;
+	setOrigin({16,16});
 	ResetPos({256, 832});
 }
 
@@ -15,7 +15,7 @@ void Ball::Launch() {
 }
 
 void Ball::ResetPos(const sf::Vector2f &bumperPos) {
-	sf::Vector2f bumperOffset({64,-16});
+	sf::Vector2f bumperOffset({64,-18});
 	auto newPos = bumperPos + bumperOffset;
 	setPosition(newPos);
 	mState = State::DOCKED;
@@ -29,15 +29,14 @@ void Ball::Update(const sf::Vector2f &bumperPos, sf::Time& deltaTime) {
 	}
 }
 
-void Ball::Bounce(sf::Rect<float> rect, float distance) {
-	auto rPos = rect.position;
-	auto rSize = rect.size;
+void Ball::Bounce(const sf::Sprite& obj, float distance) {
+	auto rPos = obj.getPosition();
+	auto rSize = obj.getGlobalBounds().size;
 	auto bPos = getPosition();
-	auto bRadius = mRadius;
 	
 	ResolveOverlap(distance);
-	auto isBounceHorizontal = (bRadius < rPos.x || bRadius > (rPos.x + rSize.x));
-	auto isBounceVertical = (bRadius < rPos.y || bRadius > (rPos.y + rSize.y));
+	auto isBounceHorizontal = (bPos.x < rPos.x || bPos.x > (rPos.x + rSize.x));
+	auto isBounceVertical = (bPos.y < rPos.y || bPos.y > (rPos.y + rSize.y));
 
 	if (isBounceHorizontal && isBounceVertical)
 		mDirection = -mDirection;
@@ -57,14 +56,14 @@ void Ball::Move(sf::Time& deltaTime) {
 
 	position.x += mDirection.x * mSpeed * deltaTimeMs;
 	position.y += mDirection.y * mSpeed * deltaTimeMs;
-	//TODO remove clamp on bounce() ready
-	position.x = std::clamp(position.x, 48.0f, 560.0f);
-	position.y = std::clamp(position.y, 48.0f, 880.0f);
 	setPosition(position);
 }
 
 void Ball::ResolveOverlap(float distance) {
-	float snapDistance = std::abs(distance - mRadius);
+	float overlap = std::abs(distance - mRadius);
 	auto invertedDirection = -mDirection;
-	this->setPosition(invertedDirection.normalized() * snapDistance);
+	auto pos = this->getPosition();
+
+	pos += (invertedDirection.normalized() * overlap);
+	this->setPosition(pos);
 }
