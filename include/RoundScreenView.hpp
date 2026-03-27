@@ -1,6 +1,7 @@
 #pragma once
 #include "ScreenView.hpp"
-#include "Round.hpp"
+#include "Bumper.hpp"
+#include "Ball.hpp"
 
 class RoundScreenView : public ScreenView {
 	public:
@@ -17,11 +18,15 @@ class RoundScreenView : public ScreenView {
 		std::shared_ptr<sf::Texture> mWallTex;
 		std::shared_ptr<sf::Sprite> mWallLeft;
 		std::shared_ptr<sf::Sprite> mWallRight;
-
 		std::shared_ptr<sf::Texture> mCeilTex;
 		std::shared_ptr<sf::Sprite> mCeil;
-
-		std::unique_ptr<Round> mRound;
+		
+		std::shared_ptr<sf::Texture> mBumperTex;
+		std::shared_ptr<Bumper>      mBumper;
+		std::shared_ptr<sf::Texture> mBallTex;
+		std::shared_ptr<Ball>      mBall;
+		
+		std::shared_ptr<sf::RectangleShape> mDeathArea;
 
 		void UpdateCredits(Game& game);
 		void UpdateScore(Game &game);

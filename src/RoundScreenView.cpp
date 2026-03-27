@@ -44,14 +44,28 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	mCeil = std::make_shared<sf::Sprite>(*mCeilTex);
 	mCeil->setTextureRect({{0, 0},{640, 32}});
 
+	
+	mBumperTex = std::make_shared<sf::Texture>("assets/Bumper.png");
+	mBumper = std::make_shared<Bumper>(*mBumperTex);
+	mBumper->setPosition({256, 832});
+	
+	mBallTex = std::make_shared<sf::Texture>("assets/Ball.png");
+	mBall = std::make_shared<Ball>(*mBallTex);
+	mBall->setScale({0.5f, 0.5f});
+
+	//TODO convert to simple rect
+	mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
+	mDeathArea->setPosition({32, 832});
+	
 	mDrawables.push_back(mBackground);
 	mDrawables.push_back(mCreditsTxt);
 	mDrawables.push_back(mScoreTxt);
 	mDrawables.push_back(mWallLeft);
 	mDrawables.push_back(mWallRight);
 	mDrawables.push_back(mCeil);
-
-	mRound = std::make_unique<Round>(*this);
+	mDrawables.push_back(mBumper);
+	mDrawables.push_back(mBall);
+	mDrawables.push_back(mDeathArea); //TODO remove on rect convert
 }
 
 void RoundScreenView::Update(Game& game) {
@@ -63,19 +77,21 @@ void RoundScreenView::Update(Game& game) {
 		window.close();
 	if (frameInput.coin)
 		game.AddCredit();
-	//TODO test only, Round owns it
+
  	if (frameInput.action) {
-		if (mRound->GetBall().GetState() == Ball::State::DOCKED)
-			mRound->GetBall().Launch();
+		if (mBall->GetState() == Ball::State::DOCKED)
+			mBall->Launch();
 	}
 	if (frameInput.left)
-		mRound->GetBumper().Move(-1, deltaTime);
-	if (frameInput.right)
-		mRound->GetBumper().Move(1, deltaTime);
+		mBumper->Move(-1, deltaTime);
+	else if (frameInput.right)
+		mBumper->Move(1, deltaTime);
 
-	//TODO test only, Round owns it
+
+	//TODO coldet
+
 	
-	mRound->GetBall().Update(mRound->GetBumper().getPosition() ,deltaTime);
+	mBall->Update(mBumper->getPosition() ,deltaTime);
 
 	UpdateCredits(game);
 	UpdateScore(game);
