@@ -56,8 +56,6 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 
 void RoundScreenView::Update(Game& game) {
 	auto& frameInput = game.GetInputManager().FetchInput();
-
-	//TODO @@@@@@ arreglar referencias a deltatime!! tiene que ser un valor unico por cada frame!!!
 	auto& deltaTime = game.GetRenderManager().GetDeltaTime();
 	auto& window = game.GetRenderManager().GetWindow();
 
