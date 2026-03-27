@@ -31,9 +31,11 @@ class RoundScreenView : public ScreenView {
 		std::shared_ptr<sf::RectangleShape>      mDeathArea;
 		std::vector<std::shared_ptr<sf::Sprite>> mColdetVector;
 		std::vector<std::shared_ptr<Block>>      mBlockVector;
+		std::vector<std::shared_ptr<sf::Sprite>> mDestroyedSprites;
 		
 		void LoadLevel(const std::array<const std::string, 9>& level);
 		void UpdateBall(const sf::Time& deltaTime);
+		void UpdateBlocks();
 		void UpdateCredits(Game& game);
 		void UpdateScore(Game &game);
 		float GetBallDistance(const sf::Sprite &obj);

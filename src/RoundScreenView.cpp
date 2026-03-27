@@ -4,7 +4,6 @@
 #include "Game.hpp"
 #include "Levels.hpp"
 
-//TODO remove 
 constexpr std::string_view CREDITS_STR = "CREDITS ";
 constexpr std::string_view SCORE_STR = "SCORE ";
 
@@ -76,7 +75,7 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	mColdetVector.push_back(mWallRight);
 	mColdetVector.push_back(mBumper);
 
-	//TODO make dinamic
+	//TODO make it dynamic
 	LoadLevel(level0);
 }
 
@@ -99,9 +98,9 @@ void RoundScreenView::Update(Game& game) {
 		mBumper->Move(1, deltaTime);
 
 	UpdateBall(deltaTime);
+	UpdateBlocks();
 	UpdateCredits(game);
 	UpdateScore(game);
-
 }
 
 void RoundScreenView::LoadLevel(const std::array<const std::string, 9>& level) {
@@ -120,6 +119,11 @@ void RoundScreenView::LoadLevel(const std::array<const std::string, 9>& level) {
 		actualPos.x = 32;
 		actualPos.y += offset.y;
 	}
+
+	for (const auto& block : mBlockVector) {
+		mDrawables.push_back(block);
+		mColdetVector.push_back(block);
+	}
 }
 
 void RoundScreenView::UpdateBall(const sf::Time &deltaTime)
@@ -127,13 +131,35 @@ void RoundScreenView::UpdateBall(const sf::Time &deltaTime)
 	if (mBall->GetState() == Ball::State::PLAYING) {
 		for (const auto &obj : mColdetVector) {
 			float distance = GetBallDistance(*obj);
+
 			if (distance <= mBall->GetRadius()) {
 				mBall->Bounce(*obj, distance);
+				if (typeid(*obj) == typeid(Block)) {
+					if (dynamic_cast<Block*>(obj.get())->Damage())
+						mDestroyedSprites.push_back(obj);
+				}
 				break;
 			}
 		}
 	}
 	mBall->Update(mBumper->getPosition(), deltaTime);
+}
+
+void RoundScreenView::UpdateBlocks() {
+	for (const auto& sprt : mDestroyedSprites) {
+		auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprt);
+		if (itBlock != mBlockVector.end())
+			mBlockVector.erase(itBlock);
+
+		auto itColdet = std::find(mColdetVector.begin(), mColdetVector.end(), sprt);
+		if (itColdet != mColdetVector.end())
+			mColdetVector.erase(itColdet);
+
+		auto itDrawable = std::find(mDrawables.begin(), mDrawables.end(), sprt);
+		if (itDrawable != mDrawables.end())
+			mDrawables.erase(itDrawable);
+	}
+	mDestroyedSprites.clear();
 }
 
 float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {
