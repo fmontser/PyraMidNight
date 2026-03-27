@@ -48,12 +48,15 @@ void Ball::Bounce(const sf::Sprite& obj, float distance) {
 }
 
 void Ball::ApplyBumperMod(const sf::Sprite& bumper) {
+	
 	float bumperWidth = bumper.getGlobalBounds().size.x;
 	float bumperX = bumper.getPosition().x + bumperWidth / 2.0f;
 	float modFactor = (getPosition().x - bumperX) / (bumperWidth / 2.0f);
 	float speed = std::sqrt(std::powf(mDirection.x, 2) + std::powf(mDirection.y, 2));
 	
+	// Apply control modification
 	mDirection.x = modFactor;
+	//Keep vector speed and upwards direction
 	mDirection.y = -std::sqrt(std::max(0.0f, std::powf(speed, 2) - std::powf(mDirection.x, 2))); 
 }
 
