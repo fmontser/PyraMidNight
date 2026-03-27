@@ -11,7 +11,7 @@ class Ball : public sf::Sprite {
 
 		void Launch();
 		void ResetPos(const sf::Vector2f& bumperPos);
-		void Update(const sf::Vector2f &bumperPos, sf::Time& deltaTime);
+		void Update(const sf::Vector2f &bumperPos,const sf::Time& deltaTime);
 		void Bounce(const sf::Sprite &obj, float distance);
 
 		const State& GetState() const;
@@ -25,7 +25,7 @@ class Ball : public sf::Sprite {
 			sf::Vector2f    mDirection;
 			float           mRadius;
 		
-		void Move(sf::Time& deltaTime);
+		void Move(const sf::Time& deltaTime);
 		float GetDistance(sf::Rect<float> rect);
 		void ResolveOverlap(float distance);
 	};

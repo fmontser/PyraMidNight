@@ -21,7 +21,7 @@ void Ball::ResetPos(const sf::Vector2f &bumperPos) {
 	mState = State::DOCKED;
 }
 
-void Ball::Update(const sf::Vector2f &bumperPos, sf::Time& deltaTime) {
+void Ball::Update(const sf::Vector2f &bumperPos, const sf::Time& deltaTime) {
 	switch (mState)	{
 		case State::PLAYING: Move(deltaTime); break;
 		case State::DOCKED: ResetPos(bumperPos); break;
@@ -50,7 +50,7 @@ const Ball::State &Ball::GetState() const { return mState; }
 const float Ball::GetRadius() const { return mRadius; }
 
 //TODO hardcoded values...get playarea rect
-void Ball::Move(sf::Time& deltaTime) {
+void Ball::Move(const sf::Time& deltaTime) {
 	sf::Vector2f position = getPosition();
 	auto deltaTimeMs = deltaTime.asMilliseconds();
 

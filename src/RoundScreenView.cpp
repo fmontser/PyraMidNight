@@ -83,7 +83,6 @@ void RoundScreenView::Update(Game& game) {
 		window.close();
 	if (frameInput.coin)
 		game.AddCredit();
-
  	if (frameInput.action) {
 		if (mBall->GetState() == Ball::State::DOCKED)
 			mBall->Launch();
@@ -93,26 +92,23 @@ void RoundScreenView::Update(Game& game) {
 	else if (frameInput.right)
 		mBumper->Move(1, deltaTime);
 
+	UpdateBall(deltaTime);
+	UpdateCredits(game);
+	UpdateScore(game);
+}
 
-	//TODO coldet #########################
-	
+void RoundScreenView::UpdateBall(const sf::Time& deltaTime)
+{
 	if (mBall->GetState() == Ball::State::PLAYING) {
-		for (const auto& obj : mColdetVector) {
+		for (const auto &obj : mColdetVector) {
 			float distance = GetBallDistance(*obj);
 			if (distance <= mBall->GetRadius()) {
- 				mBall->Bounce(*obj, distance);
+				mBall->Bounce(*obj, distance);
 				break;
 			}
 		}
 	}
-
-	//##########################################
-
-
-	mBall->Update(mBumper->getPosition() ,deltaTime);
-
-	UpdateCredits(game);
-	UpdateScore(game);
+	mBall->Update(mBumper->getPosition(), deltaTime);
 }
 
 float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {

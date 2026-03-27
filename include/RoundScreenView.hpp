@@ -6,15 +6,16 @@
 class RoundScreenView : public ScreenView {
 	public:
 		RoundScreenView();
-		void Update(Game& game) override;
+		void Update(Game &game) override;
 
-	private:
+		
+		private:
 		std::shared_ptr<sf::Font>    mFont;
 		std::shared_ptr<sf::Text>    mCreditsTxt;
 		std::shared_ptr<sf::Text>    mScoreTxt;
 		std::shared_ptr<sf::Texture> mBackgroundTex;
 		std::shared_ptr<sf::Sprite>  mBackground;
-
+		
 		std::shared_ptr<sf::Texture> mWallTex;
 		std::shared_ptr<sf::Sprite>  mWallLeft;
 		std::shared_ptr<sf::Sprite>  mWallRight;
@@ -28,7 +29,8 @@ class RoundScreenView : public ScreenView {
 		
 		std::shared_ptr<sf::RectangleShape> mDeathArea;
 		std::vector<std::shared_ptr<sf::Sprite>> mColdetVector;
-
+		
+		void UpdateBall(const sf::Time& deltaTime);
 		void UpdateCredits(Game& game);
 		void UpdateScore(Game &game);
 		float GetBallDistance(const sf::Sprite &obj);
