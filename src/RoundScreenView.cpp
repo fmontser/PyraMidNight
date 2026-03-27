@@ -138,6 +138,8 @@ void RoundScreenView::UpdateBall(const sf::Time &deltaTime)
 				if (typeid(*obj) == typeid(Block)) {
 					if (dynamic_cast<Block*>(obj.get())->Damage())
 						mDestroyedSprites.push_back(obj);
+				} else if (typeid(*obj) == typeid(Bumper)) {
+					mBall->ApplyBumperMod(*obj);
 				}
 				break;
 			}
@@ -145,6 +147,7 @@ void RoundScreenView::UpdateBall(const sf::Time &deltaTime)
 	}
 	mBall->Update(mBumper->getPosition(), deltaTime);
 }
+
 
 void RoundScreenView::UpdateBlocks() {
 	for (const auto& sprt : mDestroyedSprites) {
@@ -171,8 +174,6 @@ void RoundScreenView::UpdateGame(Game &game){
 	if (mBlockVector.empty())
 		game.SetNextRound();
 }
-
-
 
 void RoundScreenView::UpdateCredits(Game& game) {
 	mCreditsTxt->setString(std::string(CREDITS_STR)
