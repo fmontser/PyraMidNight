@@ -31,7 +31,6 @@ set(APP_SOURCES
 	src/ScreenView.cpp
 	src/TitleScreenView.cpp
 	src/RoundScreenView.cpp
-	src/Round.cpp
 	src/Bumper.cpp
 	src/Ball.cpp
 )
