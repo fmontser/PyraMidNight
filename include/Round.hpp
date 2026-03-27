@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <memory>
 #include "Bumper.hpp"
+#include "Ball.hpp"
 
 class RoundScreenView;
 
@@ -10,6 +11,7 @@ class Round {
 		Round(RoundScreenView& screenView);
 
 		Bumper& GetBumper();
+		Ball& GetBall();
 
 	private:
 		RoundScreenView& mScreenView;
@@ -18,4 +20,6 @@ class Round {
 
 		std::shared_ptr<sf::Texture> mBumperTex;
 		std::shared_ptr<Bumper>      mBumper;
+		std::shared_ptr<sf::Texture> mBallTex;
+		std::shared_ptr<Ball>      mBall;
 };

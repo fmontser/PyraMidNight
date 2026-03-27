@@ -54,7 +54,7 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	mRound = std::make_unique<Round>(*this);
 }
 
-void RoundScreenView::ProcessInput(Game& game) {
+void RoundScreenView::Update(Game& game) {
 	auto& frameInput = game.GetInputManager().FetchInput();
 	auto& deltaTime = game.GetRenderManager().GetDeltaTime();
 	auto& window = game.GetRenderManager().GetWindow();
@@ -63,12 +63,19 @@ void RoundScreenView::ProcessInput(Game& game) {
 		window.close();
 	if (frameInput.coin)
 		game.AddCredit();
-	if (frameInput.action && game.GetCredits() > 0)
-		game.SetState(Game::State::ROUND_SCREEN);
+	//TODO test only, Round owns it
+ 	if (frameInput.action) {
+		if (mRound->GetBall().GetState() == Ball::State::DOCKED)
+			mRound->GetBall().Launch();
+	}
 	if (frameInput.left)
 		mRound->GetBumper().Move(-1, deltaTime);
 	if (frameInput.right)
 		mRound->GetBumper().Move(1, deltaTime);
+
+	//TODO test only, Round owns it
+	
+	mRound->GetBall().Update(mRound->GetBumper().getPosition() ,deltaTime);
 
 	UpdateCredits(game);
 	UpdateScore(game);
