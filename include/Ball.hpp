@@ -16,14 +16,12 @@ class Ball : public sf::Sprite {
 
 		const State& GetState() const;
 		const float GetRadius() const;
-
-		void SetDirection(sf::Vector2f direction);
 		
-		private:
-			State           mState;
-			float           mSpeed;
-			sf::Vector2f    mDirection;
-			float           mRadius;
+	private:
+		State           mState;
+		float           mSpeed;
+		sf::Vector2f    mDirection;
+		float           mRadius;
 		
 		void Move(const sf::Time& deltaTime);
 		float GetDistance(sf::Rect<float> rect);
