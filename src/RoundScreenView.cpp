@@ -57,9 +57,9 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 
 	//TODO convert to simple rect
 	mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
-	mDeathArea->setPosition({32, 832});
+	mDeathArea->setPosition({32, 864});
 	mDeathArea->setFillColor({0,0,0,0});
-	
+
 	mDrawables.push_back(mBackground);
 	mDrawables.push_back(mCreditsTxt);
 	mDrawables.push_back(mScoreTxt);
@@ -76,7 +76,7 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	mColdetVector.push_back(mBumper);
 
 	//TODO make it dynamic
-	LoadLevel(level0);
+	LoadLevel(level1);
 }
 
 void RoundScreenView::Update(Game& game) {
@@ -99,6 +99,7 @@ void RoundScreenView::Update(Game& game) {
 
 	UpdateBall(deltaTime);
 	UpdateBlocks();
+	UpdateGame(game);
 	UpdateCredits(game);
 	UpdateScore(game);
 }
@@ -162,15 +163,16 @@ void RoundScreenView::UpdateBlocks() {
 	mDestroyedSprites.clear();
 }
 
-float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {
-	auto bPos = mBall->getPosition();
-	auto rect = obj.getGlobalBounds();
-	float closestX = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);
-	float closestY = std::clamp(bPos.y, rect.position.y, rect.position.y + rect.size.y);
-	float distX = bPos.x - closestX;
-	float distY = bPos.y - closestY;
-	return std::sqrtf((distX * distX) + (distY * distY));
+void RoundScreenView::UpdateGame(Game &game){
+	//Lose
+	if (mDeathArea->getGlobalBounds().contains(mBall->getPosition()))
+		LoseBall(game);
+	//Win
+	if (mBlockVector.empty())
+		game.SetNextRound();
 }
+
+
 
 void RoundScreenView::UpdateCredits(Game& game) {
 	mCreditsTxt->setString(std::string(CREDITS_STR)
@@ -185,3 +187,23 @@ void RoundScreenView::UpdateScore(Game& game) {
 		.append(std::to_string(static_cast<int>(game.GetScore()))));
 }
 
+void RoundScreenView::LoseBall(Game& game) {
+	game.ConsumeCredit();
+	//TODO remove score penalty?
+	if (game.GetCredits() == 0){
+		game.GameOver();
+		return;
+	}
+	//TODO animation?
+	mBall->ResetPos(mBumper->getPosition());
+};
+
+float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {
+	auto bPos = mBall->getPosition();
+	auto rect = obj.getGlobalBounds();
+	float closestX = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);
+	float closestY = std::clamp(bPos.y, rect.position.y, rect.position.y + rect.size.y);
+	float distX = bPos.x - closestX;
+	float distY = bPos.y - closestY;
+	return std::sqrtf((distX * distX) + (distY * distY));
+}
