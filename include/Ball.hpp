@@ -11,7 +11,7 @@ class Ball : public sf::Sprite {
 
 		void Launch();
 		void ResetPos(const sf::Vector2f& bumperPos);
-		void Update(sf::Time& deltaTime);
+		void Update(const sf::Vector2f &bumperPos, sf::Time& deltaTime);
 		void Bounce(sf::Rect<float> rect);
 
 		const State& GetState() const;

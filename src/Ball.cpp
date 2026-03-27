@@ -19,9 +19,12 @@ void Ball::ResetPos(const sf::Vector2f &bumperPos) {
 	mState = State::DOCKED;
 }
 
-void Ball::Update(sf::Time& deltaTime) {
-	if (mState == State::PLAYING)
-		Move(deltaTime);
+void Ball::Update(const sf::Vector2f &bumperPos, sf::Time& deltaTime) {
+	switch (mState)	{
+		case State::PLAYING: Move(deltaTime); break;
+		case State::DOCKED: ResetPos(bumperPos); break;
+		default: break;
+	}
 }
 
 void Ball::Bounce(sf::Rect<float> rect) {

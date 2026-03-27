@@ -77,7 +77,7 @@ void RoundScreenView::Update(Game& game) {
 
 	//TODO test only, Round owns it
 	
-	mRound->GetBall().Update(deltaTime);
+	mRound->GetBall().Update(mRound->GetBumper().getPosition() ,deltaTime);
 
 	UpdateCredits(game);
 	UpdateScore(game);
