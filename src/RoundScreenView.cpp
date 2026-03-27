@@ -1,3 +1,4 @@
+#include <cmath>
 #include "RoundScreenView.hpp"
 #include "Game.hpp"
 
@@ -66,6 +67,11 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	mDrawables.push_back(mBumper);
 	mDrawables.push_back(mBall);
 	mDrawables.push_back(mDeathArea); //TODO remove on rect convert
+
+	mColdetVector.push_back(mWallLeft);
+	mColdetVector.push_back(mWallRight);
+	mColdetVector.push_back(mCeil);
+	mColdetVector.push_back(mBumper);
 }
 
 void RoundScreenView::Update(Game& game) {
@@ -88,9 +94,30 @@ void RoundScreenView::Update(Game& game) {
 		mBumper->Move(1, deltaTime);
 
 
-	//TODO coldet
+	//TODO coldet #########################
 
-	
+
+	for (const auto& obj : mColdetVector) {
+		
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	//##########################################
+
+
 	mBall->Update(mBumper->getPosition() ,deltaTime);
 
 	UpdateCredits(game);
@@ -108,4 +135,19 @@ void RoundScreenView::UpdateScore(Game& game) {
 
 	mScoreTxt->setString(std::string(SCORE_STR)
 		.append(std::to_string(static_cast<int>(game.GetScore()))));
+}
+
+float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {
+	float distance = 0;
+	const auto& rect = obj.getGlobalBounds();
+	auto dVec = sf::Vector2f({});
+	auto rPos = rect.position; //TODO check origin?
+	auto rSize = rect.size;
+	auto bPos = mBall->getPosition();
+	auto bRadius = mBall->GetRadius();
+	
+	dVec.x = std::max(rPos.x, std::min(bPos.x, (rPos.x + rSize.x)));
+	dVec.y = std::max(rPos.x, std::min(bPos.x, (rPos.x + rSize.x)));
+	distance = std::sqrtf(std::powf(dVec.x, 2) + std::powf(dVec.y, 2));
+	return distance;
 }

@@ -29,8 +29,7 @@ void Ball::Update(const sf::Vector2f &bumperPos, sf::Time& deltaTime) {
 	}
 }
 
-void Ball::Bounce(sf::Rect<float> rect) {
-	float distance = GetDistance(rect);
+void Ball::Bounce(sf::Rect<float> rect, float distance) {
 	auto rPos = rect.position;
 	auto rSize = rect.size;
 	auto bPos = getPosition();
@@ -62,20 +61,6 @@ void Ball::Move(sf::Time& deltaTime) {
 	position.x = std::clamp(position.x, 48.0f, 560.0f);
 	position.y = std::clamp(position.y, 48.0f, 880.0f);
 	setPosition(position);
-}
-
-float Ball::GetDistance(sf::Rect<float> rect) {
-	float distance = 0;
-	auto dVec = sf::Vector2f({});
-	auto rPos = rect.position; //TODO check origin?
-	auto rSize = rect.size;
-	auto bPos = getPosition();
-	auto bRadius = mRadius;
-	
-	dVec.x = std::max(rPos.x, std::min(bPos.x, (rPos.x + rSize.x)));
-	dVec.y = std::max(rPos.x, std::min(bPos.x, (rPos.x + rSize.x)));
-	distance = std::sqrtf(std::powf(dVec.x, 2) + std::powf(dVec.y, 2));
-	return distance;
 }
 
 void Ball::ResolveOverlap(float distance) {
