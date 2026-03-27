@@ -1,6 +1,6 @@
 #include "Block.hpp"
 
-Block::Block(const sf::Texture &texture, int8_t hitPoints = 1) : sf::Sprite(texture) {
+Block::Block(const sf::Texture& texture, int8_t hitPoints) : sf::Sprite(texture) {
 	this->hitPoints = hitPoints;
 }
 
