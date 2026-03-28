@@ -13,6 +13,10 @@ Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 	mFinalRound = 1; //TODO calculate from available levels or difficulty setting
 	mScore = 0;
 
+	mTitleScreen = nullptr;
+	mRoundScreen = nullptr;
+	mEndScreenView = nullptr;
+
 	//TODO make score persistent (when resourceMAnager is added)
 	//Fake data
 	mRanking.push_back({"RAA", 1000000});
@@ -20,37 +24,50 @@ Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 	mRanking.push_back({"JMA", 800000});
 	mRanking.push_back({"IOQ", 700000});
 	mRanking.push_back({"FFF", 600000});
-	mRanking.push_back({"ISS", 500000});
-	mRanking.push_back({"YSS", 400000});
-	mRanking.push_back({"PAS", 300000});
-	mRanking.push_back({"TOI", 200000});
-	mRanking.push_back({"CAN", 0});
+	mRanking.push_back({"ISS", 3000});
+	mRanking.push_back({"YSS", 1000});
+	mRanking.push_back({"PAS", 500});
+	mRanking.push_back({"TOI", 200});
+	mRanking.push_back({"CAN", 1});
 	SortRanking();
 }
 
 void Game::Run() {
 
-	//TODO remove screens when moving forward!
-	//TODO proper memory management with screenViews!!!
 	// main loop
 	while (mRenderManager.GetWindow().isOpen()) {
 
 		switch (mState) {
 			case Game::State::TITLE_SCREEN:
-				if (!mTitleScreen.Update(*this))
+				if (mTitleScreen == nullptr)
+					mTitleScreen = std::make_shared<TitleScreenView>();
+				if (!mTitleScreen->Update(*this)) {
 					mState = State::ROUND_SCREEN;
-				mRenderManager.RenderFrame(mTitleScreen);
+					mTitleScreen = nullptr;
+					break;
+				}
+				mRenderManager.RenderFrame(*mTitleScreen);
 				break;
 			case Game::State::ROUND_SCREEN:
-				if (!mRoundScreen.Update(*this))
+				if (mRoundScreen == nullptr)
+					mRoundScreen = std::make_shared<RoundScreenView>();
+				if (!mRoundScreen->Update(*this)) {
 					//TODO load next level or gameOVer
 					GameOver();
-				mRenderManager.RenderFrame(mRoundScreen);
+					mRoundScreen = nullptr;
+					break;
+				}
+				mRenderManager.RenderFrame(*mRoundScreen);
 				break;
 			case Game::State::END_SCREEN:
-				if (!mEndScreenView.Update(*this))
+				if (mEndScreenView == nullptr)
+					mEndScreenView = std::make_shared<EndScreenView>();
+				if (!mEndScreenView->Update(*this)) {
 					mState = State::TITLE_SCREEN;
-				mRenderManager.RenderFrame(mEndScreenView);
+					mEndScreenView = nullptr;
+					break;
+				}
+				mRenderManager.RenderFrame(*mEndScreenView);
 				break;
 			default:
 				break;

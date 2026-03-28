@@ -30,7 +30,7 @@ class Game {
 
 		void SortRanking();
 		std::vector<ScoreEntry>& GetRanking();
-		
+
 		//TODO not IOC!!!!!
 		void AddCredit();
 		void ConsumeCredit();
@@ -49,9 +49,9 @@ class Game {
 		
 		RenderManager    mRenderManager;
 		InputManager     mInputManager;
-		TitleScreenView  mTitleScreen;
-		RoundScreenView  mRoundScreen;
-		EndScreenView    mEndScreenView;
+		std::shared_ptr<TitleScreenView> mTitleScreen;
+		std::shared_ptr<RoundScreenView> mRoundScreen;
+		std::shared_ptr<EndScreenView>   mEndScreenView;
 		
 		void SetNextRound();
 		void GameOver();
