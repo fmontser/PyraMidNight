@@ -37,7 +37,7 @@ void Game::Run() {
 
 		switch (mState) {
 			case Game::State::TITLE_SCREEN:
-				if (!mTitleScreen.Update(*this));
+				if (!mTitleScreen.Update(*this))
 					mState = State::ROUND_SCREEN;
 				mRenderManager.RenderFrame(mTitleScreen);
 				break;

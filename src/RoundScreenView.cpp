@@ -174,10 +174,10 @@ bool RoundScreenView::UpdateGame(Game &game){
 		LoseBall(game);
 		return false;
 	}
-	//TODO LOAD NEXT LEVEL!!! @@@@@@@@@@
+	//TODO LOAD NEXT LEVEL!!! @@@@@@@@@@ indicate win state!
 	//Win
 	if (mBlockVector.empty())
-		game.SetNextRound();
+		return false;
 	return true;
 }
 
@@ -194,15 +194,15 @@ void RoundScreenView::UpdateScore(Game& game) {
 		.append(std::to_string(static_cast<int>(game.GetScore()))));
 }
 
-void RoundScreenView::LoseBall(Game& game) {
+bool RoundScreenView::LoseBall(Game& game) {
 	game.ConsumeCredit();
 	//TODO remove score penalty?
-	if (game.GetCredits() == 0){
-		game.GameOver();
-		return;
+	if (game.GetCredits() == 0) {
+		return false;
 	}
 	//TODO animation?
 	mBall->ResetPos(mBumper->getPosition());
+	return true;
 };
 
 float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {

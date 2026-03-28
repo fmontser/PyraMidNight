@@ -39,6 +39,6 @@ class RoundScreenView : public ScreenView {
 		bool UpdateGame(Game& game);
 		void UpdateCredits(Game& game);
 		void UpdateScore(Game &game);
-		void LoseBall(Game& game);
+		bool LoseBall(Game& game);
 		float GetBallDistance(const sf::Sprite &obj);
 };

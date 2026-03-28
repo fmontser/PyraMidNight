@@ -5,7 +5,7 @@
 class Cursor : public sf::RectangleShape {
 	public:
 		enum class Action {
-			LEFT, RIGTH, UP, DOWN
+			LEFT, RIGHT, UP, DOWN
 		};
 
 		Cursor(sf::Font& font);

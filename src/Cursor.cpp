@@ -21,13 +21,17 @@ void Cursor::Control(Action action) {
 	{
 		case Action::LEFT:
 			//TODO move cursor charsize
-			move({-30,0});
-			mEntryIndex = std::clamp(--mEntryIndex, (size_t)0, (size_t)2);
+			if (mEntryIndex > 0) {
+				move({-30,0});
+				mEntryIndex = std::clamp(--mEntryIndex, (size_t)0, (size_t)2);
+			}
 			break;
-		case Action::RIGTH:
+		case Action::RIGHT:
 			//TODO move cursor charsize
-			move({30,0});
-			mEntryIndex = std::clamp(++mEntryIndex, (size_t)0, (size_t)2);
+			if (mEntryIndex < 2) {
+				move({30,0});
+				mEntryIndex = std::clamp(++mEntryIndex, (size_t)0, (size_t)2);
+			}
 			break;
 		case Action::UP:
 			ChangeChar(Action::UP);
