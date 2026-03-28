@@ -22,6 +22,7 @@ class Game {
 		Game();
 
 		void Run();
+		//TODO not IOC!!!!!
 		void AddScore(uint32_t points);
 		void ResetScore();
 		void RecordScore();
@@ -29,17 +30,15 @@ class Game {
 
 		void SortRanking();
 		std::vector<ScoreEntry>& GetRanking();
-
+		
+		//TODO not IOC!!!!!
 		void AddCredit();
 		void ConsumeCredit();
 		uint8_t GetCredits() const;
 
-		void SetState(State state);
-		void SetNextRound();
-		void GameOver();
 		RenderManager& GetRenderManager();
 		InputManager&  GetInputManager();
-
+		
 	private:
 		State    mState;
 		uint8_t  mCredits;
@@ -47,11 +46,13 @@ class Game {
 		uint8_t  mFinalRound;
 		uint32_t mScore;
 		std::vector<ScoreEntry> mRanking;
-
+		
 		RenderManager    mRenderManager;
 		InputManager     mInputManager;
 		TitleScreenView  mTitleScreen;
 		RoundScreenView  mRoundScreen;
 		EndScreenView    mEndScreenView;
-
-};
+		
+		void SetNextRound();
+		void GameOver();
+	};

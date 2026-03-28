@@ -37,15 +37,19 @@ void Game::Run() {
 
 		switch (mState) {
 			case Game::State::TITLE_SCREEN:
-				mTitleScreen.Update(*this);
+				if (!mTitleScreen.Update(*this));
+					mState = State::ROUND_SCREEN;
 				mRenderManager.RenderFrame(mTitleScreen);
 				break;
 			case Game::State::ROUND_SCREEN:
-				mRoundScreen.Update(*this);
+				if (!mRoundScreen.Update(*this))
+					//TODO load next level or gameOVer
+					GameOver();
 				mRenderManager.RenderFrame(mRoundScreen);
 				break;
 			case Game::State::END_SCREEN:
-				mEndScreenView.Update(*this);
+				if (!mEndScreenView.Update(*this))
+					mState = State::TITLE_SCREEN;
 				mRenderManager.RenderFrame(mEndScreenView);
 				break;
 			default:
@@ -92,8 +96,6 @@ void Game::ConsumeCredit() {
 }
 
 uint8_t Game::GetCredits() const { return mCredits; }
-
-void Game::SetState(State state) { mState = state; }
 
 void Game::SetNextRound() {
 	if (mRound < mFinalRound)
