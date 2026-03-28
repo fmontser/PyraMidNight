@@ -1,4 +1,0 @@
-//TODO tema getters referencias constantes...
-//TODO orden de implementcoin private public, getsetters..
-//TODO revision de arquitectura general
-//TODO jerarquias de eliminacion  de objetos shared o normales...eliminar las referencias en containers, y leugo los objetos, no deberian permanecer entre "SCREENS"

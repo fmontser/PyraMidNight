@@ -36,7 +36,9 @@ class RoundScreenView : public ScreenView {
 		void LoadLevel(const std::array<const std::string, 9>& level);
 		void UpdateBall(const sf::Time& deltaTime);
 		void UpdateBlocks();
+		void UpdateGame(Game& game);
 		void UpdateCredits(Game& game);
 		void UpdateScore(Game &game);
+		void LoseBall(Game& game);
 		float GetBallDistance(const sf::Sprite &obj);
 };

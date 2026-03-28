@@ -1,9 +1,9 @@
-#include "Ball.hpp"
 #include <algorithm>
 #include <cmath>
+#include "Ball.hpp"
 
 Ball::Ball(const sf::Texture& texture) : sf::Sprite(texture) {
-	mSpeed = 0.4;
+	mSpeed = 0.6;
 	mDirection = {-1, -1};
 	mRadius = 16;
 	setOrigin({16,16});
@@ -18,6 +18,7 @@ void Ball::ResetPos(const sf::Vector2f &bumperPos) {
 	sf::Vector2f bumperOffset({64,-18});
 	auto newPos = bumperPos + bumperOffset;
 	setPosition(newPos);
+	mDirection = {-1,-1};
 	mState = State::DOCKED;
 }
 
@@ -44,6 +45,19 @@ void Ball::Bounce(const sf::Sprite& obj, float distance) {
 		mDirection.x = -mDirection.x;
 	else if (isBounceVertical)
 		mDirection.y = -mDirection.y;
+}
+
+void Ball::ApplyBumperMod(const sf::Sprite& bumper) {
+	
+	float bumperWidth = bumper.getGlobalBounds().size.x;
+	float bumperX = bumper.getPosition().x + bumperWidth / 2.0f;
+	float modFactor = (getPosition().x - bumperX) / (bumperWidth / 2.0f);
+	float speed = std::sqrt(std::powf(mDirection.x, 2) + std::powf(mDirection.y, 2));
+	
+	// Apply control modification
+	mDirection.x = modFactor;
+	//Keep vector speed and upwards direction
+	mDirection.y = -std::sqrt(std::max(0.0f, std::powf(speed, 2) - std::powf(mDirection.x, 2))); 
 }
 
 const Ball::State &Ball::GetState() const { return mState; }

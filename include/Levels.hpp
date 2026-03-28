@@ -2,7 +2,7 @@
 #include <string>
 #include <array>
 
-const std::array<const std::string, 9> level0 = {
+const std::array<const std::string, 9> level1 = {
 	"000000000",
 	"000000000",
 	"111111111",

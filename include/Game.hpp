@@ -26,6 +26,7 @@ class Game {
 
 		void SetState(State state);
 		void SetNextRound();
+		void GameOver();
 		RenderManager& GetRenderManager();
 		InputManager&  GetInputManager();
 

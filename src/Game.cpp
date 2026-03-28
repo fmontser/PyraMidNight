@@ -8,14 +8,15 @@ constexpr uint32_t MAX_CREDITS = std::numeric_limits<uint8_t>::max();
 Game::Game() :
 	mState(Game::State::TITLE_SCREEN),
 	mCredits(0),
-	mRound(0),
-	mFinalRound(3),
+	mRound(1),
+	mFinalRound(1),
 	mScore(0),
 	mRenderManager(),
 	mInputManager(mRenderManager.GetWindow()) {}
 
 void Game::Run() {
 
+	//TODO remove screens when moving forward!
 	// main loop
 	while (mRenderManager.GetWindow().isOpen()) {
 
@@ -30,6 +31,10 @@ void Game::Run() {
 				break;
 			case Game::State::END_SCREEN:
 				//TODO run or update SCREEN
+				//TODO title screen placeholder, remove
+
+				mTitleScreen.Update(*this);
+				mRenderManager.RenderFrame(mTitleScreen);
 				break;
 			default:
 				break;
@@ -65,6 +70,13 @@ void Game::SetState(State state) { mState = state; }
 void Game::SetNextRound() {
 	if (mRound < mFinalRound)
 		mRound++;
+	else
+		GameOver();
+}
+
+void Game::GameOver() {
+	//TODO endscreen
+	mState = State::END_SCREEN;
 }
 
 RenderManager &Game::GetRenderManager() { return mRenderManager; }
