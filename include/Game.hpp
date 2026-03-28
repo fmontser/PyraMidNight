@@ -5,6 +5,7 @@
 #include "RoundScreenView.hpp"
 #include "InputManager.hpp"
 #include "RenderManager.hpp"
+#include "EndScreenView.hpp"
 
 
 class Game {
@@ -13,12 +14,21 @@ class Game {
 			TITLE_SCREEN, ROUND_SCREEN, END_SCREEN
 		};
 
+		struct ScoreEntry {
+			std::string name;
+			uint32_t    score;
+		};
+
 		Game();
 
 		void Run();
 		void AddScore(uint32_t points);
 		void ResetScore();
+		void RecordScore();
 		uint32_t GetScore() const;
+
+		void SortRanking();
+		std::vector<ScoreEntry>& GetRanking();
 
 		void AddCredit();
 		void ConsumeCredit();
@@ -36,10 +46,12 @@ class Game {
 		uint8_t  mRound;
 		uint8_t  mFinalRound;
 		uint32_t mScore;
+		std::vector<ScoreEntry> mRanking;
 
 		RenderManager    mRenderManager;
 		InputManager     mInputManager;
 		TitleScreenView  mTitleScreen;
 		RoundScreenView  mRoundScreen;
+		EndScreenView    mEndScreenView;
 
 };

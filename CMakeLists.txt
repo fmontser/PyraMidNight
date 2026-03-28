@@ -21,7 +21,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-
 # BINARIES
 set(APP_SOURCES
 	src/main.cpp
@@ -31,6 +30,7 @@ set(APP_SOURCES
 	src/ScreenView.cpp
 	src/TitleScreenView.cpp
 	src/RoundScreenView.cpp
+	src/EndScreenView.cpp
 	src/Bumper.cpp
 	src/Ball.cpp
 	src/Block.cpp

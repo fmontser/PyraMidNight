@@ -1,4 +1,3 @@
-#include <algorithm>
 #include "EndScreenView.hpp"
 #include "Game.hpp"
 
