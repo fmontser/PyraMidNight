@@ -3,9 +3,13 @@
 
 constexpr std::string_view TITLE_STR = "GAME OVER!";
 constexpr std::string_view CONTINUE_STR = "Press SPACE to continue!";
+constexpr std::string_view ABC_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 //TODO hardcoded values
 EndScreenView::EndScreenView() : ScreenView() {
+	mIsRankingDraw = false;
+	mIsNameSet =  false;
+
 	//TODO filesystem exception control
 	mFont = std::make_shared<sf::Font>("assets/ClearSans-Regular.ttf");
 
@@ -57,6 +61,8 @@ EndScreenView::EndScreenView() : ScreenView() {
 	mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
 	mBackground->setColor({64, 0, 0, 255});
 
+	mCursor = CreateCursor();
+
 	mDrawables.push_back(mBackground);
 	mDrawables.push_back(mTitleTxt);
 	mDrawables.push_back(mStartTxt);
@@ -66,6 +72,7 @@ EndScreenView::EndScreenView() : ScreenView() {
 		mDrawables.push_back(entry.score);
 	}
 
+	mDrawables.push_back(mCursor);
 }
 
 void EndScreenView::Update(Game& game) {
@@ -79,24 +86,39 @@ void EndScreenView::Update(Game& game) {
 	if (frameInput.action)
 		game.SetState(Game::State::TITLE_SCREEN);
 
-	ShowRanking(game);
+	if (!mIsRankingDraw)
+		mIsRankingDraw = ShowRanking(game);
+	else if (!mIsNameSet) {
+		mIsNameSet = EnterRecordName(game, frameInput);
+	}
 }
 
-void EndScreenView::ShowRanking(Game& game) {
+bool EndScreenView::ShowRanking(Game& game) {
 	auto ranking = game.GetRanking();
 	size_t i = 0;
 
-	//TODO ENTER NAME!!
-
-	for (const auto& entry : ranking) {
+	for (auto& gameEntry : ranking) {
 		if (i < mRankingTxt.size()) {
-			mRankingTxt[i].name->setString(entry.name);
-			mRankingTxt[i].score->setString(PadZeroScore(entry.score, 10));
+			mRankingTxt[i].name->setString(gameEntry.name);
+			mRankingTxt[i].score->setString(PadZeroScore(gameEntry.score, 10));
 		}
 		i++;
 	}
+	return true;
+}
 
-	//TODO blink record??
+std::shared_ptr<sf::RectangleShape>& EndScreenView::CreateCursor() {
+	auto cursorSize =  sf::Vector2f({});
+	auto cursor = std::make_shared<sf::RectangleShape>(sf::RectangleShape());
+
+	cursorSize.x =	mFont->getGlyph('?', 48.0f, false).bounds.size.x;
+	cursorSize.y =	mFont->getGlyph('?', 48.0f, false).bounds.size.y;
+
+	cursor->setSize(cursorSize);
+	cursor->setFillColor({0, 0, 0, 0});
+	cursor->setOutlineColor({0, 255, 0, 255});
+	cursor->setOutlineThickness(2);
+	return cursor;
 }
 
 std::string EndScreenView::PadZeroScore(uint32_t score, uint32_t digits) {

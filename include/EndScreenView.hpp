@@ -1,6 +1,6 @@
 #pragma once
-#include "ScreenView.hpp"
 #include <string>
+#include "ScreenView.hpp"
 
 class EndScreenView : public ScreenView {
 	public:
@@ -13,14 +13,18 @@ class EndScreenView : public ScreenView {
 		void Update(Game& game) override;
 
 	private:
-		std::shared_ptr<sf::Font> mFont;
-		std::shared_ptr<sf::Text> mTitleTxt;
-		std::shared_ptr<sf::Text> mStartTxt;
-		std::shared_ptr<sf::Texture> mBackgroundTex;
-		std::shared_ptr<sf::Sprite> mBackground;
+		std::shared_ptr<sf::Font>           mFont;
+		std::shared_ptr<sf::Text>           mTitleTxt;
+		std::shared_ptr<sf::Text>           mStartTxt;
+		std::shared_ptr<sf::Texture>        mBackgroundTex;
+		std::shared_ptr<sf::Sprite>         mBackground;
+		std::shared_ptr<sf::RectangleShape> mCursor;
 
 		std::vector<ScoreEntry> mRankingTxt;
+		bool mIsRankingDraw;
+		bool mIsNameSet;
 
-		void ShowRanking(Game& game);
+		std::shared_ptr<sf::RectangleShape>& CreateCursor();
+		bool ShowRanking(Game& game);
 		std::string PadZeroScore(uint32_t score, uint32_t digits);
 };
