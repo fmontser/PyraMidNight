@@ -11,7 +11,7 @@ class EndScreenView : public ScreenView {
 		};
 
 		EndScreenView();
-		void Update(Game& game) override;
+		bool Update(Game& game) override;
 
 	private:
 		std::shared_ptr<sf::Font>           mFont;

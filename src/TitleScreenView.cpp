@@ -44,7 +44,7 @@ TitleScreenView::TitleScreenView() : ScreenView() {
 	mDrawables.push_back(mStartTxt);
 }
 
-void TitleScreenView::Update(Game& game) {
+bool TitleScreenView::Update(Game& game) {
 	auto& frameInput = game.GetInputManager().FetchInput();
 	auto& deltaTime = game.GetRenderManager().GetDeltaTime();
 	auto& window = game.GetRenderManager().GetWindow();
@@ -59,7 +59,8 @@ void TitleScreenView::Update(Game& game) {
 		mCreditsTxt->setString(mCreditsStr);
 	}
 	if (frameInput.action && game.GetCredits() > 0)
-		game.SetState(Game::State::ROUND_SCREEN);
+		return false;
+	return true;
 }
 
 void TitleScreenView::UpdateCredits(Game& game) {

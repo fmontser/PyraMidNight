@@ -79,7 +79,7 @@ RoundScreenView::RoundScreenView() : ScreenView() {
 	LoadLevel(level1);
 }
 
-void RoundScreenView::Update(Game& game) {
+bool RoundScreenView::Update(Game& game) {
 	auto& frameInput = game.GetInputManager().FetchInput();
 	auto& deltaTime = game.GetRenderManager().GetDeltaTime();
 	auto& window = game.GetRenderManager().GetWindow();
@@ -99,9 +99,11 @@ void RoundScreenView::Update(Game& game) {
 
 	UpdateBall(deltaTime);
 	UpdateBlocks();
-	UpdateGame(game);
 	UpdateCredits(game);
 	UpdateScore(game);
+	if (!UpdateGame(game))
+		return false;
+	return true;
 }
 
 void RoundScreenView::LoadLevel(const std::array<const std::string, 9>& level) {
@@ -166,13 +168,17 @@ void RoundScreenView::UpdateBlocks() {
 	mDestroyedSprites.clear();
 }
 
-void RoundScreenView::UpdateGame(Game &game){
+bool RoundScreenView::UpdateGame(Game &game){
 	//Lose
-	if (mDeathArea->getGlobalBounds().contains(mBall->getPosition()))
+	if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
 		LoseBall(game);
+		return false;
+	}
+	//TODO LOAD NEXT LEVEL!!! @@@@@@@@@@ indicate win state!
 	//Win
 	if (mBlockVector.empty())
-		game.SetNextRound();
+		return false;
+	return true;
 }
 
 void RoundScreenView::UpdateCredits(Game& game) {
@@ -188,15 +194,15 @@ void RoundScreenView::UpdateScore(Game& game) {
 		.append(std::to_string(static_cast<int>(game.GetScore()))));
 }
 
-void RoundScreenView::LoseBall(Game& game) {
+bool RoundScreenView::LoseBall(Game& game) {
 	game.ConsumeCredit();
 	//TODO remove score penalty?
-	if (game.GetCredits() == 0){
-		game.GameOver();
-		return;
+	if (game.GetCredits() == 0) {
+		return false;
 	}
 	//TODO animation?
 	mBall->ResetPos(mBumper->getPosition());
+	return true;
 };
 
 float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {

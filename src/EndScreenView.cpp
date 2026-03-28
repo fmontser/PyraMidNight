@@ -74,7 +74,7 @@ EndScreenView::EndScreenView() : ScreenView() {
 	mDrawables.push_back(mCursor);
 }
 
-void EndScreenView::Update(Game& game) {
+bool EndScreenView::Update(Game& game) {
 	auto& frameInput = game.GetInputManager().FetchInput();
 	auto& window = game.GetRenderManager().GetWindow();
 
@@ -89,24 +89,25 @@ void EndScreenView::Update(Game& game) {
 	}
 	if (frameInput.close)
 		window.close();
-	if (frameInput.action && mIsNameSet){
-		game.SetState(Game::State::TITLE_SCREEN);
-	}
 	if (!mIsNameSet) {
- 		if (frameInput.left)
-			mCursor->Control(Cursor::Action::LEFT);
+		if (frameInput.left)
+		mCursor->Control(Cursor::Action::LEFT);
 		else if (frameInput.right)
-			mCursor->Control(Cursor::Action::RIGTH);
+		mCursor->Control(Cursor::Action::RIGHT);
 		else if (frameInput.up)
-			mCursor->Control(Cursor::Action::UP);
+		mCursor->Control(Cursor::Action::UP);
 		else if (frameInput.down)
-			mCursor->Control(Cursor::Action::DOWN);
+		mCursor->Control(Cursor::Action::DOWN);
 		else if (frameInput.action) {
 			mIsNameSet = mCursor->Accept(*mGameEntryName);
 			mStartTxt->setFillColor(sf::Color::Blue);
 			mStartTxt->setOutlineColor(sf::Color::Yellow);
+			return true;
 		}
 	}
+	if (frameInput.action && mIsNameSet)
+		return false;
+	return true;
 }
 
 bool EndScreenView::SetGameRanking(Game& game) {
