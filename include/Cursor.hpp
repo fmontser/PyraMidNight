@@ -12,11 +12,16 @@ class Cursor : public sf::RectangleShape {
 
 		void Control(Action action);
 		void SetEntry(std::shared_ptr<sf::Text>& entry);
-		bool IsNameSet();
+		bool Accept(std::string &gameEntryName);
 
 	private:
 		std::shared_ptr<sf::Text> mEntryTxt;
 		sf::Font& mFont;
+		size_t mEntryIndex;
+		
+		void ChangeChar(Action action);
+		char SelectChar(Action action);
+
 		
 
 };

@@ -1,8 +1,10 @@
+#include <algorithm>
 #include "Cursor.hpp"
 
-constexpr std::string_view ABC_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+constexpr std::string_view CHARSET_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 Cursor::Cursor(sf::Font& font) : mFont(font) {
+	mEntryIndex = 0;
 	auto cursorSize =  sf::Vector2f({});
 	cursorSize.x =	mFont.getGlyph('?', 48.0f, false).bounds.size.x;
 	cursorSize.y =	mFont.getGlyph('?', 48.0f, false).bounds.size.y;
@@ -13,30 +15,67 @@ Cursor::Cursor(sf::Font& font) : mFont(font) {
 	setOutlineThickness(2);
 }
 
+//TODO remove this, unnecesary
 void Cursor::Control(Action action) {
 	switch (action)
 	{
 		case Action::LEFT:
+			//TODO move cursor charsize
 			move({-30,0});
+			mEntryIndex = std::clamp(--mEntryIndex, (size_t)0, (size_t)2);
 			break;
 		case Action::RIGTH:
+			//TODO move cursor charsize
 			move({30,0});
+			mEntryIndex = std::clamp(++mEntryIndex, (size_t)0, (size_t)2);
 			break;
 		case Action::UP:
-			move({0,-30});
+			ChangeChar(Action::UP);
 			break;
 		case Action::DOWN:
-			move({0,30});
+			ChangeChar(Action::DOWN);
 			break;
 		default:
 			break;
 	}
 }
 
-void Cursor::SetEntry(std::shared_ptr<sf::Text> &entry) {
-	//TODO
+void Cursor::SetEntry(std::shared_ptr<sf::Text> &entry) { 
+	mEntryTxt = entry;
+	move(mEntryTxt->getGlobalBounds().position);
 }
 
-bool Cursor::IsNameSet() {
-	return false;
+//TODO check surviving data
+bool Cursor::Accept(std::string& gameEntryName) {
+	gameEntryName = mEntryTxt->getString();
+	setOutlineColor({0, 0, 0, 0});
+	return true;
+}
+
+void Cursor::ChangeChar(Action action) {
+	char selected = SelectChar(action);
+	std::string str = mEntryTxt->getString();
+	
+	str[mEntryIndex] = selected;
+	mEntryTxt->setString(str);
+}
+
+char Cursor::SelectChar(Action action) {
+	static int index = -1;
+	char selected = 'A';
+	const int max = CHARSET_STR.size();
+
+	switch (action)	{
+		case Action::UP:
+			index =  (index + 1) % max;
+			selected = CHARSET_STR[index];
+			break;
+		case Action::DOWN:
+			index = (index - 1 + max) % max;
+			selected = CHARSET_STR[index];
+			break;
+		default:
+			break;
+	}
+	return selected;
 }

@@ -20,11 +20,12 @@ class EndScreenView : public ScreenView {
 		std::shared_ptr<sf::Texture>        mBackgroundTex;
 		std::shared_ptr<sf::Sprite>         mBackground;
 		std::shared_ptr<Cursor>             mCursor;
+		std::shared_ptr<std::string>        mGameEntryName;
 
 		std::vector<ScoreEntry> mRankingTxt;
 		bool mIsRankingDraw;
 		bool mIsNameSet;
 
-		bool ShowRanking(Game& game);
+		bool SetGameRanking(Game& game);
 		std::string PadZeroScore(uint32_t score, uint32_t digits);
 };

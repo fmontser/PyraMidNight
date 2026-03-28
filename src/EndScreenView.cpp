@@ -18,9 +18,9 @@ EndScreenView::EndScreenView() : ScreenView() {
 	mTitleTxt->setString(std::string(TITLE_STR));
 	mTitleTxt->setCharacterSize(80);
 	mTitleTxt->setFillColor(sf::Color::Blue);
-	mTitleTxt->setPosition({100.f, 100.f});
 	mTitleTxt->setOutlineColor(sf::Color::Yellow);
 	mTitleTxt->setOutlineThickness(4);
+	mTitleTxt->setPosition({100.f, 100.f});
 
 	//TODO make dynamic score ranking
 	auto rankingEntryPos = sf::Vector2f({100.0f, 160.0f});
@@ -32,9 +32,9 @@ EndScreenView::EndScreenView() : ScreenView() {
 		rankingEntryPos.y += textOffset.y;
 		nameEntry->setCharacterSize(48);
 		nameEntry->setFillColor(sf::Color::White);
-		nameEntry->setPosition(rankingEntryPos);
 		nameEntry->setOutlineColor(sf::Color::Blue);
 		nameEntry->setOutlineThickness(1);
+		nameEntry->setPosition(rankingEntryPos);
 
 		auto scoreEntry = std::make_shared<sf::Text>(*mFont);
 		scoreEntry->setString("0000000000");
@@ -42,9 +42,9 @@ EndScreenView::EndScreenView() : ScreenView() {
 		rankingEntryPos.x += textOffset.x;
 		scoreEntry->setCharacterSize(48);
 		scoreEntry->setFillColor(sf::Color::White);
-		scoreEntry->setPosition(rankingEntryPos);
 		scoreEntry->setOutlineColor(sf::Color::Blue);
 		scoreEntry->setOutlineThickness(1);
+		scoreEntry->setPosition(rankingEntryPos);
 		rankingEntryPos.x -= textOffset.x;
 
 		mRankingTxt.push_back({nameEntry, scoreEntry});
@@ -53,10 +53,10 @@ EndScreenView::EndScreenView() : ScreenView() {
 	mStartTxt = std::make_shared<sf::Text>(*mFont);
 	mStartTxt->setString(std::string(CONTINUE_STR));
 	mStartTxt->setCharacterSize(40);
-	mStartTxt->setFillColor(sf::Color::Blue);
-	mStartTxt->setPosition({100.f, 650.f});
-	mStartTxt->setOutlineColor(sf::Color::Yellow);
+	mStartTxt->setFillColor({0, 0, 0, 0});
+	mStartTxt->setOutlineColor({0, 0, 0, 0});
 	mStartTxt->setOutlineThickness(3);
+	mStartTxt->setPosition({100.f, 650.f});
 
 	mBackgroundTex = std::make_shared<sf::Texture>(sf::Texture("assets/Background.png"));
 	mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
@@ -76,11 +76,10 @@ EndScreenView::EndScreenView() : ScreenView() {
 
 void EndScreenView::Update(Game& game) {
 	auto& frameInput = game.GetInputManager().FetchInput();
-	auto& deltaTime = game.GetRenderManager().GetDeltaTime();
 	auto& window = game.GetRenderManager().GetWindow();
 
 	if (!mIsRankingDraw) {
-		mIsRankingDraw = ShowRanking(game);
+		mIsRankingDraw = SetGameRanking(game);
 			
 		//Find record for cursor
 		for (auto& text : mRankingTxt) {
@@ -91,11 +90,10 @@ void EndScreenView::Update(Game& game) {
 	if (frameInput.close)
 		window.close();
 	if (frameInput.action && mIsNameSet){
-		//TODO hice message until ready
 		game.SetState(Game::State::TITLE_SCREEN);
 	}
 	if (!mIsNameSet) {
-		if (frameInput.left)
+ 		if (frameInput.left)
 			mCursor->Control(Cursor::Action::LEFT);
 		else if (frameInput.right)
 			mCursor->Control(Cursor::Action::RIGTH);
@@ -103,11 +101,15 @@ void EndScreenView::Update(Game& game) {
 			mCursor->Control(Cursor::Action::UP);
 		else if (frameInput.down)
 			mCursor->Control(Cursor::Action::DOWN);
-		mIsNameSet = mCursor->IsNameSet();
+		else if (frameInput.action) {
+			mIsNameSet = mCursor->Accept(*mGameEntryName);
+			mStartTxt->setFillColor(sf::Color::Blue);
+			mStartTxt->setOutlineColor(sf::Color::Yellow);
+		}
 	}
 }
 
-bool EndScreenView::ShowRanking(Game& game) {
+bool EndScreenView::SetGameRanking(Game& game) {
 	auto ranking = game.GetRanking();
 	size_t i = 0;
 
@@ -115,6 +117,8 @@ bool EndScreenView::ShowRanking(Game& game) {
 		if (i < mRankingTxt.size()) {
 			mRankingTxt[i].name->setString(gameEntry.name);
 			mRankingTxt[i].score->setString(PadZeroScore(gameEntry.score, 10));
+			if (gameEntry.name == "???")
+				mGameEntryName = std::make_shared<std::string>(gameEntry.name);
 		}
 		i++;
 	}

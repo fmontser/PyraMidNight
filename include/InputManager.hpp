@@ -7,7 +7,9 @@ class InputManager {
 			bool up;
 			bool down;
 			bool left;
+			bool holdLeft;
 			bool right;
+			bool holdRight;
 			bool action;
 			bool coin;
 			bool menu;
