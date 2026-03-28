@@ -1,9 +1,9 @@
+#include <algorithm>
 #include "EndScreenView.hpp"
 #include "Game.hpp"
 
 constexpr std::string_view TITLE_STR = "GAME OVER!";
 constexpr std::string_view CONTINUE_STR = "Press SPACE to continue!";
-constexpr std::string_view ABC_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 //TODO hardcoded values
 EndScreenView::EndScreenView() : ScreenView() {
@@ -12,6 +12,7 @@ EndScreenView::EndScreenView() : ScreenView() {
 
 	//TODO filesystem exception control
 	mFont = std::make_shared<sf::Font>("assets/ClearSans-Regular.ttf");
+	mCursor = std::make_shared<Cursor>(*mFont);
 
 	mTitleTxt = std::make_shared<sf::Text>(*mFont);
 	mTitleTxt->setString(std::string(TITLE_STR));
@@ -61,8 +62,6 @@ EndScreenView::EndScreenView() : ScreenView() {
 	mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
 	mBackground->setColor({64, 0, 0, 255});
 
-	mCursor = CreateCursor();
-
 	mDrawables.push_back(mBackground);
 	mDrawables.push_back(mTitleTxt);
 	mDrawables.push_back(mStartTxt);
@@ -80,16 +79,31 @@ void EndScreenView::Update(Game& game) {
 	auto& deltaTime = game.GetRenderManager().GetDeltaTime();
 	auto& window = game.GetRenderManager().GetWindow();
 
+	if (!mIsRankingDraw) {
+		mIsRankingDraw = ShowRanking(game);
+			
+		//Find record for cursor
+		for (auto& text : mRankingTxt) {
+			if (text.name->getString() == "???")
+				mCursor->SetEntry(text.name);
+		}
+	}
 	if (frameInput.close)
 		window.close();
-
-	if (frameInput.action)
+	if (frameInput.action && mIsNameSet){
+		//TODO hice message until ready
 		game.SetState(Game::State::TITLE_SCREEN);
-
-	if (!mIsRankingDraw)
-		mIsRankingDraw = ShowRanking(game);
-	else if (!mIsNameSet) {
-		mIsNameSet = EnterRecordName(game, frameInput);
+	}
+	if (!mIsNameSet) {
+		if (frameInput.left)
+			mCursor->Control(Cursor::Action::LEFT);
+		else if (frameInput.right)
+			mCursor->Control(Cursor::Action::RIGTH);
+		else if (frameInput.up)
+			mCursor->Control(Cursor::Action::UP);
+		else if (frameInput.down)
+			mCursor->Control(Cursor::Action::DOWN);
+		mIsNameSet = mCursor->IsNameSet();
 	}
 }
 
@@ -105,20 +119,6 @@ bool EndScreenView::ShowRanking(Game& game) {
 		i++;
 	}
 	return true;
-}
-
-std::shared_ptr<sf::RectangleShape>& EndScreenView::CreateCursor() {
-	auto cursorSize =  sf::Vector2f({});
-	auto cursor = std::make_shared<sf::RectangleShape>(sf::RectangleShape());
-
-	cursorSize.x =	mFont->getGlyph('?', 48.0f, false).bounds.size.x;
-	cursorSize.y =	mFont->getGlyph('?', 48.0f, false).bounds.size.y;
-
-	cursor->setSize(cursorSize);
-	cursor->setFillColor({0, 0, 0, 0});
-	cursor->setOutlineColor({0, 255, 0, 255});
-	cursor->setOutlineThickness(2);
-	return cursor;
 }
 
 std::string EndScreenView::PadZeroScore(uint32_t score, uint32_t digits) {

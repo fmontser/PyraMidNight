@@ -34,6 +34,7 @@ set(APP_SOURCES
 	src/Bumper.cpp
 	src/Ball.cpp
 	src/Block.cpp
+	src/Cursor.cpp
 )
 
 set(APP_LIBS
