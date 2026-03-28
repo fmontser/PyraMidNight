@@ -92,9 +92,9 @@ void RoundScreenView::Update(Game& game) {
 		if (mBall->GetState() == Ball::State::DOCKED)
 			mBall->Launch();
 	}
-	if (frameInput.left)
+	if (frameInput.holdLeft)
 		mBumper->Move(-1, deltaTime);
-	else if (frameInput.right)
+	else if (frameInput.holdRight)
 		mBumper->Move(1, deltaTime);
 
 	UpdateBall(deltaTime);

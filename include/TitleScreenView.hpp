@@ -8,14 +8,14 @@ class TitleScreenView : public ScreenView {
 		void Update(Game& game) override;
 
 	private:
-		std::shared_ptr<sf::Font> font;
-		std::shared_ptr<sf::Text> titleTxt;
-		std::shared_ptr<sf::Text> creditsTxt;
-		std::shared_ptr<sf::Text> startTxt;
+		std::shared_ptr<sf::Font> mFont;
+		std::shared_ptr<sf::Text> mTitleTxt;
+		std::shared_ptr<sf::Text> mCreditsTxt;
+		std::shared_ptr<sf::Text> mStartTxt;
 		std::shared_ptr<sf::Texture> mBackgroundTex;
 		std::shared_ptr<sf::Sprite> mBackground;
 
-		std::string creditsStr;
+		std::string mCreditsStr;
 
 		void UpdateCredits(Game& game);
 };
