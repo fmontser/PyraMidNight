@@ -1,9 +1,9 @@
+#include <algorithm>
 #include "EndScreenView.hpp"
 #include "Game.hpp"
 
 constexpr std::string_view TITLE_STR = "GAME OVER!";
-constexpr std::string_view CREDITS_STR = "Insert coin! credits ";
-constexpr std::string_view START_STR = "Press SPACE to start!";
+constexpr std::string_view CONTINUE_STR = "Press SPACE to continue!";
 
 //TODO hardcoded values
 EndScreenView::EndScreenView() : ScreenView() {
@@ -19,21 +19,38 @@ EndScreenView::EndScreenView() : ScreenView() {
 	mTitleTxt->setOutlineThickness(4);
 
 	//TODO make dynamic score ranking
-	mCreditsTxt = std::make_shared<sf::Text>(*mFont);
-	mCreditsTxt->setString(std::string(CREDITS_STR).append("0"));
-	mCreditsTxt->setCharacterSize(48);
-	mCreditsTxt->setFillColor(sf::Color::Blue);
-	mCreditsTxt->setPosition({100.f, 500.f});
-	mCreditsTxt->setOutlineColor(sf::Color::Yellow);
-	mCreditsTxt->setOutlineThickness(3);
-	//##########
+	auto rankingEntryPos = sf::Vector2f({100.0f, 160.0f});
+	for (size_t i = 0; i < 10; i++) {
+		auto nameEntry = std::make_shared<sf::Text>(*mFont);
+		nameEntry->setString("AAA");
+		auto textOffset = sf::Vector2f({160.0f, 40.0f});
 
+		rankingEntryPos.y += textOffset.y;
+		nameEntry->setCharacterSize(48);
+		nameEntry->setFillColor(sf::Color::White);
+		nameEntry->setPosition(rankingEntryPos);
+		nameEntry->setOutlineColor(sf::Color::Blue);
+		nameEntry->setOutlineThickness(1);
 
+		auto scoreEntry = std::make_shared<sf::Text>(*mFont);
+		scoreEntry->setString("0000000000");
+
+		rankingEntryPos.x += textOffset.x;
+		scoreEntry->setCharacterSize(48);
+		scoreEntry->setFillColor(sf::Color::White);
+		scoreEntry->setPosition(rankingEntryPos);
+		scoreEntry->setOutlineColor(sf::Color::Blue);
+		scoreEntry->setOutlineThickness(1);
+		rankingEntryPos.x -= textOffset.x;
+
+		mRankingTxt.push_back({nameEntry, scoreEntry});
+	}
+	
 	mStartTxt = std::make_shared<sf::Text>(*mFont);
-	mStartTxt->setString(std::string(START_STR));
+	mStartTxt->setString(std::string(CONTINUE_STR));
 	mStartTxt->setCharacterSize(40);
 	mStartTxt->setFillColor(sf::Color::Blue);
-	mStartTxt->setPosition({130.f, 600.f});
+	mStartTxt->setPosition({100.f, 650.f});
 	mStartTxt->setOutlineColor(sf::Color::Yellow);
 	mStartTxt->setOutlineThickness(3);
 
@@ -43,8 +60,13 @@ EndScreenView::EndScreenView() : ScreenView() {
 
 	mDrawables.push_back(mBackground);
 	mDrawables.push_back(mTitleTxt);
-	mDrawables.push_back(mCreditsTxt);
 	mDrawables.push_back(mStartTxt);
+
+	for (const auto& entry : mRankingTxt) {
+		mDrawables.push_back(entry.name);
+		mDrawables.push_back(entry.score);
+	}
+
 }
 
 void EndScreenView::Update(Game& game) {
@@ -57,4 +79,30 @@ void EndScreenView::Update(Game& game) {
 
 	if (frameInput.action)
 		game.SetState(Game::State::TITLE_SCREEN);
+
+	ShowRanking(game);
+}
+
+void EndScreenView::ShowRanking(Game& game) {
+	auto ranking = game.GetRanking();
+	size_t i = 0;
+
+	//TODO ENTER NAME!!
+
+	for (const auto& entry : ranking) {
+		if (i < mRankingTxt.size()) {
+			mRankingTxt[i].name->setString(entry.name);
+			mRankingTxt[i].score->setString(PadZeroScore(entry.score, 10));
+		}
+		i++;
+	}
+
+	//TODO blink record??
+}
+
+std::string EndScreenView::PadZeroScore(uint32_t score, uint32_t digits) {
+	std::ostringstream ss;
+
+	ss << std::setw(digits) << std::setfill('0') << score;
+	return ss.str();
 }
