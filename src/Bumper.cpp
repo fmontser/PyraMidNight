@@ -1,6 +1,5 @@
 #include <algorithm>
 #include "Bumper.hpp"
-#include"Common.hpp"
 
 namespace fknd {
 	
