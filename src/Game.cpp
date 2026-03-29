@@ -3,11 +3,7 @@
 #include "Game.hpp"
 
 namespace fknd {
-
-	constexpr uint32_t MAX_SCORE = std::numeric_limits<uint32_t>::max();
-	constexpr uint32_t MAX_CREDITS = std::numeric_limits<uint8_t>::max();
 	
-	//TODO remove hardcoded values
 	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 		mState = Game::State::TITLE_SCREEN;
 		mCredits = 0;
@@ -78,8 +74,8 @@ namespace fknd {
 	}
 	
 	void Game::AddScore(uint32_t points) {
-		if (points > (MAX_SCORE - mScore))
-			mScore = MAX_SCORE;
+		if (points > (GAME_MAX_SCORE - mScore))
+			mScore = GAME_MAX_SCORE;
 		else
 			mScore += points;
 	}
@@ -89,7 +85,7 @@ namespace fknd {
 	void Game::RecordScore() {
 		mRanking.push_back({"   ", mScore});
 		SortRanking();
-		if (mRanking.size() > 10)
+		if (mRanking.size() > GAME_RANK_SIZE)
 			mRanking.pop_back();
 	}
 	
@@ -105,7 +101,7 @@ namespace fknd {
 	std::vector<Game::ScoreEntry> &Game::GetRanking() { return mRanking; }
 	
 	void Game::AddCredit() {
-		if (mCredits < MAX_CREDITS)
+		if (mCredits < GAME_MAX_CREDITS)
 			mCredits++;
 	}
 	

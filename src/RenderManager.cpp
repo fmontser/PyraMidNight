@@ -4,10 +4,10 @@ namespace fknd {
 	
 	//TODO remove hardcoded
 	RenderManager::RenderManager() :
-		mWindow(sf::VideoMode({640, 896}),
+		mWindow(sf::VideoMode(RNDR_RESOLUTION),
 		"FranKanoid",
 		sf::Style::Titlebar | sf::Style::Close) {
-			mWindow.setFramerateLimit(60);
+			mWindow.setFramerateLimit(RNDR_FRAME_LIMIT);
 	}
 	
 	void RenderManager::RenderFrame(ScreenView& screenView) {

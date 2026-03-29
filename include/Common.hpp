@@ -4,6 +4,12 @@
 #include <SFML/Graphics.hpp>
 
 namespace fknd {
+	//Game
+	inline constexpr uint32_t GAME_MAX_SCORE = std::numeric_limits<uint32_t>::max();
+	inline constexpr uint8_t GAME_MAX_CREDITS = std::numeric_limits<uint8_t>::max();
+	inline constexpr uint8_t GAME_RANK_SIZE = 10;
+	inline constexpr uint8_t GAME_FINAL_ROUND_ID = 1; //Starts at 1
+
 	//Ball
 	inline constexpr float BALL_INIT_SPEED = 0.6f;
 	inline constexpr sf::Vector2f BALL_INIT_DIR = {-1, -1};
@@ -73,4 +79,9 @@ namespace fknd {
 	inline constexpr std::string_view PATH_TEX_BUMP = "assets/Bumper.png";
 	inline constexpr std::string_view PATH_TEX_BALL = "assets/Ball.png";
 	inline constexpr std::string_view PATH_TEX_BLOCK = "assets/Block32.png";
+
+	//RenderManager (DO NOT EDIT RESOLUTION!!!)
+	inline constexpr std::string_view RNDR_WINDOW_NAME = "FranKanoid";
+	inline constexpr sf::Vector2u RNDR_RESOLUTION = {640, 896};
+	inline constexpr uint32_t RNDR_FRAME_LIMIT = 60;
 }
