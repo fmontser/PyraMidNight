@@ -99,7 +99,7 @@ bool EndScreenView::Update(Game& game) {
 		else if (frameInput.down)
 		mCursor->Control(Cursor::Action::DOWN);
 		else if (frameInput.action) {
-			mIsNameSet = mCursor->Accept(*mGameEntryName);
+			mIsNameSet = mCursor->Accept(GetGameEntryName(game));
 			mStartTxt->setFillColor(sf::Color::Blue);
 			mStartTxt->setOutlineColor(sf::Color::Yellow);
 			return true;
@@ -118,12 +118,17 @@ bool EndScreenView::SetGameRanking(Game& game) {
 		if (i < mRankingTxt.size()) {
 			mRankingTxt[i].name->setString(gameEntry.name);
 			mRankingTxt[i].score->setString(PadZeroScore(gameEntry.score, 10));
-			if (gameEntry.name == "???")
-				mGameEntryName = std::make_shared<std::string>(gameEntry.name);
 		}
 		i++;
 	}
 	return true;
+}
+
+std::string* EndScreenView::GetGameEntryName(Game &game) {
+	for (auto& gameEntry : game.GetRanking()) {
+		if (gameEntry.name == "???")
+			return &gameEntry.name;
+	}
 }
 
 std::string EndScreenView::PadZeroScore(uint32_t score, uint32_t digits) {

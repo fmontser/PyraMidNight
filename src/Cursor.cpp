@@ -50,8 +50,9 @@ void Cursor::SetEntry(std::shared_ptr<sf::Text> &entry) {
 }
 
 //TODO check surviving data
-bool Cursor::Accept(std::string& gameEntryName) {
-	gameEntryName = mEntryTxt->getString();
+bool Cursor::Accept(std::string* gameEntryName) {
+	if (gameEntryName != nullptr)
+		*gameEntryName = mEntryTxt->getString();
 	setOutlineColor({0, 0, 0, 0});
 	return true;
 }

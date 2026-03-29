@@ -12,7 +12,7 @@ class Cursor : public sf::RectangleShape {
 
 		void Control(Action action);
 		void SetEntry(std::shared_ptr<sf::Text>& entry);
-		bool Accept(std::string &gameEntryName);
+		bool Accept(std::string* gameEntryName);
 
 	private:
 		std::shared_ptr<sf::Text> mEntryTxt;
