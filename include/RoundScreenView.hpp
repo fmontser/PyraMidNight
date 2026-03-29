@@ -1,5 +1,4 @@
 #pragma once
-#include <functional>
 #include "ScreenView.hpp"
 #include "Bumper.hpp"
 #include "Ball.hpp"
@@ -11,12 +10,12 @@ namespace fknd {
 	class RoundScreenView : public ScreenView {
 		public:
 			struct RoundUpdate {
-				sf::Time&                     deltaTime;
-				bool                          holdLeft;
-				bool                          holdRight;
-				bool                          action;
-				uint8_t&                      credits;
-				uint32_t&                     score;
+				sf::Time& deltaTime;
+				bool      holdLeft;
+				bool      holdRight;
+				bool      action;
+				uint8_t&  credits;
+				uint32_t& score;
 			};
 
 			RoundScreenView();

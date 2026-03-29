@@ -6,7 +6,7 @@ namespace fknd {
 	
 	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 		mState = Game::State::TITLE_SCREEN;
-		mCredits = 3;
+		mCredits = 0;
 		mRound = 1;
 		mFinalRound = 1; //TODO calculate from available levels or difficulty setting
 		mScore = 0;
@@ -36,19 +36,15 @@ namespace fknd {
 		while (mRenderManager.GetWindow().isOpen()) {
 			mInput = mInputManager.FetchInput();
 			mDeltaTime = mRenderManager.GetDeltaTime();
+
 			if (mInput.close)
 				mRenderManager.GetWindow().close();
-			//TODO borrar, cuando el responsable tenga
-			if (mInput.coin)
-				mCredits++;
 
 			switch (mState) {
 				case Game::State::TITLE_SCREEN:
-					//TODO delete bypass
-					mState = State::ROUND_SCREEN;
 					if (mTitleScreen == nullptr)
 						mTitleScreen = std::make_shared<TitleScreenView>();
-					if (!mTitleScreen->Update(*this)) {
+					if (!mTitleScreen->Update(WrapTitleUpdate())) {
 						mState = State::ROUND_SCREEN;
 						mTitleScreen = nullptr;
 						break;
@@ -58,7 +54,7 @@ namespace fknd {
 				case Game::State::ROUND_SCREEN:
 					if (mRoundScreen == nullptr)
 						mRoundScreen = std::make_shared<RoundScreenView>();
-					if (!mRoundScreen->Update(BuildRoundUpdate())) {
+					if (!mRoundScreen->Update(WrapRoundUpdate())) {
 						//TODO load next level or gameOVer
 						GameOver();
 						mRoundScreen = nullptr;
@@ -82,16 +78,14 @@ namespace fknd {
 		}
 	}
 	
-
-	
-	void Game::ResetScore() { mScore = 0; }
-	
 	void Game::RecordScore() {
 		mRanking.push_back({"   ", mScore});
 		SortRanking();
 		if (mRanking.size() > GAME_RANK_SIZE)
-			mRanking.pop_back();
+		mRanking.pop_back();
 	}
+	void Game::ResetScore() { mScore = 0; }
+	uint32_t Game::GetScore() const { return mScore; }
 	
 	void Game::SortRanking() {
 		std::sort(mRanking.begin(), mRanking.end(),
@@ -101,16 +95,9 @@ namespace fknd {
 		);
 	}
 	
-	uint32_t Game::GetScore() const { return mScore; }
 	std::vector<Game::ScoreEntry> &Game::GetRanking() { return mRanking; }
 	
-	void Game::AddCredit() {
-		if (mCredits < GAME_MAX_CREDITS)
-			mCredits++;
-	}
-	
-
-	
+	//TODO needed anymore?
 	uint8_t Game::GetCredits() const { return mCredits; }
 	
 	void Game::SetNextRound() {
@@ -126,7 +113,7 @@ namespace fknd {
 		ResetScore();
 	}
 
-	RoundScreenView::RoundUpdate Game::BuildRoundUpdate() {
+	RoundScreenView::RoundUpdate Game::WrapRoundUpdate() {
 		return {
 				mDeltaTime,
 				mInput.holdLeft,
@@ -135,6 +122,14 @@ namespace fknd {
 				mCredits,
 				mScore
 				};
+	}
+
+	TitleScreenView::TitleUpdate Game::WrapTitleUpdate() {
+		return {
+				mInput.action,
+				mInput.coin,
+				mCredits
+		};
 	}
 
 	RenderManager &Game::GetRenderManager() { return mRenderManager; }

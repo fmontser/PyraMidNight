@@ -42,33 +42,32 @@ namespace fknd {
 		mDrawables.push_back(mStartTxt);
 	}
 
+	//TODO delete!
 	bool TitleScreenView::Update()
 	{
 		return false;
 	}
 
-	bool TitleScreenView::Update(Game& game) {
-		auto& frameInput = game.GetInputManager().FetchInput();
-		auto& deltaTime = game.GetRenderManager().GetDeltaTime();
-		auto& window = game.GetRenderManager().GetWindow();
-	
-		if (frameInput.close)
-			window.close();
-		if (frameInput.coin) {
-			game.AddCredit();
-			UpdateCredits(game);
-			if (game.GetCredits() > 0)
-				mStartTxt->setScale({1,1});
-			mCreditsTxt->setString(mCreditsStr);
+	bool TitleScreenView::Update(TitleUpdate update)
+	{
+		if (update.coin) {
+			UpdateCredits(update.credits);
+			if (update.credits > 0)
+				ShowStartText();
 		}
-		if (frameInput.action && game.GetCredits() > 0)
+		if (update.action && update.credits > 0)
 			return false;
 		return true;
 	}
-	
-	void TitleScreenView::UpdateCredits(Game& game) {
+
+	void TitleScreenView::UpdateCredits(uint8_t& credits) {
+		if (credits < GAME_MAX_CREDITS)
+			credits++;
 		mCreditsStr = std::string(TITLE_CREDITS_STR).append(
-			std::to_string(static_cast<int>(game.GetCredits())));
+			std::to_string(credits));
 	}
-	
+	void TitleScreenView::ShowStartText() {
+		mStartTxt->setScale({1,1});
+		mCreditsTxt->setString(mCreditsStr);
+	}
 }

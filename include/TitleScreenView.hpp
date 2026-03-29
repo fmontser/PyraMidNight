@@ -7,10 +7,16 @@ namespace fknd {
 	
 	class TitleScreenView : public ScreenView {
 		public:
+			struct TitleUpdate {
+				bool     action;
+				bool     coin;
+				uint8_t& credits;
+			};
+
 			TitleScreenView();
 			//TODO remove update()
 			bool Update();
-			bool Update(Game& game);
+			bool Update(TitleUpdate update);
 	
 		private:
 			std::shared_ptr<sf::Font> mFont;
@@ -22,7 +28,8 @@ namespace fknd {
 	
 			std::string mCreditsStr;
 	
-			void UpdateCredits(Game& game);
+			void UpdateCredits(uint8_t& credits);
+			void ShowStartText();
 	};
 
 }

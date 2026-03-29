@@ -1,7 +1,6 @@
 #include <cmath>
 #include <algorithm>
 #include "RoundScreenView.hpp"
-#include "Game.hpp"
 #include "Levels.hpp"
 
 namespace fknd {

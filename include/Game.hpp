@@ -22,20 +22,17 @@ namespace fknd {
 			};
 	
 			Game();
-	
-			void Run();
-			//TODO not IOC!!!!!
 
-			void ResetScore();
+			void Run();
+
 			void RecordScore();
+			void ResetScore();
 			uint32_t GetScore() const;
 	
 			void SortRanking();
 			std::vector<ScoreEntry>& GetRanking();
 	
-			//TODO not IOC!!!!!
-			void AddCredit();
-
+			//TODO needed anymore?
 			uint8_t GetCredits() const;
 	
 			RenderManager& GetRenderManager();
@@ -61,7 +58,8 @@ namespace fknd {
 			
 			void SetNextRound();
 			void GameOver();
-			RoundScreenView::RoundUpdate BuildRoundUpdate();
+			RoundScreenView::RoundUpdate WrapRoundUpdate();
+			TitleScreenView::TitleUpdate WrapTitleUpdate();
 		};
 
 }
