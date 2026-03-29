@@ -75,17 +75,11 @@ namespace fknd {
 		mDrawables.push_back(mCursor);
 	}
 
-	bool EndScreenView::Update()
-	{
-		return false;
-	}
+	bool EndScreenView::Update(EndScreenUpdate update) {
 
-	bool EndScreenView::Update(Game& game) {
-		auto& frameInput = game.GetInputManager().FetchInput();
-		auto& window = game.GetRenderManager().GetWindow();
 	
 		if (!mIsRankingDraw) {
-			mIsRankingDraw = SetGameRanking(game);
+			mIsRankingDraw = DrawPlayerRanking(update.ranking);
 				
 			//Find record for cursor
 			for (auto& text : mRankingTxt) {
@@ -93,30 +87,28 @@ namespace fknd {
 					mCursor->SetEntry(text.name);
 			}
 		}
-		if (frameInput.close)
-			window.close();
+
 		if (!mIsNameSet) {
-			if (frameInput.left)
+			if (update.left)
 			mCursor->Update(Cursor::Input::LEFT);
-			else if (frameInput.right)
+			else if (update.right)
 			mCursor->Update(Cursor::Input::RIGHT);
-			else if (frameInput.up)
+			else if (update.up)
 			mCursor->Update(Cursor::Input::UP);
-			else if (frameInput.down)
+			else if (update.down)
 			mCursor->Update(Cursor::Input::DOWN);
-			else if (frameInput.action) {
-				mIsNameSet = mCursor->Accept(GetGameEntryName(game));
+			else if (update.action) {
+				mIsNameSet = mCursor->Accept(GetGameEntryName(update.ranking));
 				mContTxt->setScale({1,1});
 				return true;
 			}
 		}
-		if (frameInput.action && mIsNameSet)
+		if (update.action && mIsNameSet)
 			return false;
 		return true;
 	}
 	
-	bool EndScreenView::SetGameRanking(Game& game) {
-		auto ranking = game.GetRanking();
+	bool EndScreenView::DrawPlayerRanking(std::vector<ScoreEntry>& ranking) {
 		size_t i = 0;
 	
 		for (auto& gameEntry : ranking) {
@@ -129,8 +121,8 @@ namespace fknd {
 		return true;
 	}
 	
-	std::string* EndScreenView::GetGameEntryName(Game &game) {
-		for (auto& gameEntry : game.GetRanking()) {
+	std::string* EndScreenView::GetGameEntryName(std::vector<ScoreEntry>& ranking) {
+		for (auto& gameEntry : ranking) {
 			if (gameEntry.name == "   ")
 				return &gameEntry.name;
 		}
@@ -144,5 +136,6 @@ namespace fknd {
 		return ss.str();
 	}
 
+	bool EndScreenView::Update() { return false; }
 }
 

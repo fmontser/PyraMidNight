@@ -30,9 +30,9 @@ namespace fknd {
 		SortRanking();
 	}
 	
+	// main loop
 	void Game::Run() {
 	
-		// main loop
 		while (mRenderManager.GetWindow().isOpen()) {
 			mInput = mInputManager.FetchInput();
 			mDeltaTime = mRenderManager.GetDeltaTime();
@@ -44,7 +44,7 @@ namespace fknd {
 				case Game::State::TITLE_SCREEN:
 					if (mTitleScreen == nullptr)
 						mTitleScreen = std::make_shared<TitleScreenView>();
-					if (!mTitleScreen->Update(WrapTitleUpdate())) {
+					if (!mTitleScreen->Update(WrapTitleScreenUpdate())) {
 						mState = State::ROUND_SCREEN;
 						mTitleScreen = nullptr;
 						break;
@@ -54,7 +54,7 @@ namespace fknd {
 				case Game::State::ROUND_SCREEN:
 					if (mRoundScreen == nullptr)
 						mRoundScreen = std::make_shared<RoundScreenView>();
-					if (!mRoundScreen->Update(WrapRoundUpdate())) {
+					if (!mRoundScreen->Update(WrapRoundScreenUpdate())) {
 						//TODO load next level or gameOVer
 						GameOver();
 						mRoundScreen = nullptr;
@@ -65,7 +65,7 @@ namespace fknd {
 				case Game::State::END_SCREEN:
 					if (mEndScreenView == nullptr)
 						mEndScreenView = std::make_shared<EndScreenView>();
-					if (!mEndScreenView->Update(*this)) {
+					if (!mEndScreenView->Update(WrapEndScreenUpdate())) {
 						mState = State::TITLE_SCREEN;
 						mEndScreenView = nullptr;
 						break;
@@ -77,28 +77,6 @@ namespace fknd {
 			}
 		}
 	}
-	
-	void Game::RecordScore() {
-		mRanking.push_back({"   ", mScore});
-		SortRanking();
-		if (mRanking.size() > GAME_RANK_SIZE)
-		mRanking.pop_back();
-	}
-	void Game::ResetScore() { mScore = 0; }
-	uint32_t Game::GetScore() const { return mScore; }
-	
-	void Game::SortRanking() {
-		std::sort(mRanking.begin(), mRanking.end(),
-		[](const Game::ScoreEntry& a, const Game::ScoreEntry& b) {
-			return a.score > b.score;
-		}
-		);
-	}
-	
-	std::vector<Game::ScoreEntry> &Game::GetRanking() { return mRanking; }
-	
-	//TODO needed anymore?
-	uint8_t Game::GetCredits() const { return mCredits; }
 	
 	void Game::SetNextRound() {
 		if (mRound < mFinalRound)
@@ -113,7 +91,32 @@ namespace fknd {
 		ResetScore();
 	}
 
-	RoundScreenView::RoundUpdate Game::WrapRoundUpdate() {
+	void Game::RecordScore() {
+		mRanking.push_back({"   ", mScore});
+		SortRanking();
+		if (mRanking.size() > GAME_RANK_SIZE)
+			mRanking.pop_back();
+	}
+
+	void Game::ResetScore() { mScore = 0; }
+	
+	void Game::SortRanking() {
+		std::sort(mRanking.begin(), mRanking.end(),
+		[](const EndScreenView::ScoreEntry& a, const EndScreenView::ScoreEntry& b) {
+			return a.score > b.score;
+		}
+		);
+	}
+
+	TitleScreenView::TitleScreenUpdate Game::WrapTitleScreenUpdate() {
+		return {
+				mInput.action,
+				mInput.coin,
+				mCredits
+		};
+	}
+
+	RoundScreenView::RoundScreenUpdate Game::WrapRoundScreenUpdate() {
 		return {
 				mDeltaTime,
 				mInput.holdLeft,
@@ -124,15 +127,15 @@ namespace fknd {
 				};
 	}
 
-	TitleScreenView::TitleUpdate Game::WrapTitleUpdate() {
+	EndScreenView::EndScreenUpdate Game::WrapEndScreenUpdate() {
 		return {
-				mInput.action,
-				mInput.coin,
-				mCredits
+			mInput.left,
+			mInput.right,
+			mInput.up,
+			mInput.down,
+			mInput.action,
+			mScore,
+			mRanking
 		};
 	}
-
-	RenderManager &Game::GetRenderManager() { return mRenderManager; }
-	InputManager &Game::GetInputManager() { return mInputManager; }
-
 }

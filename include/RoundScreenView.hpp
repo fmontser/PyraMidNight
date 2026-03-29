@@ -9,7 +9,7 @@ namespace fknd {
 
 	class RoundScreenView : public ScreenView {
 		public:
-			struct RoundUpdate {
+			struct RoundScreenUpdate {
 				sf::Time& deltaTime;
 				bool      holdLeft;
 				bool      holdRight;
@@ -19,9 +19,8 @@ namespace fknd {
 			};
 
 			RoundScreenView();
-			//TODO remove update()
-			bool Update();
-			bool Update(RoundUpdate update);
+
+			bool Update(RoundScreenUpdate update);
 
 		private:
 			std::shared_ptr<sf::Font>    mFont;
@@ -59,6 +58,7 @@ namespace fknd {
 			float GetBallDistance(const sf::Sprite &obj);
 			void AddScore(uint32_t& score, uint32_t points);
 			void ConsumeCredit(uint8_t& credits);
+			bool Update();
 	};
 
 }

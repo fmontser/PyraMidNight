@@ -5,22 +5,18 @@
 
 namespace fknd {
 	
-	//TODO delete forward on refactor
-	class Game;
-
 	class ScreenView {
 		public:
-			virtual ~ScreenView() = default;
+			struct ScreenUpdate {};
 
 			virtual bool Update() = 0;
-	
-			std::vector<std::shared_ptr<sf::Drawable>>&
-			GetDrawables();
-	
+			std::vector<std::shared_ptr<sf::Drawable>>& GetDrawables();
+
+			
 		protected:
 			ScreenView();
 			
 			std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
-	};
+		};
 
 }

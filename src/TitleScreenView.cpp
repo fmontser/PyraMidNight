@@ -42,13 +42,7 @@ namespace fknd {
 		mDrawables.push_back(mStartTxt);
 	}
 
-	//TODO delete!
-	bool TitleScreenView::Update()
-	{
-		return false;
-	}
-
-	bool TitleScreenView::Update(TitleUpdate update)
+	bool TitleScreenView::Update(TitleScreenUpdate update)
 	{
 		if (update.coin) {
 			UpdateCredits(update.credits);
@@ -70,4 +64,6 @@ namespace fknd {
 		mStartTxt->setScale({1,1});
 		mCreditsTxt->setString(mCreditsStr);
 	}
+	
+	bool TitleScreenView::Update() { return false;}
 }

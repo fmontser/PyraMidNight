@@ -75,12 +75,7 @@ namespace fknd {
 		LoadLevel(level1);
 	}
 
-	bool RoundScreenView::Update()
-	{
-		return false;
-	}
-
-	bool RoundScreenView::Update(RoundUpdate update) {
+	bool RoundScreenView::Update(RoundScreenUpdate update) {
 
 		if (update.action)
 			mBall->Launch();
@@ -217,4 +212,6 @@ namespace fknd {
 		if (credits > 0)
 			credits--;
 	}
+	
+	bool RoundScreenView::Update() { return false; }
 }

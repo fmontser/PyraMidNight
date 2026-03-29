@@ -8,17 +8,34 @@ namespace fknd {
 	
 	class EndScreenView : public ScreenView {
 		public:
+		
 			struct ScoreEntry {
+				std::string name;
+				uint32_t    score;
+			};
+
+			struct EndScreenUpdate {
+				bool      left;
+				bool      right;
+				bool      up;
+				bool      down;
+				bool      action;
+				uint32_t& score;
+				std::vector<ScoreEntry>& ranking;
+			};
+			
+			EndScreenView();
+
+			bool Update(EndScreenUpdate update);
+			
+		private:
+			
+			
+			struct ScoreEntryText {
 				std::shared_ptr<sf::Text> name;
 				std::shared_ptr<sf::Text> score;
 			};
-	
-			EndScreenView();
-			//TODO remove update()
-			bool Update();
-			bool Update(Game& game);
-	
-		private:
+
 			std::shared_ptr<sf::Font>           mFont;
 			std::shared_ptr<sf::Text>           mTitleTxt;
 			std::shared_ptr<sf::Text>           mContTxt;
@@ -26,13 +43,14 @@ namespace fknd {
 			std::shared_ptr<sf::Sprite>         mBackground;
 			std::shared_ptr<Cursor>             mCursor;
 	
-			std::vector<ScoreEntry> mRankingTxt;
+			std::vector<ScoreEntryText> mRankingTxt;
 			bool mIsRankingDraw;
 			bool mIsNameSet;
 	
-			bool SetGameRanking(Game& game);
-			std::string* GetGameEntryName(Game& game); 
+			bool DrawPlayerRanking(std::vector<ScoreEntry>& ranking);
+			std::string* GetGameEntryName(std::vector<ScoreEntry>& ranking); 
 			std::string PadZeroScore(uint32_t score, uint32_t digits);
+			bool Update();
 	};
 
 }
