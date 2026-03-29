@@ -130,6 +130,7 @@ std::string* EndScreenView::GetGameEntryName(Game &game) {
 		if (gameEntry.name == "???")
 			return &gameEntry.name;
 	}
+	return nullptr;
 }
 
 std::string EndScreenView::PadZeroScore(uint32_t score, uint32_t digits) {
