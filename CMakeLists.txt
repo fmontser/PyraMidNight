@@ -5,21 +5,25 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+# SFML local dependencies
+set(SFML_STATIC_LIBRARIES ON CACHE BOOL "" FORCE)
+set(SFML_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+set(SFML_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(SFML_INSTALL_PKGCONFIG_FILES OFF CACHE BOOL "" FORCE)
+set(SFML_ZIP_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/SFML-3.0.2.zip")
+
+# Unzip SFML
+include(FetchContent)
+FetchContent_Declare(
+	SFML
+	URL "${SFML_ZIP_PATH}"
+)
+FetchContent_MakeAvailable(SFML)
+
 option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
 if(ENABLE_ASAN)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
 endif()
-
-include(FetchContent)
-
-#TODO dependencies must be available locally on ZIP
-# Dependencies
-FetchContent_Declare(
-	SFML
-	GIT_REPOSITORY https://github.com/SFML/SFML.git
-	GIT_TAG        3.0.2
-)
-FetchContent_MakeAvailable(SFML)
 
 # BINARIES
 set(APP_SOURCES
@@ -50,11 +54,11 @@ target_link_libraries(FranKanoid PRIVATE ${APP_LIBS})
 
 # MultiPlatform setting
 
-#TODO Must work on Windows.
 if(WIN32)
+	# needed for windows main type
+	target_link_libraries(FranKanoid PRIVATE sfml-main)
 	# avoid terminal window spawning Windows
 	target_link_options(FranKanoid PRIVATE "/SUBSYSTEM:WINDOWS")
-	# This is needed to link SFML statically on windows
 	target_compile_definitions(FranKanoid PUBLIC SFML_STATIC)
 endif()
 
