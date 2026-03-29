@@ -1,16 +1,15 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-//TODO text cursor for records!
 class Cursor : public sf::RectangleShape {
 	public:
-		enum class Action {
-			LEFT, RIGHT, UP, DOWN
+		enum class Input {
+			LEFT, RIGHT, UP, DOWN, ACTION
 		};
 
 		Cursor(sf::Font& font);
 
-		void Control(Action action);
+		void Update(Input action);
 		void SetEntry(std::shared_ptr<sf::Text>& entry);
 		bool Accept(std::string* gameEntryName);
 
@@ -19,9 +18,6 @@ class Cursor : public sf::RectangleShape {
 		sf::Font& mFont;
 		size_t mEntryIndex;
 		
-		void ChangeChar(Action action);
-		char SelectChar(Action action);
-
-		
-
+		void ChangeChar(Input action);
+		char SelectChar(Input action);
 };

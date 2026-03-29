@@ -2,12 +2,13 @@
 #include <cmath>
 #include "Ball.hpp"
 
+
 Ball::Ball(const sf::Texture& texture) : sf::Sprite(texture) {
-	mSpeed = 0.6;
-	mDirection = {-1, -1};
-	mRadius = 16;
-	setOrigin({16,16});
-	ResetPos({256, 832});
+	mSpeed = fkd::BALL_INIT_SPEED;
+	mDirection = fkd::BALL_INIT_DIR;
+	mRadius = texture.getSize().x / 2;
+	setOrigin({mRadius,mRadius});
+	ResetPos(fkd::BALL_INIT_POS);
 }
 
 void Ball::Launch() {
@@ -15,15 +16,14 @@ void Ball::Launch() {
 }
 
 void Ball::ResetPos(const sf::Vector2f &bumperPos) {
-	sf::Vector2f bumperOffset({64,-18});
-	auto newPos = bumperPos + bumperOffset;
+	auto newPos = bumperPos + fkd::BALL_DOCKED_OFFSET;
 	setPosition(newPos);
-	mDirection = {-1,-1};
+	mDirection = fkd::BALL_INIT_DIR;
 	mState = State::DOCKED;
 }
 
 void Ball::Update(const sf::Vector2f &bumperPos, const sf::Time& deltaTime) {
-	switch (mState)	{
+	switch (mState) {
 		case State::PLAYING: Move(deltaTime); break;
 		case State::DOCKED: ResetPos(bumperPos); break;
 		default: break;
@@ -47,6 +47,7 @@ void Ball::Bounce(const sf::Sprite& obj, float distance) {
 		mDirection.y = -mDirection.y;
 }
 
+//TODO add formula as comment?
 void Ball::ApplyBumperMod(const sf::Sprite& bumper) {
 	
 	float bumperWidth = bumper.getGlobalBounds().size.x;
@@ -63,7 +64,7 @@ void Ball::ApplyBumperMod(const sf::Sprite& bumper) {
 const Ball::State &Ball::GetState() const { return mState; }
 const float Ball::GetRadius() const { return mRadius; }
 
-//TODO hardcoded values...get playarea rect
+
 void Ball::Move(const sf::Time& deltaTime) {
 	sf::Vector2f position = getPosition();
 	auto deltaTimeMs = deltaTime.asMilliseconds();

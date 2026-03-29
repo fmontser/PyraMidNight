@@ -47,8 +47,10 @@ class Game {
 		uint32_t mScore;
 		std::vector<ScoreEntry> mRanking;
 		
-		RenderManager    mRenderManager;
-		InputManager     mInputManager;
+		//TODO ResourceManager
+		//TODO AudioManager
+		RenderManager mRenderManager;
+		InputManager  mInputManager;
 		std::shared_ptr<TitleScreenView> mTitleScreen;
 		std::shared_ptr<RoundScreenView> mRoundScreen;
 		std::shared_ptr<EndScreenView>   mEndScreenView;

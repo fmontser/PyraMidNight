@@ -15,29 +15,28 @@ Cursor::Cursor(sf::Font& font) : mFont(font) {
 	setOutlineThickness(2);
 }
 
-//TODO remove this, unnecesary
-void Cursor::Control(Action action) {
+//TODO hardcoded data...
+void Cursor::Update(Input action) {
 	switch (action)
 	{
-		case Action::LEFT:
-			//TODO move cursor charsize
+		case Input::LEFT:
 			if (mEntryIndex > 0) {
 				move({-30,0});
 				mEntryIndex = std::clamp(--mEntryIndex, (size_t)0, (size_t)2);
 			}
 			break;
-		case Action::RIGHT:
-			//TODO move cursor charsize
+		case Input::RIGHT:
+
 			if (mEntryIndex < 2) {
 				move({30,0});
 				mEntryIndex = std::clamp(++mEntryIndex, (size_t)0, (size_t)2);
 			}
 			break;
-		case Action::UP:
-			ChangeChar(Action::UP);
+		case Input::UP:
+			ChangeChar(Input::UP);
 			break;
-		case Action::DOWN:
-			ChangeChar(Action::DOWN);
+		case Input::DOWN:
+			ChangeChar(Input::DOWN);
 			break;
 		default:
 			break;
@@ -49,7 +48,7 @@ void Cursor::SetEntry(std::shared_ptr<sf::Text> &entry) {
 	move(mEntryTxt->getGlobalBounds().position);
 }
 
-//TODO check surviving data
+//TODO refactor ranking system
 bool Cursor::Accept(std::string* gameEntryName) {
 	if (gameEntryName != nullptr)
 		*gameEntryName = mEntryTxt->getString();
@@ -57,7 +56,7 @@ bool Cursor::Accept(std::string* gameEntryName) {
 	return true;
 }
 
-void Cursor::ChangeChar(Action action) {
+void Cursor::ChangeChar(Input action) {
 	char selected = SelectChar(action);
 	std::string str = mEntryTxt->getString();
 	
@@ -65,17 +64,17 @@ void Cursor::ChangeChar(Action action) {
 	mEntryTxt->setString(str);
 }
 
-char Cursor::SelectChar(Action action) {
+char Cursor::SelectChar(Input action) {
 	static int index = -1;
 	char selected = 'A';
 	const int max = CHARSET_STR.size();
 
 	switch (action)	{
-		case Action::UP:
+		case Input::UP:
 			index =  (index + 1) % max;
 			selected = CHARSET_STR[index];
 			break;
-		case Action::DOWN:
+		case Input::DOWN:
 			index = (index - 1 + max) % max;
 			selected = CHARSET_STR[index];
 			break;

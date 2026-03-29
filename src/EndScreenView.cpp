@@ -92,13 +92,13 @@ bool EndScreenView::Update(Game& game) {
 		window.close();
 	if (!mIsNameSet) {
 		if (frameInput.left)
-		mCursor->Control(Cursor::Action::LEFT);
+		mCursor->Update(Cursor::Input::LEFT);
 		else if (frameInput.right)
-		mCursor->Control(Cursor::Action::RIGHT);
+		mCursor->Update(Cursor::Input::RIGHT);
 		else if (frameInput.up)
-		mCursor->Control(Cursor::Action::UP);
+		mCursor->Update(Cursor::Input::UP);
 		else if (frameInput.down)
-		mCursor->Control(Cursor::Action::DOWN);
+		mCursor->Update(Cursor::Input::DOWN);
 		else if (frameInput.action) {
 			mIsNameSet = mCursor->Accept(GetGameEntryName(game));
 			mStartTxt->setFillColor(sf::Color::Blue);

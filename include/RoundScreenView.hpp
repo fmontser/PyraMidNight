@@ -34,7 +34,7 @@ class RoundScreenView : public ScreenView {
 		std::vector<std::shared_ptr<sf::Sprite>> mDestroyedSprites;
 		
 		void LoadLevel(const std::array<const std::string, 9>& level);
-		void UpdateBall(const sf::Time& deltaTime);
+		void UpdateBall(const sf::Time &deltaTime);
 		void UpdateBlocks();
 		bool UpdateGame(Game& game);
 		void UpdateCredits(Game& game);
