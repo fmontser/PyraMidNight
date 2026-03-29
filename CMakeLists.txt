@@ -12,6 +12,22 @@ set(SFML_BUILD_TESTS OFF CACHE BOOL "" FORCE)
 set(SFML_INSTALL_PKGCONFIG_FILES OFF CACHE BOOL "" FORCE)
 set(SFML_ZIP_PATH "${CMAKE_CURRENT_SOURCE_DIR}/external/SFML-3.0.2.zip")
 
+# address sanitizer
+option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
+if(ENABLE_ASAN)
+	if(MSVC)
+		# windows
+		add_compile_options(/fsanitize=address /Zi)
+		add_link_options(/INCREMENTAL:NO)
+		message(STATUS "AddressSanitizer enabled (MSVC)")
+	else()
+		# linux
+		add_compile_options(-fsanitize=address -g)
+		add_link_options(-fsanitize=address)
+		message(STATUS "AddressSanitizer enabled (GCC)")
+	endif()
+endif()
+
 # Unzip SFML
 include(FetchContent)
 FetchContent_Declare(
@@ -20,10 +36,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-option(ENABLE_ASAN "Enable AddressSanitizer" OFF)
-if(ENABLE_ASAN)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
-endif()
 
 # BINARIES
 set(APP_SOURCES
@@ -49,6 +61,7 @@ set(APP_LIBS
 )
 
 add_executable(FranKanoid ${APP_SOURCES})
+
 target_include_directories(FranKanoid PUBLIC include)
 target_link_libraries(FranKanoid PRIVATE ${APP_LIBS})
 
