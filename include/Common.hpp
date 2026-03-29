@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <SFML/Graphics.hpp>
 
-namespace fkd {
+namespace fknd {
 	//Ball
 	inline constexpr float BALL_INIT_SPEED = 0.6f;
 	inline constexpr sf::Vector2f BALL_INIT_DIR = {-1, -1};
@@ -15,5 +15,14 @@ namespace fkd {
 	inline constexpr float BMPR_MV_LIMIT_L = 32.0f;
 	inline constexpr float BMPR_MV_LIMIT_R = 480.0f;
 
+	//Cursor
+	inline constexpr float CUR_MV_OFFSET = 30.0f;
+	inline constexpr float CUR_FONT_SZ = 48.0f;
+	inline constexpr float CUR_OUTLINE_SZ = 2.0f;
+	inline constexpr sf::Color CUR_OUTLINE_COL = sf::Color::Green;
+	inline constexpr sf::Color CUR_FILL_COL = sf::Color::Transparent;
+
+	//Level
+	inline constexpr u_int8_t LVL_DIMENSIONS2 = 9;
 
 }

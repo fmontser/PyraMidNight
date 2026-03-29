@@ -1,11 +1,17 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Common.hpp"
 
-class Block : public sf::Sprite {
-	public:
-		Block(const sf::Texture& texture, int8_t hitPoints);
+namespace fknd {
 
-		bool Damage();
-	private:
-		int8_t hitPoints;
-};
+	//TODO more types of blocks...
+	class Block : public sf::Sprite {
+		public:
+			Block(const sf::Texture& texture, int8_t hitPoints);
+	
+			bool Damage();
+		private:
+			int8_t hitPoints;
+	};
+
+}

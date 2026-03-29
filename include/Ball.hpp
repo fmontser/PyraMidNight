@@ -2,7 +2,9 @@
 #include <SFML/Graphics.hpp>
 #include "Common.hpp"
 
-class Ball : public sf::Sprite {
+namespace fknd {
+
+	class Ball : public sf::Sprite {
 	public:
 		enum class State {
 			DOCKED, PLAYING
@@ -29,3 +31,7 @@ class Ball : public sf::Sprite {
 		float GetDistance(sf::Rect<float> rect);
 		void  ResolveOverlap(float distance);
 	};
+
+}
+
+
