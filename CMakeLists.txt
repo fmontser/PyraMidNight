@@ -25,7 +25,6 @@ if(ENABLE_ASAN)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address -g")
 endif()
 
-
 # BINARIES
 set(APP_SOURCES
 	src/main.cpp
