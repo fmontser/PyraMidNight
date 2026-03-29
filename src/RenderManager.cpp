@@ -10,10 +10,11 @@ namespace fknd {
 			mWindow.setFramerateLimit(RNDR_FRAME_LIMIT);
 	}
 	
-	void RenderManager::RenderFrame(ScreenView& screenView) {
+	void RenderManager::RenderFrame(
+		std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
 		mWindow.clear();
 	
-		for (const auto& drw : screenView.GetDrawables())
+		for (const auto& drw : drawables)
 			mWindow.draw(*drw);
 	
 		mWindow.display();

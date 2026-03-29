@@ -49,7 +49,7 @@ namespace fknd {
 						mTitleScreen = nullptr;
 						break;
 					}
-					mRenderManager.RenderFrame(*mTitleScreen);
+					mRenderManager.RenderFrame(mTitleScreen->GetDrawables());
 					break;
 				case Game::State::ROUND_SCREEN:
 					if (mRoundScreen == nullptr)
@@ -60,7 +60,7 @@ namespace fknd {
 						mRoundScreen = nullptr;
 						break;
 					}
-					mRenderManager.RenderFrame(*mRoundScreen);
+					mRenderManager.RenderFrame(mRoundScreen->GetDrawables());
 					break;
 				case Game::State::END_SCREEN:
 					if (mEndScreenView == nullptr)
@@ -70,7 +70,7 @@ namespace fknd {
 						mEndScreenView = nullptr;
 						break;
 					}
-					mRenderManager.RenderFrame(*mEndScreenView);
+					mRenderManager.RenderFrame(mEndScreenView->GetDrawables());
 					break;
 				default:
 					break;
