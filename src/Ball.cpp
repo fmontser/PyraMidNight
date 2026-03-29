@@ -12,7 +12,8 @@ Ball::Ball(const sf::Texture& texture) : sf::Sprite(texture) {
 }
 
 void Ball::Launch() {
-	mState = State::PLAYING;
+	if (mState == State::DOCKED)
+		mState = State::PLAYING;
 }
 
 void Ball::ResetPos(const sf::Vector2f &bumperPos) {

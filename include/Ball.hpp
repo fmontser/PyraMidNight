@@ -25,7 +25,7 @@ class Ball : public sf::Sprite {
 		sf::Vector2f    mDirection;
 		float           mRadius;
 		
-		void Move(const sf::Time& deltaTime);
+		void  Move(const sf::Time& deltaTime);
 		float GetDistance(sf::Rect<float> rect);
-		void ResolveOverlap(float distance);
+		void  ResolveOverlap(float distance);
 	};

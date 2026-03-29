@@ -88,10 +88,8 @@ bool RoundScreenView::Update(Game& game) {
 		window.close();
 	if (frameInput.coin)
 		game.AddCredit();
- 	if (frameInput.action) {
-		if (mBall->GetState() == Ball::State::DOCKED)
-			mBall->Launch();
-	}
+ 	if (frameInput.action)
+		mBall->Launch();
 	if (frameInput.holdLeft)
 		mBumper->Move(-1, deltaTime);
 	else if (frameInput.holdRight)
