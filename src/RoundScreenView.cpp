@@ -6,35 +6,31 @@
 
 namespace fknd {
 
-	constexpr std::string_view CREDITS_STR = "CREDITS ";
-	constexpr std::string_view SCORE_STR = "SCORE ";
-
-	//TODO hardcoded values
 	RoundScreenView::RoundScreenView() : ScreenView() {
 		//TODO filesystem exception control
-		mFont = std::make_shared<sf::Font>("assets/ClearSans-Regular.ttf");
+		mFont = std::make_shared<sf::Font>(PATH_FONT);
 
 		mCreditsTxt = std::make_shared<sf::Text>(*mFont);
-		mCreditsTxt->setString(std::string(CREDITS_STR));
-		mCreditsTxt->setCharacterSize(24);
-		mCreditsTxt->setFillColor(sf::Color::White);
-		mCreditsTxt->setPosition({128.f, 864.f});
-		mCreditsTxt->setOutlineColor(sf::Color::Blue);
+		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR));
+		mCreditsTxt->setCharacterSize(ROUND_TXT_CHAR_SZ);
+		mCreditsTxt->setFillColor(ROUND_TXT_FILLCOL);
+		mCreditsTxt->setOutlineColor(ROUND_TXT_OUTCOL);
 		mCreditsTxt->setOutlineThickness(1);
+		mCreditsTxt->setPosition({128.0f, 864.0f});
 
 		mScoreTxt = std::make_shared<sf::Text>(*mFont);
-		mScoreTxt->setString(std::string(SCORE_STR));
-		mScoreTxt->setCharacterSize(24);
-		mScoreTxt->setFillColor(sf::Color::White);
-		mScoreTxt->setPosition({352.f, 864.f});
-		mScoreTxt->setOutlineColor(sf::Color::Blue);
-		mScoreTxt->setOutlineThickness(1);
+		mScoreTxt->setString(std::string(ROUND_SCORE_STR));
+		mScoreTxt->setCharacterSize(ROUND_TXT_CHAR_SZ);
+		mScoreTxt->setFillColor(ROUND_TXT_FILLCOL);
+		mScoreTxt->setOutlineColor(ROUND_TXT_OUTCOL);
+		mScoreTxt->setOutlineThickness(ROUND_TXT_OUTLINE_SZ);
+		mScoreTxt->setPosition({352.0f, 864.f});
 		
-		mBackgroundTex = std::make_shared<sf::Texture>(sf::Texture("assets/Background.png"));
+		mBackgroundTex = std::make_shared<sf::Texture>(sf::Texture(PATH_TEX_BG));
 		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
-		mBackground->setColor(sf::Color({0, 0, 255, 128})); //TODO tint
+		mBackground->setColor(ROUND_BG_TINT);
 		
-		mWallTex = std::make_shared<sf::Texture>(sf::Texture("assets/Wall32.png"));
+		mWallTex = std::make_shared<sf::Texture>(sf::Texture(PATH_TEX_WALL));
 		mWallTex->setRepeated(true);
 		mWallLeft = std::make_shared<sf::Sprite>(sf::Sprite(*mWallTex));
 		mWallLeft->setTextureRect({{0, 0},{32, 896}});
@@ -43,24 +39,23 @@ namespace fknd {
 		mWallRight->setTextureRect({{0, 0},{32, 896}});
 		mWallRight->setPosition({608, 32});
 
-		mCeilTex = std::make_shared<sf::Texture>(sf::Texture("assets/Ceil32.png"));
+		mCeilTex = std::make_shared<sf::Texture>(sf::Texture(PATH_TEX_CEIL));
 		mCeilTex->setRepeated(true);
 		mCeil = std::make_shared<sf::Sprite>(*mCeilTex);
 		mCeil->setTextureRect({{0, 0},{640, 32}});
 
-		mBumperTex = std::make_shared<sf::Texture>("assets/Bumper.png");
+		mBumperTex = std::make_shared<sf::Texture>(PATH_TEX_BUMP);
 		mBumper = std::make_shared<Bumper>(*mBumperTex);
 		mBumper->setPosition({256, 832});
 		
-		mBallTex = std::make_shared<sf::Texture>("assets/Ball.png");
+		mBallTex = std::make_shared<sf::Texture>(PATH_TEX_BALL);
 		mBall = std::make_shared<Ball>(*mBallTex);
 
-		mBlockTex = std::make_shared<sf::Texture>("assets/Block32.png");
+		mBlockTex = std::make_shared<sf::Texture>(PATH_TEX_BLOCK);
 
-		//TODO convert to simple rect
 		mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
 		mDeathArea->setPosition({32, 864});
-		mDeathArea->setFillColor({0,0,0,0});
+		mDeathArea->setFillColor(sf::Color::Transparent);
 
 		mDrawables.push_back(mBackground);
 		mDrawables.push_back(mCreditsTxt);
@@ -70,7 +65,7 @@ namespace fknd {
 		mDrawables.push_back(mCeil);
 		mDrawables.push_back(mBumper);
 		mDrawables.push_back(mBall);
-		mDrawables.push_back(mDeathArea); //TODO remove on rect convert
+		mDrawables.push_back(mDeathArea);
 
 		mColdetVector.push_back(mCeil);
 		mColdetVector.push_back(mWallLeft);
@@ -106,7 +101,7 @@ namespace fknd {
 		return true;
 	}
 
-	void RoundScreenView::LoadLevel(const std::array<const std::string, 9>& level) {
+	void RoundScreenView::LoadLevel(const std::array<const std::string, LVL_DIMENSIONS2>& level) {
 		const auto offset =sf::Vector2f(64,32);
 		auto actualPos = sf::Vector2f(32,32);
 
@@ -182,7 +177,7 @@ namespace fknd {
 	}
 
 	void RoundScreenView::UpdateCredits(Game& game) {
-		mCreditsTxt->setString(std::string(CREDITS_STR)
+		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR)
 			.append(std::to_string(static_cast<int>(game.GetCredits()))));
 	}
 
@@ -190,13 +185,13 @@ namespace fknd {
 		//TODO delete score test
 		game.AddScore(1);
 
-		mScoreTxt->setString(std::string(SCORE_STR)
+		mScoreTxt->setString(std::string(ROUND_SCORE_STR)
 			.append(std::to_string(static_cast<int>(game.GetScore()))));
 	}
 
 	bool RoundScreenView::LoseBall(Game& game) {
 		game.ConsumeCredit();
-		//TODO remove score penalty?
+		//TODO score penalty?
 		if (game.GetCredits() == 0) {
 			return false;
 		}

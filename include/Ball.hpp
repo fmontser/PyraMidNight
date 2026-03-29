@@ -27,8 +27,8 @@ namespace fknd {
 		sf::Vector2f    mDirection;
 		float           mRadius;
 		
+		//TODO move GetBallDistance here?
 		void  Move(const sf::Time& deltaTime);
-		float GetDistance(sf::Rect<float> rect);
 		void  ResolveOverlap(float distance);
 	};
 

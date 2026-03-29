@@ -87,7 +87,7 @@ namespace fknd {
 	void Game::ResetScore() { mScore = 0; }
 	
 	void Game::RecordScore() {
-		mRanking.push_back({"???", mScore});
+		mRanking.push_back({"   ", mScore});
 		SortRanking();
 		if (mRanking.size() > 10)
 			mRanking.pop_back();

@@ -19,7 +19,7 @@ namespace fknd {
 		private:
 			std::shared_ptr<sf::Font>           mFont;
 			std::shared_ptr<sf::Text>           mTitleTxt;
-			std::shared_ptr<sf::Text>           mStartTxt;
+			std::shared_ptr<sf::Text>           mContTxt;
 			std::shared_ptr<sf::Texture>        mBackgroundTex;
 			std::shared_ptr<sf::Sprite>         mBackground;
 			std::shared_ptr<Cursor>             mCursor;

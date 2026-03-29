@@ -2,8 +2,6 @@
 #include "Cursor.hpp"
 
 namespace fknd {
-
-	constexpr std::string_view CHARSET_STR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	
 	Cursor::Cursor(sf::Font& font) : mFont(font) {
 		mEntryIndex = 0;
@@ -17,7 +15,7 @@ namespace fknd {
 		setOutlineThickness(CUR_OUTLINE_SZ);
 	}
 	
-	//TODO hardcoded data...
+	//TODO fix cursor pos
 	void Cursor::Update(Input action) {
 		switch (action)
 		{
@@ -57,7 +55,8 @@ namespace fknd {
 		setOutlineColor(sf::Color::Transparent);
 		return true;
 	}
-	
+
+	//TODO fix first down push
 	void Cursor::ChangeChar(Input action) {
 		char selected = SelectChar(action);
 		std::string str = mEntryTxt->getString();
@@ -66,19 +65,20 @@ namespace fknd {
 		mEntryTxt->setString(str);
 	}
 	
+	//TODO fix first down push
 	char Cursor::SelectChar(Input action) {
 		static int index = -1;
 		char selected = 'A';
-		const int max = CHARSET_STR.size();
+		const int max = CUR_CHAR_SET.size();
 	
 		switch (action)	{
 			case Input::UP:
 				index =  (index + 1) % max;
-				selected = CHARSET_STR[index];
+				selected = CUR_CHAR_SET[index];
 				break;
 			case Input::DOWN:
 				index = (index - 1 + max) % max;
-				selected = CHARSET_STR[index];
+				selected = CUR_CHAR_SET[index];
 				break;
 			default:
 				break;
