@@ -6,7 +6,7 @@ namespace fknd {
 	
 	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 		mState = Game::State::TITLE_SCREEN;
-		mCredits = 0;
+		mCredits = 3;
 		mRound = 1;
 		mFinalRound = 1; //TODO calculate from available levels or difficulty setting
 		mScore = 0;
@@ -34,9 +34,18 @@ namespace fknd {
 	
 		// main loop
 		while (mRenderManager.GetWindow().isOpen()) {
-	
+			mInput = mInputManager.FetchInput();
+			mDeltaTime = mRenderManager.GetDeltaTime();
+			if (mInput.close)
+				mRenderManager.GetWindow().close();
+			//TODO borrar, cuando el responsable tenga
+			if (mInput.coin)
+				mCredits++;
+
 			switch (mState) {
 				case Game::State::TITLE_SCREEN:
+					//TODO delete bypass
+					mState = State::ROUND_SCREEN;
 					if (mTitleScreen == nullptr)
 						mTitleScreen = std::make_shared<TitleScreenView>();
 					if (!mTitleScreen->Update(*this)) {
@@ -49,7 +58,7 @@ namespace fknd {
 				case Game::State::ROUND_SCREEN:
 					if (mRoundScreen == nullptr)
 						mRoundScreen = std::make_shared<RoundScreenView>();
-					if (!mRoundScreen->Update(*this)) {
+					if (!mRoundScreen->Update(BuildRoundUpdate())) {
 						//TODO load next level or gameOVer
 						GameOver();
 						mRoundScreen = nullptr;
@@ -73,12 +82,7 @@ namespace fknd {
 		}
 	}
 	
-	void Game::AddScore(uint32_t points) {
-		if (points > (GAME_MAX_SCORE - mScore))
-			mScore = GAME_MAX_SCORE;
-		else
-			mScore += points;
-	}
+
 	
 	void Game::ResetScore() { mScore = 0; }
 	
@@ -105,10 +109,7 @@ namespace fknd {
 			mCredits++;
 	}
 	
-	void Game::ConsumeCredit() {
-		if (mCredits > 0)
-			mCredits--;
-	}
+
 	
 	uint8_t Game::GetCredits() const { return mCredits; }
 	
@@ -124,7 +125,18 @@ namespace fknd {
 		RecordScore();
 		ResetScore();
 	}
-	
+
+	RoundScreenView::RoundUpdate Game::BuildRoundUpdate() {
+		return {
+				mDeltaTime,
+				mInput.holdLeft,
+				mInput.holdRight,
+				mInput.action,
+				mCredits,
+				mScore
+				};
+	}
+
 	RenderManager &Game::GetRenderManager() { return mRenderManager; }
 	InputManager &Game::GetInputManager() { return mInputManager; }
 

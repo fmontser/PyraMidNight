@@ -76,27 +76,25 @@ namespace fknd {
 		LoadLevel(level1);
 	}
 
-	bool RoundScreenView::Update(Game& game) {
-		auto& frameInput = game.GetInputManager().FetchInput();
-		auto& deltaTime = game.GetRenderManager().GetDeltaTime();
-		auto& window = game.GetRenderManager().GetWindow();
+	bool RoundScreenView::Update()
+	{
+		return false;
+	}
 
-		if (frameInput.close)
-			window.close();
-		if (frameInput.coin)
-			game.AddCredit();
-		if (frameInput.action)
+	bool RoundScreenView::Update(RoundUpdate update) {
+
+		if (update.action)
 			mBall->Launch();
-		if (frameInput.holdLeft)
-			mBumper->Move(-1, deltaTime);
-		else if (frameInput.holdRight)
-			mBumper->Move(1, deltaTime);
+		if (update.holdLeft)
+			mBumper->Move(-1, update.deltaTime);
+		else if (update.holdRight)
+			mBumper->Move(1, update.deltaTime);
 
-		UpdateBall(deltaTime);
+		UpdateBall(update.deltaTime);
 		UpdateBlocks();
-		UpdateCredits(game);
-		UpdateScore(game);
-		if (!UpdateGame(game))
+		UpdateCredits(update.credits);
+		UpdateScore(update.score);
+		if (!UpdateGame(update.credits))
 			return false;
 		return true;
 	}
@@ -163,11 +161,10 @@ namespace fknd {
 		mDestroyedSprites.clear();
 	}
 
-	bool RoundScreenView::UpdateGame(Game &game){
+	bool RoundScreenView::UpdateGame(uint8_t& credits) {
 		//Lose
 		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
-			LoseBall(game);
-			return false;
+			return LoseBall(credits);;
 		}
 		//TODO LOAD NEXT LEVEL!!! @@@@@@@@@@ indicate win state!
 		//Win
@@ -176,23 +173,23 @@ namespace fknd {
 		return true;
 	}
 
-	void RoundScreenView::UpdateCredits(Game& game) {
+	void RoundScreenView::UpdateCredits(uint8_t& credits) {
 		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR)
-			.append(std::to_string(static_cast<int>(game.GetCredits()))));
+			.append(std::to_string(credits)));
 	}
 
-	void RoundScreenView::UpdateScore(Game& game) {
+	void RoundScreenView::UpdateScore(uint32_t& score) {
 		//TODO delete score test
-		game.AddScore(1);
+		AddScore(score, 1);
 
 		mScoreTxt->setString(std::string(ROUND_SCORE_STR)
-			.append(std::to_string(static_cast<int>(game.GetScore()))));
+			.append(std::to_string(score)));
 	}
 
-	bool RoundScreenView::LoseBall(Game& game) {
-		game.ConsumeCredit();
+	bool RoundScreenView::LoseBall(uint8_t& credits) {
+		ConsumeCredit(credits);
 		//TODO score penalty?
-		if (game.GetCredits() == 0) {
+		if (credits == 0) {
 			return false;
 		}
 		//TODO animation?
@@ -210,5 +207,15 @@ namespace fknd {
 		return std::sqrtf((distX * distX) + (distY * distY));
 	}
 
+	void RoundScreenView::AddScore(uint32_t& score, uint32_t points) {
+		if (points > (GAME_MAX_SCORE - score))
+			score = GAME_MAX_SCORE;
+		else
+			score += points;
+	}
 
+	void RoundScreenView::ConsumeCredit(uint8_t& credits) {
+		if (credits > 0)
+			credits--;
+	}
 }

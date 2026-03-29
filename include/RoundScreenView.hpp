@@ -1,4 +1,5 @@
 #pragma once
+#include <functional>
 #include "ScreenView.hpp"
 #include "Bumper.hpp"
 #include "Ball.hpp"
@@ -9,8 +10,19 @@ namespace fknd {
 
 	class RoundScreenView : public ScreenView {
 		public:
+			struct RoundUpdate {
+				sf::Time&                     deltaTime;
+				bool                          holdLeft;
+				bool                          holdRight;
+				bool                          action;
+				uint8_t&                      credits;
+				uint32_t&                     score;
+			};
+
 			RoundScreenView();
-			bool Update(Game &game) override;
+			//TODO remove update()
+			bool Update();
+			bool Update(RoundUpdate update);
 
 		private:
 			std::shared_ptr<sf::Font>    mFont;
@@ -36,14 +48,18 @@ namespace fknd {
 			std::vector<std::shared_ptr<Block>>      mBlockVector;
 			std::vector<std::shared_ptr<sf::Sprite>> mDestroyedSprites;
 			
+
+
 			void LoadLevel(const std::array<const std::string, LVL_DIMENSIONS2>& level);
 			void UpdateBall(const sf::Time &deltaTime);
 			void UpdateBlocks();
-			bool UpdateGame(Game& game);
-			void UpdateCredits(Game& game);
-			void UpdateScore(Game &game);
-			bool LoseBall(Game& game);
+			bool UpdateGame(uint8_t& credits);
+			void UpdateCredits(uint8_t& credits);
+			void UpdateScore(uint32_t& score);
+			bool LoseBall(uint8_t& credits);
 			float GetBallDistance(const sf::Sprite &obj);
+			void AddScore(uint32_t& score, uint32_t points);
+			void ConsumeCredit(uint8_t& credits);
 	};
 
 }

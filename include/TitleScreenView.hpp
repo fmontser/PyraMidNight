@@ -8,7 +8,9 @@ namespace fknd {
 	class TitleScreenView : public ScreenView {
 		public:
 			TitleScreenView();
-			bool Update(Game& game) override;
+			//TODO remove update()
+			bool Update();
+			bool Update(Game& game);
 	
 		private:
 			std::shared_ptr<sf::Font> mFont;

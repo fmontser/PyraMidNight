@@ -3,9 +3,9 @@
 #include <cstdint>
 #include "TitleScreenView.hpp"
 #include "RoundScreenView.hpp"
+#include "EndScreenView.hpp"
 #include "InputManager.hpp"
 #include "RenderManager.hpp"
-#include "EndScreenView.hpp"
 #include "Common.hpp"
 
 namespace fknd {
@@ -25,7 +25,7 @@ namespace fknd {
 	
 			void Run();
 			//TODO not IOC!!!!!
-			void AddScore(uint32_t points);
+
 			void ResetScore();
 			void RecordScore();
 			uint32_t GetScore() const;
@@ -35,7 +35,7 @@ namespace fknd {
 	
 			//TODO not IOC!!!!!
 			void AddCredit();
-			void ConsumeCredit();
+
 			uint8_t GetCredits() const;
 	
 			RenderManager& GetRenderManager();
@@ -51,14 +51,17 @@ namespace fknd {
 			
 			//TODO ResourceManager
 			//TODO AudioManager
-			RenderManager mRenderManager;
-			InputManager  mInputManager;
+			InputManager         mInputManager;
+			InputManager::Input  mInput;
+			RenderManager        mRenderManager;
+			sf::Time             mDeltaTime;
 			std::shared_ptr<TitleScreenView> mTitleScreen;
 			std::shared_ptr<RoundScreenView> mRoundScreen;
 			std::shared_ptr<EndScreenView>   mEndScreenView;
 			
 			void SetNextRound();
 			void GameOver();
+			RoundScreenView::RoundUpdate BuildRoundUpdate();
 		};
 
 }

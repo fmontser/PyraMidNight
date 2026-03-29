@@ -41,7 +41,12 @@ namespace fknd {
 		mDrawables.push_back(mCreditsTxt);
 		mDrawables.push_back(mStartTxt);
 	}
-	
+
+	bool TitleScreenView::Update()
+	{
+		return false;
+	}
+
 	bool TitleScreenView::Update(Game& game) {
 		auto& frameInput = game.GetInputManager().FetchInput();
 		auto& deltaTime = game.GetRenderManager().GetDeltaTime();

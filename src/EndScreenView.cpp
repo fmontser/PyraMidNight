@@ -74,7 +74,12 @@ namespace fknd {
 	
 		mDrawables.push_back(mCursor);
 	}
-	
+
+	bool EndScreenView::Update()
+	{
+		return false;
+	}
+
 	bool EndScreenView::Update(Game& game) {
 		auto& frameInput = game.GetInputManager().FetchInput();
 		auto& window = game.GetRenderManager().GetWindow();
