@@ -6,9 +6,7 @@ class Bumper : public sf::Sprite {
 		Bumper(const sf::Texture& texture);
 
 		void Move(int8_t magnitude, sf::Time& deltaTime);
-		float GetFriction();
 
 	private:
 		float mSpeed;
-		float mFriction;
 };
