@@ -3,14 +3,16 @@
 namespace fknd {
 
 	Block::Block(const sf::Texture& texture, int8_t hitPoints) : sf::Sprite(texture) {
-		this->hitPoints = hitPoints;
+		mHitPoints = hitPoints;
+		mScorePoints = SCORE_BLOCK_MOD * mHitPoints;
 	}
 	
 	bool Block::Damage() {
-		hitPoints--;
-		if (hitPoints == 0)
+		mHitPoints--;
+		if (mHitPoints == 0)
 			return true;
 		return false;
 	}
 
+	int32_t Block::GetScore() { return mScorePoints; }
 }
