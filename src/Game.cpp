@@ -81,7 +81,7 @@ namespace fknd {
 	}
 	
 	void Game::SetNextRound() {
-		if (mRound < mFinalRound) {
+		if (mRound < mFinalRound && mCredits > 0) {
 			mRound++;
 			mRoundScreen = std::make_shared<RoundScreenView>();
 		}
