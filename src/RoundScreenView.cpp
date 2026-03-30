@@ -6,6 +6,8 @@
 namespace fknd {
 
 	RoundScreenView::RoundScreenView() : ScreenView() {
+
+		mLvlIsLoaded = false;
 		//TODO filesystem exception control
 		mFont = std::make_shared<sf::Font>(PATH_FONT);
 
@@ -70,13 +72,11 @@ namespace fknd {
 		mColdetVector.push_back(mWallLeft);
 		mColdetVector.push_back(mWallRight);
 		mColdetVector.push_back(mBumper);
-
-		//TODO make it dynamic
-		LoadLevel(level1);
 	}
 
 	bool RoundScreenView::Update(RoundScreenUpdate update) {
-
+ 		if (!mLvlIsLoaded)
+			mLvlIsLoaded = LoadLevel(update.roundId);
 		if (update.action)
 			mBall->Launch();
 		if (update.holdLeft)
@@ -93,14 +93,15 @@ namespace fknd {
 		return true;
 	}
 
-	void RoundScreenView::LoadLevel(const std::array<const std::string, LVL_DIMENSIONS2>& level) {
+	bool RoundScreenView::LoadLevel(uint8_t& roundId) {
+		auto& level = ROUNDS[roundId];
 		const auto offset =sf::Vector2f(64,32);
 		auto actualPos = sf::Vector2f(32,32);
 
 		for (const auto& str : level) {
 			for (const auto chara : str) {
 				if (chara != '0') {
-					auto block = std::make_shared<Block>(*mBlockTex, 1);
+					auto block = std::make_shared<Block>(*mBlockTex, 1); //TODO set block variants when available
 					block->setPosition(actualPos);
 					mBlockVector.push_back(block);
 				}
@@ -114,6 +115,7 @@ namespace fknd {
 			mDrawables.push_back(block);
 			mColdetVector.push_back(block);
 		}
+		return true;
 	}
 
 	void RoundScreenView::UpdateBall(const sf::Time &deltaTime)
@@ -160,7 +162,6 @@ namespace fknd {
 		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
 			return LoseBall(credits);;
 		}
-		//TODO LOAD NEXT LEVEL!!! @@@@@@@@@@ indicate win state!
 		//Win
 		if (mBlockVector.empty())
 			return false;
@@ -186,7 +187,6 @@ namespace fknd {
 		if (credits == 0) {
 			return false;
 		}
-		//TODO animation?
 		mBall->ResetPos(mBumper->getPosition());
 		return true;
 	};

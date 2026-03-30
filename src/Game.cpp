@@ -7,8 +7,8 @@ namespace fknd {
 	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 		mState = Game::State::TITLE_SCREEN;
 		mCredits = 0;
-		mRound = 1;
-		mFinalRound = 1; //TODO calculate from available levels or difficulty setting
+		mRound = 0;
+		mFinalRound = GAME_FINAL_ROUND_ID; //TODO calculate from available levels or difficulty setting
 		mScore = 0;
 	
 		mTitleScreen = nullptr;
@@ -28,6 +28,8 @@ namespace fknd {
 		mRanking.push_back({"TOI", 200});
 		mRanking.push_back({"CAN", 1});
 		SortRanking();
+
+		//TODO LEVEL VALIDATION exception!!
 	}
 	
 	// main loop
@@ -55,9 +57,8 @@ namespace fknd {
 					if (mRoundScreen == nullptr)
 						mRoundScreen = std::make_shared<RoundScreenView>();
 					if (!mRoundScreen->Update(WrapRoundScreenUpdate())) {
-						//TODO load next level or gameOVer
-						GameOver();
 						mRoundScreen = nullptr;
+						SetNextRound();
 						break;
 					}
 					mRenderManager.RenderFrame(mRoundScreen->GetDrawables());
@@ -79,8 +80,10 @@ namespace fknd {
 	}
 	
 	void Game::SetNextRound() {
-		if (mRound < mFinalRound)
+		if (mRound < mFinalRound) {
 			mRound++;
+			mRoundScreen = std::make_shared<RoundScreenView>();
+		}
 		else
 			GameOver();
 	}
@@ -118,6 +121,7 @@ namespace fknd {
 
 	RoundScreenView::RoundScreenUpdate Game::WrapRoundScreenUpdate() {
 		return {
+				mRound,
 				mDeltaTime,
 				mInput.holdLeft,
 				mInput.holdRight,

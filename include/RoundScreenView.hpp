@@ -10,6 +10,7 @@ namespace fknd {
 	class RoundScreenView : public ScreenView {
 		public:
 			struct RoundScreenUpdate {
+				uint8_t&  roundId;
 				sf::Time& deltaTime;
 				bool      holdLeft;
 				bool      holdRight;
@@ -23,6 +24,7 @@ namespace fknd {
 			bool Update(RoundScreenUpdate update);
 
 		private:
+			bool mLvlIsLoaded;
 			std::shared_ptr<sf::Font>    mFont;
 			std::shared_ptr<sf::Text>    mCreditsTxt;
 			std::shared_ptr<sf::Text>    mScoreTxt;
@@ -48,7 +50,7 @@ namespace fknd {
 			
 
 
-			void LoadLevel(const std::array<const std::string, LVL_DIMENSIONS2>& level);
+			bool LoadLevel(uint8_t& roundId);
 			void UpdateBall(const sf::Time &deltaTime);
 			void UpdateBlocks();
 			bool UpdateGame(uint8_t& credits);
