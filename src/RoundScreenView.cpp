@@ -1,5 +1,6 @@
 #include <cmath>
 #include <algorithm>
+#include "ResourceManager.hpp"
 #include "RoundScreenView.hpp"
 #include "Levels.hpp"
 
@@ -9,7 +10,7 @@ namespace fknd {
 
 		mLvlIsLoaded = false;
 		//TODO filesystem exception control
-		mFont = std::make_shared<sf::Font>(PATH_FONT);
+		mFont = ResourceManager::GetFont(PATH_FONT);
 
 		mCreditsTxt = std::make_shared<sf::Text>(*mFont);
 		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR));
@@ -27,11 +28,11 @@ namespace fknd {
 		mScoreTxt->setOutlineThickness(ROUND_TXT_OUTLINE_SZ);
 		mScoreTxt->setPosition({352.0f, 864.f});
 		
-		mBackgroundTex = std::make_shared<sf::Texture>(sf::Texture(PATH_TEX_BG));
+		mBackgroundTex = ResourceManager::GetTexture(PATH_TEX_BG);
 		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
 		mBackground->setColor(ROUND_BG_TINT);
 		
-		mWallTex = std::make_shared<sf::Texture>(sf::Texture(PATH_TEX_WALL));
+		mWallTex = ResourceManager::GetTexture(PATH_TEX_WALL);
 		mWallTex->setRepeated(true);
 		mWallLeft = std::make_shared<sf::Sprite>(sf::Sprite(*mWallTex));
 		mWallLeft->setTextureRect({{0, 0},{32, 896}});
@@ -40,7 +41,7 @@ namespace fknd {
 		mWallRight->setTextureRect({{0, 0},{32, 896}});
 		mWallRight->setPosition({608, 32});
 
-		mCeilTex = std::make_shared<sf::Texture>(sf::Texture(PATH_TEX_CEIL));
+		mCeilTex = ResourceManager::GetTexture(PATH_TEX_CEIL);
 		mCeilTex->setRepeated(true);
 		mCeil = std::make_shared<sf::Sprite>(*mCeilTex);
 		mCeil->setTextureRect({{0, 0},{640, 32}});
@@ -49,10 +50,10 @@ namespace fknd {
 		mBumper = std::make_shared<Bumper>(*mBumperTex);
 		mBumper->setPosition({256, 832});
 		
-		mBallTex = std::make_shared<sf::Texture>(PATH_TEX_BALL);
+		mBallTex = ResourceManager::GetTexture(PATH_TEX_BALL);
 		mBall = std::make_shared<Ball>(*mBallTex);
 
-		mBlockTex = std::make_shared<sf::Texture>(PATH_TEX_BLOCK);
+		mBlockTex = ResourceManager::GetTexture(PATH_TEX_BLOCK);
 
 		mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
 		mDeathArea->setPosition({32, 864});

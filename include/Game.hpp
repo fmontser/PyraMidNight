@@ -5,7 +5,6 @@
 #include "RoundScreenView.hpp"
 #include "EndScreenView.hpp"
 #include "RenderManager.hpp"
-#include "ResourceManager.hpp"
 #include "InputManager.hpp"
 #include "Common.hpp"
 
@@ -29,9 +28,6 @@ namespace fknd {
 			uint32_t mScore;
 			std::vector<EndScreenView::ScoreEntry> mRanking;
 			
-			//TODO ResourceManager
-			//TODO AudioManager
-			ResourceManager      mResourceManager;
 			InputManager         mInputManager;
 			InputManager::Input  mInput;
 			RenderManager        mRenderManager;
@@ -40,7 +36,6 @@ namespace fknd {
 			std::shared_ptr<RoundScreenView> mRoundScreen;
 			std::shared_ptr<EndScreenView>   mEndScreenView;
 			
-
 			void SetNextRound();
 			void GameOver();
 			void RecordScore();

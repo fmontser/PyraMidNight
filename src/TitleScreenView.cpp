@@ -1,11 +1,11 @@
+#include "ResourceManager.hpp"
 #include "TitleScreenView.hpp"
 #include "Game.hpp"
 
 namespace fknd {
 	
 	TitleScreenView::TitleScreenView() : ScreenView() {
-		//TODO filesystem exception control
-		mFont = std::make_shared<sf::Font>(PATH_FONT);
+		mFont = ResourceManager::GetFont(PATH_FONT);
 	
 		mTitleTxt = std::make_shared<sf::Text>(*mFont);
 		mTitleTxt->setString(std::string(TITLE_STR));
@@ -32,7 +32,7 @@ namespace fknd {
 		mStartTxt->setOutlineColor(TITLE_TXT_OUTCOL);
 		mStartTxt->setOutlineThickness(TITLE_TXT_OUTLINE_SZ);
 	
-		mBackgroundTex = std::make_shared<sf::Texture>(sf::Texture(PATH_TEX_BG));
+		mBackgroundTex = ResourceManager::GetTexture(PATH_TEX_BG);
 		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
 		mBackground->setColor(TITLE_BG_TINT);
 	
