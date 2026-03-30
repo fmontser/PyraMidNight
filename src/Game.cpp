@@ -95,6 +95,7 @@ namespace fknd {
 		mState = State::END_SCREEN;
 		RecordScore();
 		ResetScore();
+		ResetCredits();
 	}
 
 	void Game::RecordScore() {
@@ -105,7 +106,9 @@ namespace fknd {
 	}
 
 	void Game::ResetScore() { mScore = 0; }
-	
+
+	void Game::ResetCredits() { mCredits = 0; }
+
 	void Game::SortRanking() {
 		std::sort(mRanking.begin(), mRanking.end(),
 		[](const EndScreenView::ScoreEntry& a, const EndScreenView::ScoreEntry& b) {

@@ -40,6 +40,7 @@ namespace fknd {
 			void GameOver();
 			void RecordScore();
 			void ResetScore();
+			void ResetCredits();
 			void SortRanking();
 			TitleScreenView::TitleScreenUpdate WrapTitleScreenUpdate();
 			RoundScreenView::RoundScreenUpdate WrapRoundScreenUpdate();
