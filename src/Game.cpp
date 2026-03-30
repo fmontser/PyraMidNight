@@ -81,18 +81,21 @@ namespace fknd {
 	}
 	
 	void Game::SetNextRound() {
-		if (mRound < mFinalRound) {
+		if (mRound < mFinalRound && mCredits > 0) {
 			mRound++;
 			mRoundScreen = std::make_shared<RoundScreenView>();
 		}
-		else
+		else {
+			mRound = 0;
 			GameOver();
+		}
 	}
 	
 	void Game::GameOver() {
 		mState = State::END_SCREEN;
 		RecordScore();
 		ResetScore();
+		ResetCredits();
 	}
 
 	void Game::RecordScore() {
@@ -103,7 +106,9 @@ namespace fknd {
 	}
 
 	void Game::ResetScore() { mScore = 0; }
-	
+
+	void Game::ResetCredits() { mCredits = 0; }
+
 	void Game::SortRanking() {
 		std::sort(mRanking.begin(), mRanking.end(),
 		[](const EndScreenView::ScoreEntry& a, const EndScreenView::ScoreEntry& b) {

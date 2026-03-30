@@ -4,6 +4,7 @@
 namespace fknd {
 	
 	Cursor::Cursor(sf::Font& font) : mFont(font) {
+		mEntryTxt = nullptr;
 		mEntryIndex = 0;
 		auto cursorSize =  sf::Vector2f({});
 		cursorSize.x =	mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.x;
@@ -11,12 +12,13 @@ namespace fknd {
 	
 		setSize(cursorSize);
 		setFillColor(CUR_FILL_COL);
-		setOutlineColor(CUR_OUTLINE_COL);
+		setOutlineColor(sf::Color::Transparent);
 		setOutlineThickness(CUR_OUTLINE_SZ);
 	}
 	
 	void Cursor::Update(Input action) {
-
+		if (mEntryTxt == nullptr)
+			return;
 		switch (action)
 		{
 			case Input::LEFT:
@@ -45,10 +47,11 @@ namespace fknd {
 		}
 	}
 	
-	void Cursor::SetEntry(std::shared_ptr<sf::Text> &entry) { 
+	bool Cursor::SetEntry(sf::Text* entry) {
 		mEntryTxt = entry;
 		auto offset = sf::Vector2f({5.0f, -30.0f});
 		move(mEntryTxt->getGlobalBounds().position + offset);
+		return true;
 	}
 	
 	bool Cursor::Accept(std::string* gameEntryName) {
@@ -59,13 +62,17 @@ namespace fknd {
 	}
 
 	void Cursor::Blink() {
-		static size_t frameCount = 0;
-		if (frameCount++ < RNDR_FRAME_LIMIT / 2)
-			setOutlineColor(sf::Color::Transparent);
-		else
-			setOutlineColor(sf::Color::Green);
-		if (frameCount == RNDR_FRAME_LIMIT)
-			frameCount = 0;
+		if (mEntryTxt == nullptr)
+			return;
+		static float timeElapsed = 0;
+		static sf::Color color = sf::Color::Transparent;
+		timeElapsed += mClock.restart().asSeconds();
+
+		if (timeElapsed >= CUR_BLINK_TIME_SEC) {
+			color = color == sf::Color::Transparent ? CUR_OUTLINE_COL : sf::Color::Transparent;
+			setOutlineColor(color);
+			timeElapsed -= CUR_BLINK_TIME_SEC;
+		}
 	}
 
 	void Cursor::ChangeChar(Input action) {

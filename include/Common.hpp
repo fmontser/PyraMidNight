@@ -21,14 +21,14 @@ namespace fknd {
 	inline constexpr float BMPR_INIT_SPEED = 0.45f;
 	inline constexpr float BMPR_MV_LIMIT_L = 32.0f;
 	inline constexpr float BMPR_MV_LIMIT_R = 480.0f;
-	inline constexpr float BMPR_ATK_DEADZONE = 0.55f;
-	inline constexpr float BMPR_ATK_PWR = 1.22f;
+	inline constexpr float BMPR_ATK_DEADZONE = 0.6f;
+	inline constexpr float BMPR_ATK_PWR = 2.22f;
 
 	//Blocks
 	
 	//Score
 	inline constexpr float SCORE_BLOCK_MOD = 25.0f;
-	inline constexpr int32_t SCORE_LOSE_BALL = -1000;
+	inline constexpr int32_t SCORE_LOSE_BALL = -100;
 	inline constexpr int32_t SCORE_TIME_PENALTY = -1;
 
 	//Cursor
@@ -37,10 +37,12 @@ namespace fknd {
 	inline constexpr float CUR_OUTLINE_SZ = 2.0f;
 	inline constexpr sf::Color CUR_OUTLINE_COL = sf::Color::Green;
 	inline constexpr sf::Color CUR_FILL_COL = sf::Color::Transparent;
+	inline constexpr float CUR_BLINK_TIME_SEC = 0.3f;
 	inline constexpr std::string_view CUR_CHAR_SET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	//TitleScreenView
 		//Text
+		inline constexpr float TITLE_CREDITS_BLINK_TIME_SEC = 0.5f;
 		inline constexpr sf::Color TITLE_TXT_FILLCOL = sf::Color::Blue;
 		inline constexpr sf::Color TITLE_TXT_OUTCOL = sf::Color::Yellow;
 		inline constexpr float TITLE_TXT_OUTLINE_SZ = 3.0f;
