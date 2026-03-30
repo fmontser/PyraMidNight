@@ -41,6 +41,7 @@ FetchContent_MakeAvailable(SFML)
 set(APP_SOURCES
 	src/main.cpp
 	src/Game.cpp
+	src/AudioManager.cpp
 	src/RenderManager.cpp
 	src/ResourceManager.cpp
 	src/InputManager.cpp
@@ -58,7 +59,7 @@ set(APP_LIBS
 	sfml-system
 	sfml-window
 	sfml-graphics
-	sfml-audio #TODO remove audio if out of scope/time
+	sfml-audio
 )
 
 add_executable(FranKanoid ${APP_SOURCES})

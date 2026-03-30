@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "Cursor.hpp"
+#include "AudioManager.hpp"
 
 namespace fknd {
 	
@@ -81,6 +82,7 @@ namespace fknd {
 		
 		str[mEntryIndex] = selected;
 		mEntryTxt->setString(str);
+		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 	}
 	
 	char Cursor::SelectChar(Input action) {
@@ -101,6 +103,7 @@ namespace fknd {
 				index = 0;
 				break;
 		}
+		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 		return selected;
 	}
 

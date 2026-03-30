@@ -85,13 +85,44 @@ namespace fknd {
 		inline constexpr sf::Color END_BG_TINT = sf::Color({64, 0, 0, 255});
 
 	//Assets
-	inline constexpr std::string_view PATH_FONT = "assets/ClearSans-Regular.ttf";
-	inline constexpr std::string_view PATH_TEX_BG = "assets/Background.png";
-	inline constexpr std::string_view PATH_TEX_WALL = "assets/Wall32.png";
-	inline constexpr std::string_view PATH_TEX_CEIL = "assets/Ceil32.png";
-	inline constexpr std::string_view PATH_TEX_BUMP = "assets/Bumper.png";
-	inline constexpr std::string_view PATH_TEX_BALL = "assets/Ball.png";
-	inline constexpr std::string_view PATH_TEX_BLOCK = "assets/Block32.png";
+	inline constexpr std::string_view PATH_FONT = "assets/fonts/ClearSans-Regular.ttf";
+
+	inline constexpr std::string_view PATH_TEX_BG = "assets/textures/Background.png";
+	inline constexpr std::string_view PATH_TEX_WALL = "assets/textures/Wall32.png";
+	inline constexpr std::string_view PATH_TEX_CEIL = "assets/textures/Ceil32.png";
+	inline constexpr std::string_view PATH_TEX_BUMP = "assets/textures/Bumper.png";
+	inline constexpr std::string_view PATH_TEX_BALL = "assets/textures/Ball.png";
+	inline constexpr std::string_view PATH_TEX_BLOCK = "assets/textures/Block32.png";
+
+	inline constexpr std::string_view PATH_AUD_BALL_BOUNCE = "assets/audio/BallBounce.ogg";
+	inline constexpr std::string_view PATH_AUD_BALL_LOSE = "assets/audio/BallLose.ogg";
+	inline constexpr std::string_view PATH_AUD_BALL_LAUNCH = "assets/audio/Launch.ogg";
+	inline constexpr std::string_view PATH_AUD_BLOCK_DAMAGE = "assets/audio/BlockDamage.ogg";
+	inline constexpr std::string_view PATH_AUD_BLOCK_DESTROY = "assets/audio/BlockDestroy.ogg";
+	inline constexpr std::string_view PATH_AUD_BUMPER_BOUNCE = "assets/audio/BumperBounce.ogg";
+	inline constexpr std::string_view PATH_AUD_PWRUP_0 = "assets/audio/PowerUp0.ogg";
+	inline constexpr std::string_view PATH_AUD_ENEMY_SPAWN = "assets/audio/EnemySpawn.ogg";
+	inline constexpr std::string_view PATH_AUD_COIN_IN = "assets/audio/Coin.ogg";
+	inline constexpr std::string_view PATH_AUD_CURSOR = "assets/audio/Cursor.ogg";
+	inline constexpr std::string_view PATH_AUD_NEXTROUND = "assets/audio/NextRound.ogg";
+	inline constexpr std::string_view PATH_AUD_GAMEOVER = "assets/audio/GameOver.ogg";
+
+	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
+
+	//AudioManager
+	inline constexpr float VOL_AUD_BALL_BOUNCE = 0.6f;
+	inline constexpr float VOL_AUD_BALL_LOSE = 1.0f;
+	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;
+	inline constexpr float VOL_AUD_BLOCK_DESTROY = 0.9f;
+	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 1.0f; //TODO
+	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO
+	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.2f;
+	inline constexpr float VOL_AUD_PWRUP_0 = 1.0f;
+	inline constexpr float VOL_AUD_COIN_IN = 1.0f;
+	inline constexpr float VOL_AUD_CURSOR = 1.0f;
+	inline constexpr float VOL_AUD_NEXTROUND = 1.0f;
+	inline constexpr float VOL_AUD_GAMEOVER = 1.0f;
+	inline constexpr float VOL_AUD_MUSIC_0 = 0.2f;
 
 	//RenderManager (DO NOT EDIT RESOLUTION!!!)
 	inline constexpr std::string_view RNDR_WINDOW_NAME = "FranKanoid";
