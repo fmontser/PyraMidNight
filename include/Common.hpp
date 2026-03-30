@@ -3,12 +3,13 @@
 #include <cstdint>
 #include <SFML/Graphics.hpp>
 
+//TODO aling variables
 namespace fknd {
 	//Game
 	inline constexpr uint32_t GAME_MAX_SCORE = std::numeric_limits<uint32_t>::max();
 	inline constexpr uint8_t GAME_MAX_CREDITS = std::numeric_limits<uint8_t>::max();
 	inline constexpr uint8_t GAME_RANK_SIZE = 10;
-	inline constexpr uint8_t GAME_FINAL_ROUND_ID = 1; //Starts at 1
+	inline constexpr uint8_t GAME_FINAL_ROUND_ID = 1;
 
 	//Ball
 	inline constexpr float        BALL_INIT_SPEED = 0.6f;
@@ -21,8 +22,11 @@ namespace fknd {
 	inline constexpr float BMPR_MV_LIMIT_L = 32.0f;
 	inline constexpr float BMPR_MV_LIMIT_R = 480.0f;
 	inline constexpr float BMPR_ATK_DEADZONE = 0.55f;
+	inline constexpr float BMPR_ATK_PWR = 1.22f;
 
-
+	//Blocks
+	//TODO variants
+	
 	//Cursor
 	inline constexpr float CUR_MV_OFFSET = 30.0f;
 	inline constexpr float CUR_FONT_SZ = 48.0f;
