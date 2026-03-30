@@ -1,10 +1,12 @@
 #include <limits>
 #include <algorithm>
 #include "Game.hpp"
+#include "ResourceManager.hpp"
 
 namespace fknd {
 	
 	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
+		ResourceManager::Init();
 		mState = Game::State::TITLE_SCREEN;
 		mCredits = 0;
 		mRound = 0;
@@ -29,7 +31,6 @@ namespace fknd {
 		mRanking.push_back({"CAN", 1});
 		SortRanking();
 
-		//TODO LEVEL VALIDATION exception!!
 	}
 	
 	// main loop

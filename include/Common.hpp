@@ -62,6 +62,7 @@ namespace fknd {
 		inline constexpr sf::Color ROUND_BG_TINT = sf::Color({0, 0, 255, 128});
 		//Level
 		inline constexpr u_int8_t LVL_DIMENSIONS2 = 9;
+		inline constexpr std::string_view LVL_CHAR_SET = "0123";
 
 	//EndScreenView
 		//Text
@@ -90,4 +91,5 @@ namespace fknd {
 	inline constexpr std::string_view RNDR_WINDOW_NAME = "FranKanoid";
 	inline constexpr sf::Vector2u RNDR_RESOLUTION = {640, 896};
 	inline constexpr uint32_t RNDR_FRAME_LIMIT = 60;
+
 }

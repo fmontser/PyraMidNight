@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <sstream>
+#include "ResourceManager.hpp"
 #include "EndScreenView.hpp"
 #include "Game.hpp"
 #include "Cursor.hpp"
@@ -10,8 +11,7 @@ namespace fknd {
 		mIsRankingDraw = false;
 		mIsNameSet =  false;
 	
-		//TODO filesystem exception control
-		mFont = std::make_shared<sf::Font>(PATH_FONT);
+		mFont = ResourceManager::GetFont(PATH_FONT);
 		mCursor = std::make_shared<Cursor>(*mFont);
 	
 		mTitleTxt = std::make_shared<sf::Text>(*mFont);
@@ -58,7 +58,7 @@ namespace fknd {
 		mContTxt->setOutlineThickness(END_TXT_OUTLINE_SZ);
 		mContTxt->setPosition({100.f, 650.f});
 	
-		mBackgroundTex = std::make_shared<sf::Texture>(sf::Texture(PATH_TEX_BG));
+		mBackgroundTex = ResourceManager::GetTexture(PATH_TEX_BG);
 		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
 		mBackground->setColor(END_BG_TINT);
 	
