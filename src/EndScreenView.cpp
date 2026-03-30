@@ -21,8 +21,7 @@ namespace fknd {
 		mTitleTxt->setOutlineColor(END_TXT_OUTCOL);
 		mTitleTxt->setOutlineThickness(END_TXT_OUTLINE_SZ);
 		mTitleTxt->setPosition({100.f, 100.f});
-	
-		//TODO make dynamic score ranking
+
 		auto rankingEntryPos = sf::Vector2f({100.0f, 160.0f});
 		for (size_t i = 0; i < 10; i++) {
 			auto nameEntry = std::make_shared<sf::Text>(*mFont);
