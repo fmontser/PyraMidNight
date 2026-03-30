@@ -13,6 +13,7 @@ namespace fknd {
 		ValidateLevels();
 		LoadTextures();
 		LoadFonts();
+		LoadAudio();
 	}
 
 	void ResourceManager::Init() { instance(); }
@@ -33,6 +34,15 @@ namespace fknd {
 		});
 		if (it != vect.end())
 			return it->font;
+	}
+
+	std::shared_ptr<sf::SoundBuffer> ResourceManager::GetAudio(const std::string_view path) {
+		auto& vect = instance().mAudios;
+		auto it = std::find_if(vect.begin(), vect.end(), [path](const Audio& audio) {
+			return audio.path == path;
+		});
+		if (it != vect.end())
+			return it->audio;
 	}
 
 	void ResourceManager::ValidateLevels() {
@@ -92,6 +102,29 @@ namespace fknd {
 				}
 		} catch(const sf::Exception& e) {
 			std::cerr << "Error: Missing or wrong font file: " << e.what() << '\n';
+			exit(1);
+		}
+	}
+	void ResourceManager::LoadAudio() {
+		std::vector<std::string_view> filePaths {
+			PATH_AUD_BALL_BOUNCE,
+			PATH_AUD_BLOCK_DAMAGE,
+			PATH_AUD_BLOCK_DESTROY,
+			PATH_AUD_BUMPER_BOUNCE,
+			PATH_AUD_ENEMY_SPAWN,
+			PATH_AUD_MUSIC_0
+		};
+
+		try {
+				for (const auto& path : filePaths) {
+					auto audio = Audio {
+						path,
+						std::make_shared<sf::SoundBuffer>(path)
+					};
+				mAudios.push_back(audio);
+				}
+		} catch(const sf::Exception& e) {
+			std::cerr << "Error: Missing or wrong audio file: " << e.what() << '\n';
 			exit(1);
 		}
 	}
