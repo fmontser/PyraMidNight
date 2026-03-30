@@ -1,5 +1,6 @@
 #include <cmath>
 #include <algorithm>
+#include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 #include "RoundScreenView.hpp"
 #include "Levels.hpp"
@@ -166,6 +167,7 @@ namespace fknd {
 		}
 		//Win
 		if (mBlockVector.empty())
+			AudioManager::Play(PATH_AUD_NEXTROUND, VOL_AUD_NEXTROUND, false);
 			return false;
 		return true;
 	}
@@ -195,9 +197,11 @@ namespace fknd {
 		ConsumeCredit(credits);
 		AddScore(score, SCORE_LOSE_BALL);
 		if (credits == 0) {
+			AudioManager::Play(PATH_AUD_GAMEOVER, VOL_AUD_GAMEOVER, false);
 			return false;
 		}
 		mBall->ResetPos(mBumper->getPosition());
+		AudioManager::Play(PATH_AUD_BALL_LOSE, VOL_AUD_BALL_LOSE, false);
 		return true;
 	};
 

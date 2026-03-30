@@ -58,8 +58,10 @@ namespace fknd {
 	}
 
 	void TitleScreenView::UpdateCredits(uint8_t& credits) {
-		if (credits < GAME_MAX_CREDITS)
+		if (credits < GAME_MAX_CREDITS) {
 			credits++;
+			AudioManager::Play(PATH_AUD_COIN_IN, VOL_AUD_COIN_IN, false);
+		}
 		mCreditsStr = std::string(TITLE_CREDITS_STR).append(
 			std::to_string(credits));
 	}

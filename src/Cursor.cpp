@@ -1,5 +1,6 @@
 #include <algorithm>
 #include "Cursor.hpp"
+#include "AudioManager.hpp"
 
 namespace fknd {
 	
@@ -21,6 +22,7 @@ namespace fknd {
 			return;
 		switch (action)
 		{
+			AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 			case Input::LEFT:
 				if (mEntryIndex > 0) {
 					move({-CUR_MV_OFFSET,0});

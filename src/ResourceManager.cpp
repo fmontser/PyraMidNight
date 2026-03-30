@@ -108,10 +108,15 @@ namespace fknd {
 	void ResourceManager::LoadAudio() {
 		std::vector<std::string_view> filePaths {
 			PATH_AUD_BALL_BOUNCE,
+			PATH_AUD_BALL_LOSE,
 			PATH_AUD_BLOCK_DAMAGE,
 			PATH_AUD_BLOCK_DESTROY,
 			PATH_AUD_BUMPER_BOUNCE,
 			PATH_AUD_ENEMY_SPAWN,
+			PATH_AUD_COIN_IN,
+			PATH_AUD_CURSOR,
+			PATH_AUD_NEXTROUND,
+			PATH_AUD_GAMEOVER,
 			PATH_AUD_MUSIC_0
 		};
 
