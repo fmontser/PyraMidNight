@@ -96,9 +96,11 @@ namespace fknd {
 
 	inline constexpr std::string_view PATH_AUD_BALL_BOUNCE = "assets/audio/BallBounce.ogg";
 	inline constexpr std::string_view PATH_AUD_BALL_LOSE = "assets/audio/BallLose.ogg";
+	inline constexpr std::string_view PATH_AUD_BALL_LAUNCH = "assets/audio/Launch.ogg";
 	inline constexpr std::string_view PATH_AUD_BLOCK_DAMAGE = "assets/audio/BlockDamage.ogg";
 	inline constexpr std::string_view PATH_AUD_BLOCK_DESTROY = "assets/audio/BlockDestroy.ogg";
 	inline constexpr std::string_view PATH_AUD_BUMPER_BOUNCE = "assets/audio/BumperBounce.ogg";
+	inline constexpr std::string_view PATH_AUD_PWRUP_0 = "assets/audio/PowerUp0.ogg";
 	inline constexpr std::string_view PATH_AUD_ENEMY_SPAWN = "assets/audio/EnemySpawn.ogg";
 	inline constexpr std::string_view PATH_AUD_COIN_IN = "assets/audio/Coin.ogg";
 	inline constexpr std::string_view PATH_AUD_CURSOR = "assets/audio/Cursor.ogg";
@@ -110,10 +112,12 @@ namespace fknd {
 	//AudioManager
 	inline constexpr float VOL_AUD_BALL_BOUNCE = 0.6f;
 	inline constexpr float VOL_AUD_BALL_LOSE = 1.0f;
+	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;
 	inline constexpr float VOL_AUD_BLOCK_DESTROY = 0.9f;
 	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 1.0f; //TODO
 	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO
 	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.2f;
+	inline constexpr float VOL_AUD_PWRUP_0 = 1.0f;
 	inline constexpr float VOL_AUD_COIN_IN = 1.0f;
 	inline constexpr float VOL_AUD_CURSOR = 1.0f;
 	inline constexpr float VOL_AUD_NEXTROUND = 1.0f;

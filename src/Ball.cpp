@@ -14,8 +14,10 @@ namespace fknd {
 	}
 
 	void Ball::Launch() {
-		if (mState == State::DOCKED)
+		if (mState == State::DOCKED) {
 			mState = State::PLAYING;
+			AudioManager::Play(PATH_AUD_BALL_LAUNCH, VOL_AUD_BALL_LAUNCH, false);
+		}
 	}
 
 	void Ball::ResetPos(const sf::Vector2f &bumperPos) {
