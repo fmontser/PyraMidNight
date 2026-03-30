@@ -7,9 +7,7 @@
 namespace fknd {
 
 	RoundScreenView::RoundScreenView() : ScreenView() {
-
 		mLvlIsLoaded = false;
-		//TODO filesystem exception control
 		mFont = ResourceManager::GetFont(PATH_FONT);
 
 		mCreditsTxt = std::make_shared<sf::Text>(*mFont);

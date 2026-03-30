@@ -2,7 +2,6 @@
 
 namespace fknd {
 	
-	//TODO remove hardcoded
 	RenderManager::RenderManager() :
 		mWindow(sf::VideoMode(RNDR_RESOLUTION),
 		"FranKanoid",

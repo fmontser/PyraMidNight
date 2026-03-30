@@ -10,14 +10,14 @@ namespace fknd {
 		mState = Game::State::TITLE_SCREEN;
 		mCredits = 0;
 		mRound = 0;
-		mFinalRound = GAME_FINAL_ROUND_ID; //TODO calculate from available levels or difficulty setting
+		mFinalRound = GAME_FINAL_ROUND_ID;
 		mScore = 0;
 	
 		mTitleScreen = nullptr;
 		mRoundScreen = nullptr;
 		mEndScreenView = nullptr;
 	
-		//TODO make score persistent (when resourceMAnager is added)
+		//TODO make score persistent
 		//Fake data
 		mRanking.push_back({"RAA", 1000000});
 		mRanking.push_back({"ELI", 900000});

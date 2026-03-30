@@ -1,7 +1,5 @@
 #include <algorithm>
 #include <cmath>
-	//TODO remove include
-	#include <iostream>
 #include "Ball.hpp"
 
 namespace fknd {
