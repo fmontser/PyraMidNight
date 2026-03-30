@@ -22,7 +22,6 @@ namespace fknd {
 			return;
 		switch (action)
 		{
-			AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 			case Input::LEFT:
 				if (mEntryIndex > 0) {
 					move({-CUR_MV_OFFSET,0});
@@ -83,6 +82,7 @@ namespace fknd {
 		
 		str[mEntryIndex] = selected;
 		mEntryTxt->setString(str);
+		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 	}
 	
 	char Cursor::SelectChar(Input action) {
@@ -103,6 +103,7 @@ namespace fknd {
 				index = 0;
 				break;
 		}
+		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 		return selected;
 	}
 

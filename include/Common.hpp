@@ -113,12 +113,12 @@ namespace fknd {
 	inline constexpr float VOL_AUD_BLOCK_DESTROY = 0.9f;
 	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 1.0f; //TODO
 	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO
-	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 1.0f;
+	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.2f;
 	inline constexpr float VOL_AUD_COIN_IN = 1.0f;
 	inline constexpr float VOL_AUD_CURSOR = 1.0f;
 	inline constexpr float VOL_AUD_NEXTROUND = 1.0f;
 	inline constexpr float VOL_AUD_GAMEOVER = 1.0f;
-	inline constexpr float VOL_AUD_MUSIC_0 = 0.15f;
+	inline constexpr float VOL_AUD_MUSIC_0 = 0.2f;
 
 	//RenderManager (DO NOT EDIT RESOLUTION!!!)
 	inline constexpr std::string_view RNDR_WINDOW_NAME = "FranKanoid";

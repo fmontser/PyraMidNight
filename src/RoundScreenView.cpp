@@ -166,9 +166,10 @@ namespace fknd {
 			return LoseBall(score, credits);;
 		}
 		//Win
-		if (mBlockVector.empty())
+		if (mBlockVector.empty()) {
 			AudioManager::Play(PATH_AUD_NEXTROUND, VOL_AUD_NEXTROUND, false);
 			return false;
+		}
 		return true;
 	}
 
