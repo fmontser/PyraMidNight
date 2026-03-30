@@ -47,18 +47,19 @@ namespace fknd {
 			std::vector<std::shared_ptr<sf::Sprite>> mColdetVector;
 			std::vector<std::shared_ptr<Block>>      mBlockVector;
 			std::vector<std::shared_ptr<sf::Sprite>> mDestroyedSprites;
-			
 
+			sf::Clock mClock;
 
 			bool LoadLevel(uint8_t& roundId);
-			void UpdateBall(const sf::Time &deltaTime);
+			void UpdateBall(uint32_t& score, const sf::Time& deltaTime);
 			void UpdateBlocks();
-			bool UpdateGame(uint8_t& credits);
+			bool UpdateGame(uint32_t& score, uint8_t& credits);
 			void UpdateCredits(uint8_t& credits);
 			void UpdateScore(uint32_t& score);
-			bool LoseBall(uint8_t& credits);
-			float GetBallDistance(const sf::Sprite &obj);
-			void AddScore(uint32_t& score, uint32_t points);
+			void ScoreTimePenalty(uint32_t& score);
+			bool LoseBall(uint32_t& score, uint8_t& credits);
+			float GetBallDistance(const sf::Sprite& obj);
+			void AddScore(uint32_t& score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
 			bool Update();
 	};

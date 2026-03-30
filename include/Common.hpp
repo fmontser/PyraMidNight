@@ -25,8 +25,12 @@ namespace fknd {
 	inline constexpr float BMPR_ATK_PWR = 1.22f;
 
 	//Blocks
-	//TODO variants
 	
+	//Score
+	inline constexpr float SCORE_BLOCK_MOD = 25.0f;
+	inline constexpr int32_t SCORE_LOSE_BALL = -1000;
+	inline constexpr int32_t SCORE_TIME_PENALTY = -1;
+
 	//Cursor
 	inline constexpr float CUR_MV_OFFSET = 30.0f;
 	inline constexpr float CUR_FONT_SZ = 48.0f;
@@ -62,7 +66,7 @@ namespace fknd {
 		inline constexpr sf::Color ROUND_BG_TINT = sf::Color({0, 0, 255, 128});
 		//Level
 		inline constexpr u_int8_t LVL_DIMENSIONS2 = 9;
-		inline constexpr std::string_view LVL_CHAR_SET = "0123";
+		inline constexpr std::string_view LVL_CHAR_SET = "01";
 
 	//EndScreenView
 		//Text

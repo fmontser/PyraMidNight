@@ -85,11 +85,11 @@ namespace fknd {
 		else if (update.holdRight)
 			mBumper->Move(1, update.deltaTime);
 
-		UpdateBall(update.deltaTime);
+		UpdateBall(update.score, update.deltaTime);
 		UpdateBlocks();
 		UpdateCredits(update.credits);
 		UpdateScore(update.score);
-		if (!UpdateGame(update.credits))
+		if (!UpdateGame(update.score, update.credits))
 			return false;
 		return true;
 	}
@@ -119,7 +119,7 @@ namespace fknd {
 		return true;
 	}
 
-	void RoundScreenView::UpdateBall(const sf::Time &deltaTime)
+	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime)
 	{
 		if (mBall->GetState() == Ball::State::PLAYING) {
 			for (const auto &obj : mColdetVector) {
@@ -128,8 +128,11 @@ namespace fknd {
 				if (distance <= mBall->GetRadius()) {
 					mBall->Bounce(*obj, distance);
 					if (typeid(*obj) == typeid(Block)) {
-						if (dynamic_cast<Block*>(obj.get())->Damage())
+						auto* block = dynamic_cast<Block*>(obj.get());
+						if (block->Damage()) {
+							AddScore(score, block->GetScore());
 							mDestroyedSprites.push_back(obj);
+						}
 					} else if (typeid(*obj) == typeid(Bumper)) {
 						mBall->ApplyBumperMod(*obj);
 					}
@@ -158,10 +161,10 @@ namespace fknd {
 		mDestroyedSprites.clear();
 	}
 
-	bool RoundScreenView::UpdateGame(uint8_t& credits) {
+	bool RoundScreenView::UpdateGame(uint32_t &score, uint8_t& credits) {
 		//Lose
 		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
-			return LoseBall(credits);;
+			return LoseBall(score, credits);;
 		}
 		//Win
 		if (mBlockVector.empty())
@@ -175,16 +178,24 @@ namespace fknd {
 	}
 
 	void RoundScreenView::UpdateScore(uint32_t& score) {
-		//TODO delete score test
-		AddScore(score, 1);
-
+		ScoreTimePenalty(score);
 		mScoreTxt->setString(std::string(ROUND_SCORE_STR)
 			.append(std::to_string(score)));
 	}
 
-	bool RoundScreenView::LoseBall(uint8_t& credits) {
+	void RoundScreenView::ScoreTimePenalty(uint32_t &score) {
+		static float timeElapsed = 0; // dt es el tiempo que pasó desde el último frame
+		timeElapsed += mClock.restart().asSeconds();
+
+			if (timeElapsed >= 1.0f) { // ¿Ha pasado 1 segundo en total?
+				AddScore(score, SCORE_TIME_PENALTY);
+				timeElapsed -= 1.0f;   // Restamos el segundo exacto, no reseteamos a 0
+			}
+	}
+
+	bool RoundScreenView::LoseBall(uint32_t& score ,uint8_t& credits) {
 		ConsumeCredit(credits);
-		//TODO score penalty?
+		AddScore(score, SCORE_LOSE_BALL);
 		if (credits == 0) {
 			return false;
 		}
@@ -202,11 +213,17 @@ namespace fknd {
 		return std::sqrtf((distX * distX) + (distY * distY));
 	}
 
-	void RoundScreenView::AddScore(uint32_t& score, uint32_t points) {
-		if (points > (GAME_MAX_SCORE - score))
-			score = GAME_MAX_SCORE;
+	void RoundScreenView::AddScore(uint32_t& score, int32_t points) {
+		int64_t score64 = static_cast<int64_t>(score);
+		int64_t points64 = static_cast<int64_t>(points);
+		int64_t maxScore64 = static_cast<int64_t>(GAME_MAX_SCORE);
+
+ 		if (points64 < 0 && score64 < std::abs(points64))
+			score = 0;
+		else if (points64 > (maxScore64 - score64))
+			score = maxScore64;
 		else
-			score += points;
+			score += points64;
 	}
 
 	void RoundScreenView::ConsumeCredit(uint8_t& credits) {

@@ -10,8 +10,10 @@ namespace fknd {
 			Block(const sf::Texture& texture, int8_t hitPoints);
 	
 			bool Damage();
+			int32_t GetScore();
 		private:
-			int8_t hitPoints;
+			int8_t  mHitPoints;
+			int32_t mScorePoints;
 	};
 
 }
