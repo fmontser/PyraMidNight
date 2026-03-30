@@ -14,7 +14,7 @@ namespace fknd {
 		"000000000",
 		"000000000",
 		"000000000",
-		"000000000"
+		"000000000",
 	};
 
 	const std::array<const std::string, LVL_DIMENSIONS2> LEVEL1 = {

@@ -4,8 +4,9 @@
 #include "TitleScreenView.hpp"
 #include "RoundScreenView.hpp"
 #include "EndScreenView.hpp"
-#include "InputManager.hpp"
 #include "RenderManager.hpp"
+#include "ResourceManager.hpp"
+#include "InputManager.hpp"
 #include "Common.hpp"
 
 namespace fknd {
@@ -30,6 +31,7 @@ namespace fknd {
 			
 			//TODO ResourceManager
 			//TODO AudioManager
+			ResourceManager      mResourceManager;
 			InputManager         mInputManager;
 			InputManager::Input  mInput;
 			RenderManager        mRenderManager;
