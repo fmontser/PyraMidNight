@@ -15,6 +15,7 @@ namespace fknd {
 			void Update(Input action);
 			void SetEntry(std::shared_ptr<sf::Text>& entry);
 			bool Accept(std::string* gameEntryName);
+			void Blink();
 	
 		private:
 			std::shared_ptr<sf::Text> mEntryTxt;
