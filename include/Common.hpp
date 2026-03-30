@@ -99,6 +99,14 @@ namespace fknd {
 	inline constexpr std::string_view PATH_AUD_ENEMY_SPAWN = "assets/audio/EnemySpawn.ogg";
 	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
 
+	//AudioManager
+	inline constexpr float VOL_AUD_BALL_BOUNCE = 1.0f;
+	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 1.0f;
+	inline constexpr float VOL_AUD_BLOCK_DESTROY = 1.0f;
+	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 1.0f;
+	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f;
+	inline constexpr float VOL_AUD_MUSIC_0 = 0.2f;
+
 	//RenderManager (DO NOT EDIT RESOLUTION!!!)
 	inline constexpr std::string_view RNDR_WINDOW_NAME = "FranKanoid";
 	inline constexpr sf::Vector2u RNDR_RESOLUTION = {640, 896};

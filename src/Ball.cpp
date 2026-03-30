@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include "Ball.hpp"
+#include "AudioManager.hpp"
 
 namespace fknd {
 
@@ -47,6 +48,7 @@ namespace fknd {
 			mDirection.x = -mDirection.x;
 		else if (isBounceVertical)
 			mDirection.y = -mDirection.y;
+		AudioManager::Play(PATH_AUD_BALL_BOUNCE, VOL_AUD_BALL_BOUNCE, false);
 	}
 
 	void Ball::ApplyBumperMod(const sf::Sprite& bumper) {
@@ -61,7 +63,8 @@ namespace fknd {
 		mDirection.x = modFactor;
 
 		// keep upwards
-		mDirection.y = -std::sqrt(std::max(0.0f, std::powf(normSpeed, 2) - std::powf(mDirection.x, 2))); 
+		mDirection.y = -std::sqrt(std::max(0.0f, std::powf(normSpeed, 2) - std::powf(mDirection.x, 2)));
+		AudioManager::Play(PATH_AUD_BUMPER_BOUNCE, VOL_AUD_BUMPER_BOUNCE, false);
 	}
 
 	float Ball::GetBallDistance(const sf::Sprite& obj) {

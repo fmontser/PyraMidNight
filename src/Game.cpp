@@ -2,11 +2,13 @@
 #include <algorithm>
 #include "Game.hpp"
 #include "ResourceManager.hpp"
+#include "AudioManager.hpp"
 
 namespace fknd {
 	
 	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 		ResourceManager::Init();
+		AudioManager::Init();
 		mState = Game::State::TITLE_SCREEN;
 		mCredits = 0;
 		mRound = 0;

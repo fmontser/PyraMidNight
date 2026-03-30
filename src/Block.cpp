@@ -1,4 +1,5 @@
 #include "Block.hpp"
+#include "AudioManager.hpp"
 
 namespace fknd {
 
@@ -9,8 +10,11 @@ namespace fknd {
 	
 	bool Block::Damage() {
 		mHitPoints--;
-		if (mHitPoints == 0)
+		if (mHitPoints == 0) {
+			AudioManager::Play(PATH_AUD_BLOCK_DESTROY, VOL_AUD_BLOCK_DESTROY, false);
 			return true;
+		}
+		AudioManager::Play(PATH_AUD_BLOCK_DAMAGE, VOL_AUD_BLOCK_DAMAGE, false);
 		return false;
 	}
 
