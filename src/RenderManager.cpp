@@ -1,26 +1,30 @@
 #include "RenderManager.hpp"
 
-//TODO remove hardcoded
-RenderManager::RenderManager() :
-	mWindow(sf::VideoMode({640, 896}),
-	"FranKanoid",
-	sf::Style::Titlebar | sf::Style::Close) {
-		mWindow.setFramerateLimit(60);
-}
+namespace fknd {
+	
+	//TODO remove hardcoded
+	RenderManager::RenderManager() :
+		mWindow(sf::VideoMode(RNDR_RESOLUTION),
+		"FranKanoid",
+		sf::Style::Titlebar | sf::Style::Close) {
+			mWindow.setFramerateLimit(RNDR_FRAME_LIMIT);
+	}
+	
+	void RenderManager::RenderFrame(
+		std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
+		mWindow.clear();
+	
+		for (const auto& drw : drawables)
+			mWindow.draw(*drw);
+	
+		mWindow.display();
+	}
+	
+	sf::Time& RenderManager::GetDeltaTime() { 
+		mDeltaTime = mClock.restart();
+		return mDeltaTime;
+	}
+	
+	sf::RenderWindow& RenderManager::GetWindow() { return mWindow; }
 
-void RenderManager::RenderFrame(ScreenView& screenView) {
-	mWindow.clear();
-
-	for (const auto& drw : screenView.GetDrawables())
-		mWindow.draw(*drw);
-
-	mWindow.display();
-}
-
-sf::Time& RenderManager::GetDeltaTime() { 
-	mDeltaTime = mClock.restart();
-	return mDeltaTime;
-}
-
-sf::RenderWindow& RenderManager::GetWindow() { return mWindow; }
-
+}	

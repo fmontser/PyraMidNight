@@ -1,7 +1,10 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "Common.hpp"
 
-class Ball : public sf::Sprite {
+namespace fknd {
+
+	class Ball : public sf::Sprite {
 	public:
 		enum class State {
 			DOCKED, PLAYING
@@ -11,7 +14,7 @@ class Ball : public sf::Sprite {
 
 		void Launch();
 		void ResetPos(const sf::Vector2f& bumperPos);
-		void Update(const sf::Vector2f &bumperPos,const sf::Time& deltaTime);
+		void Update(const sf::Vector2f &bumperPos, const sf::Time& deltaTime);
 		void Bounce(const sf::Sprite &obj, float distance);
 		void ApplyBumperMod(const sf::Sprite& bumper);
 
@@ -24,7 +27,11 @@ class Ball : public sf::Sprite {
 		sf::Vector2f    mDirection;
 		float           mRadius;
 		
-		void Move(const sf::Time& deltaTime);
-		float GetDistance(sf::Rect<float> rect);
-		void ResolveOverlap(float distance);
+		//TODO move GetBallDistance here?
+		void  Move(const sf::Time& deltaTime);
+		void  ResolveOverlap(float distance);
 	};
+
+}
+
+

@@ -2,30 +2,55 @@
 #include <string>
 #include "ScreenView.hpp"
 #include "Cursor.hpp"
+#include "Common.hpp"
 
-class EndScreenView : public ScreenView {
-	public:
-		struct ScoreEntry {
-			std::shared_ptr<sf::Text> name;
-			std::shared_ptr<sf::Text> score;
-		};
+namespace fknd {
+	
+	class EndScreenView : public ScreenView {
+		public:
+		
+			struct ScoreEntry {
+				std::string name;
+				uint32_t    score;
+			};
 
-		EndScreenView();
-		bool Update(Game& game) override;
+			struct EndScreenUpdate {
+				bool      left;
+				bool      right;
+				bool      up;
+				bool      down;
+				bool      action;
+				uint32_t& score;
+				std::vector<ScoreEntry>& ranking;
+			};
+			
+			EndScreenView();
 
-	private:
-		std::shared_ptr<sf::Font>           mFont;
-		std::shared_ptr<sf::Text>           mTitleTxt;
-		std::shared_ptr<sf::Text>           mStartTxt;
-		std::shared_ptr<sf::Texture>        mBackgroundTex;
-		std::shared_ptr<sf::Sprite>         mBackground;
-		std::shared_ptr<Cursor>             mCursor;
+			bool Update(EndScreenUpdate update);
+			
+		private:
+			
+			
+			struct ScoreEntryText {
+				std::shared_ptr<sf::Text> name;
+				std::shared_ptr<sf::Text> score;
+			};
 
-		std::vector<ScoreEntry> mRankingTxt;
-		bool mIsRankingDraw;
-		bool mIsNameSet;
+			std::shared_ptr<sf::Font>           mFont;
+			std::shared_ptr<sf::Text>           mTitleTxt;
+			std::shared_ptr<sf::Text>           mContTxt;
+			std::shared_ptr<sf::Texture>        mBackgroundTex;
+			std::shared_ptr<sf::Sprite>         mBackground;
+			std::shared_ptr<Cursor>             mCursor;
+	
+			std::vector<ScoreEntryText> mRankingTxt;
+			bool mIsRankingDraw;
+			bool mIsNameSet;
+	
+			bool DrawPlayerRanking(std::vector<ScoreEntry>& ranking);
+			std::string* GetGameEntryName(std::vector<ScoreEntry>& ranking); 
+			std::string PadZeroScore(uint32_t score, uint32_t digits);
+			bool Update();
+	};
 
-		bool SetGameRanking(Game& game);
-		std::string* GetGameEntryName(Game& game); 
-		std::string PadZeroScore(uint32_t score, uint32_t digits);
-};
+}

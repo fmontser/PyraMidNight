@@ -2,17 +2,23 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "ScreenView.hpp"
+#include "Common.hpp"
 
-class RenderManager {
-	public:
-		RenderManager();
-		void RenderFrame(ScreenView& screenView);
+namespace fknd {
+	
+	class RenderManager {
+		public:
+			RenderManager();
+			void RenderFrame(
+				std::vector<std::shared_ptr<sf::Drawable>>& drawables);
+	
+			sf::Time& GetDeltaTime();
+			sf::RenderWindow& GetWindow();
+	
+		private:
+			sf::RenderWindow mWindow;
+			sf::Clock        mClock;
+			sf::Time         mDeltaTime;
+	};
 
-		sf::Time& GetDeltaTime();
-		sf::RenderWindow& GetWindow();
-
-	private:
-		sf::RenderWindow mWindow;
-		sf::Clock        mClock;
-		sf::Time         mDeltaTime;
-};
+}

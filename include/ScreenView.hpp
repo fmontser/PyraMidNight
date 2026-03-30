@@ -1,20 +1,22 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <memory>
+#include "Common.hpp"
 
-class Game;
+namespace fknd {
+	
+	class ScreenView {
+		public:
+			struct ScreenUpdate {};
 
-class ScreenView {
-	public:
-		virtual ~ScreenView() = default;
+			virtual bool Update() = 0;
+			std::vector<std::shared_ptr<sf::Drawable>>& GetDrawables();
 
-		virtual bool Update(Game& game) = 0;
+			
+		protected:
+			ScreenView();
+			
+			std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
+		};
 
-		std::vector<std::shared_ptr<sf::Drawable>>&
-		GetDrawables();
-
-	protected:
-		ScreenView();
-		
-		std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
-};
+}
