@@ -23,6 +23,7 @@ namespace fknd {
 				if (mEntryIndex > 0) {
 					move({-CUR_MV_OFFSET,0});
 					mEntryIndex = std::clamp(--mEntryIndex, (size_t)0, (size_t)2);
+					SelectChar(Input::LEFT);
 				}
 				break;
 			case Input::RIGHT:
@@ -30,6 +31,7 @@ namespace fknd {
 				if (mEntryIndex < 2) {
 					move({CUR_MV_OFFSET,0});
 					mEntryIndex = std::clamp(++mEntryIndex, (size_t)0, (size_t)2);
+					SelectChar(Input::RIGHT);
 				}
 				break;
 			case Input::UP:
@@ -67,7 +69,7 @@ namespace fknd {
 	
 	//TODO fix first down push
 	char Cursor::SelectChar(Input action) {
-		static int index = -1;
+		static int index = 0;
 		char selected = 'A';
 		const int max = CUR_CHAR_SET.size();
 	
@@ -81,6 +83,7 @@ namespace fknd {
 				selected = CUR_CHAR_SET[index];
 				break;
 			default:
+				index = 0;
 				break;
 		}
 		return selected;
