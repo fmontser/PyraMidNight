@@ -47,10 +47,11 @@ namespace fknd {
 		}
 	}
 	
-	void Cursor::SetEntry(sf::Text* entry) {
+	bool Cursor::SetEntry(sf::Text* entry) {
 		mEntryTxt = entry;
 		auto offset = sf::Vector2f({5.0f, -30.0f});
 		move(mEntryTxt->getGlobalBounds().position + offset);
+		return true;
 	}
 	
 	bool Cursor::Accept(std::string* gameEntryName) {

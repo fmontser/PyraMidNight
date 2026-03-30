@@ -13,7 +13,7 @@ namespace fknd {
 			Cursor(sf::Font& font);
 	
 			void Update(Input action);
-			void SetEntry(sf::Text* entry);
+			bool SetEntry(sf::Text* entry);
 			bool Accept(std::string* gameEntryName);
 			void Blink();
 	

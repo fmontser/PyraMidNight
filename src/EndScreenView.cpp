@@ -50,7 +50,6 @@ namespace fknd {
 		}
 		
 		mContTxt = std::make_shared<sf::Text>(*mFont);
-		mContTxt->setScale({0,0});
 		mContTxt->setString(std::string(END_CONT_STR));
 		mContTxt->setCharacterSize(END_TXT_CONT_CHAR_SZ);
 		mContTxt->setFillColor(END_TXT_FILLCOL);
@@ -76,15 +75,18 @@ namespace fknd {
 
 	bool EndScreenView::Update(EndScreenUpdate update) {
 
-	
 		if (!mIsRankingDraw) {
+			auto isEntryFound = false;
 			mIsRankingDraw = DrawPlayerRanking(update.ranking);
-				
 			//Find record for cursor
 			for (auto& text : mRankingTxt) {
 				if (text.name->getString() == "   ")
-					mCursor->SetEntry(text.name.get());
+					isEntryFound = mCursor->SetEntry(text.name.get());
 			}
+			if (isEntryFound)
+				mContTxt->setScale({0,0});
+			else
+				mIsNameSet = true;
 		}
 		if (!mIsNameSet) {
 			mCursor->Blink();

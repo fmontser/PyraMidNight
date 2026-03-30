@@ -21,8 +21,8 @@ namespace fknd {
 	inline constexpr float BMPR_INIT_SPEED = 0.45f;
 	inline constexpr float BMPR_MV_LIMIT_L = 32.0f;
 	inline constexpr float BMPR_MV_LIMIT_R = 480.0f;
-	inline constexpr float BMPR_ATK_DEADZONE = 0.55f;
-	inline constexpr float BMPR_ATK_PWR = 1.22f;
+	inline constexpr float BMPR_ATK_DEADZONE = 0.6f;
+	inline constexpr float BMPR_ATK_PWR = 2.22f;
 
 	//Blocks
 	
@@ -42,6 +42,7 @@ namespace fknd {
 
 	//TitleScreenView
 		//Text
+		inline constexpr float TITLE_CREDITS_BLINK_TIME_SEC = 0.5f;
 		inline constexpr sf::Color TITLE_TXT_FILLCOL = sf::Color::Blue;
 		inline constexpr sf::Color TITLE_TXT_OUTCOL = sf::Color::Yellow;
 		inline constexpr float TITLE_TXT_OUTLINE_SZ = 3.0f;
