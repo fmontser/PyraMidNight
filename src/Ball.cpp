@@ -1,5 +1,7 @@
 #include <algorithm>
 #include <cmath>
+	//TODO remove include
+	#include <iostream>
 #include "Ball.hpp"
 
 namespace fknd {
@@ -49,18 +51,19 @@ namespace fknd {
 			mDirection.y = -mDirection.y;
 	}
 
-	//TODO add formula as comment?
 	void Ball::ApplyBumperMod(const sf::Sprite& bumper) {
 		
 		float bumperWidth = bumper.getGlobalBounds().size.x;
 		float bumperX = bumper.getPosition().x + bumperWidth / 2.0f;
 		float modFactor = (getPosition().x - bumperX) / (bumperWidth / 2.0f);
-		float speed = std::sqrt(std::powf(mDirection.x, 2) + std::powf(mDirection.y, 2));
-		
-		// Apply control modification
+		float normSpeed = std::sqrt(std::powf(mDirection.x, 2) + std::powf(mDirection.y, 2));
+
+		if (std::abs(modFactor) < BMPR_ATK_DEADZONE)
+			modFactor = (modFactor < 0) ? -BMPR_ATK_DEADZONE : BMPR_ATK_DEADZONE;
 		mDirection.x = modFactor;
-		//Keep vector speed and upwards direction
-		mDirection.y = -std::sqrt(std::max(0.0f, std::powf(speed, 2) - std::powf(mDirection.x, 2))); 
+
+		// keep upwards
+		mDirection.y = -std::sqrt(std::max(0.0f, std::powf(normSpeed, 2) - std::powf(mDirection.x, 2))); 
 	}
 
 	const Ball::State &Ball::GetState() const { return mState; }
