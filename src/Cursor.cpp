@@ -15,14 +15,15 @@ namespace fknd {
 		setOutlineThickness(CUR_OUTLINE_SZ);
 	}
 	
-	//TODO fix cursor pos
 	void Cursor::Update(Input action) {
+
 		switch (action)
 		{
 			case Input::LEFT:
 				if (mEntryIndex > 0) {
 					move({-CUR_MV_OFFSET,0});
 					mEntryIndex = std::clamp(--mEntryIndex, (size_t)0, (size_t)2);
+					SelectChar(Input::LEFT);
 				}
 				break;
 			case Input::RIGHT:
@@ -30,6 +31,7 @@ namespace fknd {
 				if (mEntryIndex < 2) {
 					move({CUR_MV_OFFSET,0});
 					mEntryIndex = std::clamp(++mEntryIndex, (size_t)0, (size_t)2);
+					SelectChar(Input::RIGHT);
 				}
 				break;
 			case Input::UP:
@@ -45,10 +47,10 @@ namespace fknd {
 	
 	void Cursor::SetEntry(std::shared_ptr<sf::Text> &entry) { 
 		mEntryTxt = entry;
-		move(mEntryTxt->getGlobalBounds().position);
+		auto offset = sf::Vector2f({5.0f, -30.0f});
+		move(mEntryTxt->getGlobalBounds().position + offset);
 	}
 	
-	//TODO refactor ranking system
 	bool Cursor::Accept(std::string* gameEntryName) {
 		if (gameEntryName != nullptr)
 			*gameEntryName = mEntryTxt->getString();
@@ -56,7 +58,16 @@ namespace fknd {
 		return true;
 	}
 
-	//TODO fix first down push
+	void Cursor::Blink() {
+		static size_t frameCount = 0;
+		if (frameCount++ < RNDR_FRAME_LIMIT / 2)
+			setOutlineColor(sf::Color::Transparent);
+		else
+			setOutlineColor(sf::Color::Green);
+		if (frameCount == RNDR_FRAME_LIMIT)
+			frameCount = 0;
+	}
+
 	void Cursor::ChangeChar(Input action) {
 		char selected = SelectChar(action);
 		std::string str = mEntryTxt->getString();
@@ -65,9 +76,8 @@ namespace fknd {
 		mEntryTxt->setString(str);
 	}
 	
-	//TODO fix first down push
 	char Cursor::SelectChar(Input action) {
-		static int index = -1;
+		static int index = 0;
 		char selected = 'A';
 		const int max = CUR_CHAR_SET.size();
 	
@@ -81,6 +91,7 @@ namespace fknd {
 				selected = CUR_CHAR_SET[index];
 				break;
 			default:
+				index = 0;
 				break;
 		}
 		return selected;
