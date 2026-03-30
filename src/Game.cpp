@@ -85,8 +85,10 @@ namespace fknd {
 			mRound++;
 			mRoundScreen = std::make_shared<RoundScreenView>();
 		}
-		else
+		else {
+			mRound = 0;
 			GameOver();
+		}
 	}
 	
 	void Game::GameOver() {
