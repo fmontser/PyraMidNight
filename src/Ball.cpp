@@ -66,6 +66,16 @@ namespace fknd {
 		mDirection.y = -std::sqrt(std::max(0.0f, std::powf(normSpeed, 2) - std::powf(mDirection.x, 2))); 
 	}
 
+	float Ball::GetBallDistance(const sf::Sprite& obj) {
+		auto bPos = getPosition();
+		auto rect = obj.getGlobalBounds();
+		float closestX = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);
+		float closestY = std::clamp(bPos.y, rect.position.y, rect.position.y + rect.size.y);
+		float distX = bPos.x - closestX;
+		float distY = bPos.y - closestY;
+		return std::sqrtf((distX * distX) + (distY * distY));
+	}
+
 	const Ball::State &Ball::GetState() const { return mState; }
 	const float Ball::GetRadius() const { return mRadius; }
 

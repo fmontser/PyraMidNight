@@ -123,7 +123,7 @@ namespace fknd {
 	{
 		if (mBall->GetState() == Ball::State::PLAYING) {
 			for (const auto &obj : mColdetVector) {
-				float distance = GetBallDistance(*obj);
+				float distance = mBall->GetBallDistance(*obj);
 
 				if (distance <= mBall->GetRadius()) {
 					mBall->Bounce(*obj, distance);
@@ -202,16 +202,6 @@ namespace fknd {
 		mBall->ResetPos(mBumper->getPosition());
 		return true;
 	};
-
-	float RoundScreenView::GetBallDistance(const sf::Sprite& obj) {
-		auto bPos = mBall->getPosition();
-		auto rect = obj.getGlobalBounds();
-		float closestX = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);
-		float closestY = std::clamp(bPos.y, rect.position.y, rect.position.y + rect.size.y);
-		float distX = bPos.x - closestX;
-		float distY = bPos.y - closestY;
-		return std::sqrtf((distX * distX) + (distY * distY));
-	}
 
 	void RoundScreenView::AddScore(uint32_t& score, int32_t points) {
 		int64_t score64 = static_cast<int64_t>(score);

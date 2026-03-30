@@ -18,7 +18,8 @@ namespace fknd {
 		void Bounce(const sf::Sprite &obj, float distance);
 		void ApplyBumperMod(const sf::Sprite& bumper);
 
-		const State& GetState() const;
+		float GetBallDistance(const sf::Sprite &obj);
+		const State &GetState() const;
 		const float GetRadius() const;
 		
 	private:
@@ -27,7 +28,6 @@ namespace fknd {
 		sf::Vector2f    mDirection;
 		float           mRadius;
 		
-		//TODO move GetBallDistance here?
 		void  Move(const sf::Time& deltaTime);
 		void  ResolveOverlap(float distance);
 	};
