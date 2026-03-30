@@ -28,7 +28,7 @@ namespace fknd {
 	
 	//Score
 	inline constexpr float SCORE_BLOCK_MOD = 25.0f;
-	inline constexpr int32_t SCORE_LOSE_BALL = -1000;
+	inline constexpr int32_t SCORE_LOSE_BALL = -100;
 	inline constexpr int32_t SCORE_TIME_PENALTY = -1;
 
 	//Cursor
@@ -37,6 +37,7 @@ namespace fknd {
 	inline constexpr float CUR_OUTLINE_SZ = 2.0f;
 	inline constexpr sf::Color CUR_OUTLINE_COL = sf::Color::Green;
 	inline constexpr sf::Color CUR_FILL_COL = sf::Color::Transparent;
+	inline constexpr float CUR_BLINK_TIME_SEC = 0.3f;
 	inline constexpr std::string_view CUR_CHAR_SET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
 	//TitleScreenView

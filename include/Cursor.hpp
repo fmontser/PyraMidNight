@@ -13,14 +13,15 @@ namespace fknd {
 			Cursor(sf::Font& font);
 	
 			void Update(Input action);
-			void SetEntry(std::shared_ptr<sf::Text>& entry);
+			void SetEntry(sf::Text* entry);
 			bool Accept(std::string* gameEntryName);
 			void Blink();
 	
 		private:
-			std::shared_ptr<sf::Text> mEntryTxt;
+			sf::Text* mEntryTxt;
 			sf::Font& mFont;
-			size_t mEntryIndex;
+			size_t    mEntryIndex;
+			sf::Clock mClock;
 			
 			void ChangeChar(Input action);
 			char SelectChar(Input action);

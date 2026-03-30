@@ -83,10 +83,9 @@ namespace fknd {
 			//Find record for cursor
 			for (auto& text : mRankingTxt) {
 				if (text.name->getString() == "   ")
-					mCursor->SetEntry(text.name);
+					mCursor->SetEntry(text.name.get());
 			}
 		}
-
 		if (!mIsNameSet) {
 			mCursor->Blink();
 			if (update.left)

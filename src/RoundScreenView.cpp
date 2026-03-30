@@ -178,7 +178,7 @@ namespace fknd {
 	}
 
 	void RoundScreenView::UpdateScore(uint32_t& score) {
-		ScoreTimePenalty(score);
+		//ScoreTimePenalty(score);
 		mScoreTxt->setString(std::string(ROUND_SCORE_STR)
 			.append(std::to_string(score)));
 	}
