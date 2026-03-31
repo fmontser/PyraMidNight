@@ -57,7 +57,8 @@ namespace fknd {
 	const std::vector<std::array<const std::string, LVL_DIMENSIONS2>> ROUNDS {
 		LEVEL0,
 		LEVEL1,
-		LEVEL2
+		LEVEL2,
+		LEVEL3
 	};
 
 }
