@@ -15,6 +15,8 @@ namespace fknd {
 	
 			mFrameInput.holdLeft  = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
 			mFrameInput.holdRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
+			mFrameInput.coarse  = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
+			mFrameInput.fine = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RControl);
 	
 			if (const auto* key = event->getIf<sf::Event::KeyReleased>()) {
 				switch (key->code) {

@@ -7,12 +7,14 @@ namespace fknd {
 	class InputManager {
 		public:
 			struct Input {
+				bool left;
+				bool right;
 				bool up;
 				bool down;
-				bool left;
 				bool holdLeft;
-				bool right;
 				bool holdRight;
+				bool coarse;
+				bool fine;
 				bool action;
 				bool coin;
 				bool menu;
