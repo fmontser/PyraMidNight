@@ -37,7 +37,7 @@ namespace fknd {
 	
 	// main loop
 	void Game::Run() {
-	
+
 		while (mRenderManager.GetWindow().isOpen()) {
 			mInput = mInputManager.FetchInput();
 			mDeltaTime = mRenderManager.GetDeltaTime();
@@ -51,7 +51,6 @@ namespace fknd {
 					mInput.menu = false;
 				}
 			}
-
 
 			switch (mState) {
 				case State::MENU:
