@@ -4,7 +4,7 @@
 
 namespace fknd {
 	
-	Cursor::Cursor(sf::Font& font) : mFont(font) {
+	Cursor::Cursor(sf::Font& font, sf::Clock& clock) : mFont(font), mClock(clock) {
 		mEntryTxt = nullptr;
 		mEntryIndex = 0;
 		auto cursorSize =  sf::Vector2f({});

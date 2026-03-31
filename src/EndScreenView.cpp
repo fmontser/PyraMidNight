@@ -12,7 +12,7 @@ namespace fknd {
 		mIsNameSet =  false;
 	
 		mFont = ResourceManager::GetFont(PATH_FONT);
-		mCursor = std::make_shared<Cursor>(*mFont);
+		mCursor = std::make_shared<Cursor>(*mFont, mClock);
 	
 		mTitleTxt = std::make_shared<sf::Text>(*mFont);
 		mTitleTxt->setString(std::string(END_STR));

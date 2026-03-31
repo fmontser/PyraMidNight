@@ -46,6 +46,7 @@ set(APP_SOURCES
 	src/ResourceManager.cpp
 	src/InputManager.cpp
 	src/ScreenView.cpp
+	src/MenuScreenView.cpp
 	src/TitleScreenView.cpp
 	src/RoundScreenView.cpp
 	src/EndScreenView.cpp

@@ -9,7 +9,7 @@ namespace fknd {
 	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 		ResourceManager::Init();
 		AudioManager::Init();
-		mState = Game::State::TITLE_SCREEN;
+		mState = State::TITLE_SCREEN;
 		mCredits = 0;
 		mRound = 0;
 		mFinalRound = GAME_FINAL_ROUND_ID;
@@ -37,16 +37,36 @@ namespace fknd {
 	
 	// main loop
 	void Game::Run() {
-	
+
 		while (mRenderManager.GetWindow().isOpen()) {
 			mInput = mInputManager.FetchInput();
 			mDeltaTime = mRenderManager.GetDeltaTime();
 
 			if (mInput.close)
 				mRenderManager.GetWindow().close();
+			if (mInput.menu) {
+				if (mState != State::MENU) {
+					mPrevState = mState;
+					mState = State::MENU;
+					mInput.menu = false;
+				}
+			}
 
 			switch (mState) {
-				case Game::State::TITLE_SCREEN:
+				case State::MENU:
+					if (mMenuScreen == nullptr) {
+						Pause();
+						mMenuScreen = std::make_shared<MenuScreenView>();
+					}
+					if (!mMenuScreen->Update(WrapMenuScreenUpdate())) {
+						mState = mPrevState;
+						mMenuScreen = nullptr;
+						Resume();
+						break;
+					}
+					mRenderManager.RenderFrame(mMenuScreen->GetDrawables());
+					break;
+				case State::TITLE_SCREEN:
 					if (mTitleScreen == nullptr)
 						mTitleScreen = std::make_shared<TitleScreenView>();
 					if (!mTitleScreen->Update(WrapTitleScreenUpdate())) {
@@ -56,7 +76,7 @@ namespace fknd {
 					}
 					mRenderManager.RenderFrame(mTitleScreen->GetDrawables());
 					break;
-				case Game::State::ROUND_SCREEN:
+				case State::ROUND_SCREEN:
 					if (mRoundScreen == nullptr)
 						mRoundScreen = std::make_shared<RoundScreenView>();
 					if (!mRoundScreen->Update(WrapRoundScreenUpdate())) {
@@ -66,7 +86,7 @@ namespace fknd {
 					}
 					mRenderManager.RenderFrame(mRoundScreen->GetDrawables());
 					break;
-				case Game::State::END_SCREEN:
+				case State::END_SCREEN:
 					if (mEndScreenView == nullptr)
 						mEndScreenView = std::make_shared<EndScreenView>();
 					if (!mEndScreenView->Update(WrapEndScreenUpdate())) {
@@ -117,6 +137,35 @@ namespace fknd {
 			return a.score > b.score;
 		}
 		);
+	}
+
+	void Game::Pause() {
+		if (mTitleScreen != nullptr)
+			mTitleScreen->Pause();
+		if (mRoundScreen != nullptr)
+			mRoundScreen->Pause();
+		if (mEndScreenView != nullptr)
+			mEndScreenView->Pause();
+	}
+
+	void Game::Resume() {
+		if (mTitleScreen != nullptr)
+			mTitleScreen->Resume();
+		if (mRoundScreen != nullptr)
+			mRoundScreen->Resume();
+		if (mEndScreenView != nullptr)
+			mEndScreenView->Resume();
+	}
+
+	MenuScreenView::MenuScreenUpdate Game::WrapMenuScreenUpdate() {
+		return {
+				mInput.action,
+				mInput.menu,
+				mInput.left,
+				mInput.right,
+				mInput.up,
+				mInput.down
+		};
 	}
 
 	TitleScreenView::TitleScreenUpdate Game::WrapTitleScreenUpdate() {
