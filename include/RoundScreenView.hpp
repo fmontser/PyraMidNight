@@ -14,6 +14,8 @@ namespace fknd {
 				sf::Time& deltaTime;
 				bool      holdLeft;
 				bool      holdRight;
+				bool      coarse;
+				bool      fine;
 				bool      action;
 				uint8_t&  credits;
 				uint32_t& score;

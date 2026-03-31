@@ -80,9 +80,9 @@ namespace fknd {
 		if (update.action)
 			mBall->Launch();
 		if (update.holdLeft)
-			mBumper->Move(-1, update.deltaTime);
+			mBumper->Move(-1, update.deltaTime, update.fine, update.coarse);
 		else if (update.holdRight)
-			mBumper->Move(1, update.deltaTime);
+			mBumper->Move(1, update.deltaTime, update.fine, update.coarse);
 
 		UpdateBall(update.score, update.deltaTime);
 		UpdateBlocks();
@@ -179,18 +179,18 @@ namespace fknd {
 	}
 
 	void RoundScreenView::UpdateScore(uint32_t& score) {
-		//ScoreTimePenalty(score);
+		ScoreTimePenalty(score);
 		mScoreTxt->setString(std::string(ROUND_SCORE_STR)
 			.append(std::to_string(score)));
 	}
 
 	void RoundScreenView::ScoreTimePenalty(uint32_t &score) {
-		static float timeElapsed = 0; // dt es el tiempo que pasó desde el último frame
+		static float timeElapsed = 0;
 		timeElapsed += mClock.restart().asSeconds();
 
-			if (timeElapsed >= 1.0f) { // ¿Ha pasado 1 segundo en total?
+			if (timeElapsed >= 1.0f) {
 				AddScore(score, SCORE_TIME_PENALTY);
-				timeElapsed -= 1.0f;   // Restamos el segundo exacto, no reseteamos a 0
+				timeElapsed -= 1.0f;
 			}
 	}
 

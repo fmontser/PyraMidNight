@@ -133,6 +133,8 @@ namespace fknd {
 				mDeltaTime,
 				mInput.holdLeft,
 				mInput.holdRight,
+				mInput.coarse,
+				mInput.fine,
 				mInput.action,
 				mCredits,
 				mScore
