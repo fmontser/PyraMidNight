@@ -12,8 +12,8 @@ namespace fknd {
 			static void Play(const std::string_view path, float volume, bool loop);
 			static void SetBgmVolume(float volume);
 			static void SetSfxVolume(float volume);
-			static float GetBgmVolume();
-			static float GetSfxVolume();
+			static uint8_t GetBgmVolume();
+			static uint8_t GetSfxVolume();
 
 		private:
 			AudioManager();

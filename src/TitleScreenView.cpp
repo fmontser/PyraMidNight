@@ -65,6 +65,7 @@ namespace fknd {
 		mCreditsStr = std::string(TITLE_CREDITS_STR).append(
 			std::to_string(credits));
 	}
+	
 	void TitleScreenView::ShowStartText() {
 		mStartTxt->setScale({1,1});
 		mCreditsTxt->setString(mCreditsStr);

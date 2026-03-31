@@ -1,4 +1,5 @@
 #include <string>
+#include <algorithm>
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 
@@ -11,21 +12,23 @@ namespace fknd {
 
 	void AudioManager::SetBgmVolume(float volume) {
 		auto& bgm = instance().mBgm;
+		instance().mBgmVolume = std::clamp(volume, VOL_AUD_MIN, VOL_AUD_MAX);
 		for (auto& sound : bgm){
-			sound->setVolume(volume);
+			sound->setVolume(instance().mBgmVolume);
 		}
 	}
 
 	void AudioManager::SetSfxVolume(float volume) {
 		auto& sfx = instance().mSfx;
+		instance().mSfxVolume = std::clamp(volume, VOL_AUD_MIN, VOL_AUD_MAX);
 		for (auto& sound : sfx){
-			sound->setVolume(volume);
+			sound->setVolume(instance().mSfxVolume);
 		}
 	}
 
-	float AudioManager::GetBgmVolume() { return instance().mBgmVolume; }
+	uint8_t AudioManager::GetBgmVolume() { return instance().mBgmVolume; }
 
-	float AudioManager::GetSfxVolume() { return instance().mSfxVolume; }
+	uint8_t AudioManager::GetSfxVolume() { return instance().mSfxVolume; }
 
 	void AudioManager::Init() { instance(); }
 

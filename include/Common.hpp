@@ -50,6 +50,8 @@ namespace fknd {
 		inline constexpr std::string_view MENU_VOL_MUS_STR = "BGM VOLUME ";
 		inline constexpr std::string_view MENU_VOL_SFX_STR = "SFX VOLUME ";
 		inline constexpr std::string_view MENU_EXIT_STR = "EXIT GAME";
+		inline constexpr float            MENU_VOL_STEP_SZ = 5.0f;
+		inline constexpr int8_t           MENU_OPT_MAX = 3; 
 		//Bg
 		inline constexpr sf::Color        MENU_BG_TINT = sf::Color({255, 255, 255, 96});
 
@@ -123,6 +125,8 @@ namespace fknd {
 	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
 
 	//AudioManager
+	inline constexpr float VOL_AUD_MAX = 100.0f;
+	inline constexpr float VOL_AUD_MIN = 0.0f;
 	inline constexpr float VOL_AUD_BGM = 40.0f;
 	inline constexpr float VOL_AUD_SFX = 50.0f;
 	inline constexpr float VOL_AUD_BALL_BOUNCE = 0.6f;
@@ -130,8 +134,8 @@ namespace fknd {
 	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;
 	inline constexpr float VOL_AUD_BLOCK_DESTROY = 0.9f;
 	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 1.0f; //TODO
-	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO
-	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.2f;
+	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO enemies feature
+	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.4f;
 	inline constexpr float VOL_AUD_PWRUP_0 = 1.0f;
 	inline constexpr float VOL_AUD_COIN_IN = 1.0f;
 	inline constexpr float VOL_AUD_CURSOR = 1.0f;

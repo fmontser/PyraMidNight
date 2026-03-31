@@ -139,7 +139,11 @@ namespace fknd {
 	MenuScreenView::MenuScreenUpdate Game::WrapMenuScreenUpdate() {
 		return {
 				mInput.action,
-				mInput.menu
+				mInput.menu,
+				mInput.left,
+				mInput.right,
+				mInput.up,
+				mInput.down
 		};
 	}
 
