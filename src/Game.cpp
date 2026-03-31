@@ -9,7 +9,7 @@ namespace fknd {
 	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 		ResourceManager::Init();
 		AudioManager::Init();
-		mState = Game::State::TITLE_SCREEN;
+		mState = State::TITLE_SCREEN;
 		mCredits = 0;
 		mRound = 0;
 		mFinalRound = GAME_FINAL_ROUND_ID;
@@ -44,9 +44,27 @@ namespace fknd {
 
 			if (mInput.close)
 				mRenderManager.GetWindow().close();
+			if (mInput.menu) {
+				if (mState != State::MENU) {
+					mPrevState = mState;
+					mState = State::MENU;
+					mInput.menu = false;
+				}
+			}
+
 
 			switch (mState) {
-				case Game::State::TITLE_SCREEN:
+				case State::MENU:
+					if (mMenuScreen == nullptr)
+						mMenuScreen = std::make_shared<MenuScreenView>();
+					if (!mMenuScreen->Update(WrapMenuScreenUpdate())) {
+						mState = mPrevState;
+						mMenuScreen = nullptr;
+						break;
+					}
+					mRenderManager.RenderFrame(mMenuScreen->GetDrawables());
+					break;
+				case State::TITLE_SCREEN:
 					if (mTitleScreen == nullptr)
 						mTitleScreen = std::make_shared<TitleScreenView>();
 					if (!mTitleScreen->Update(WrapTitleScreenUpdate())) {
@@ -56,7 +74,7 @@ namespace fknd {
 					}
 					mRenderManager.RenderFrame(mTitleScreen->GetDrawables());
 					break;
-				case Game::State::ROUND_SCREEN:
+				case State::ROUND_SCREEN:
 					if (mRoundScreen == nullptr)
 						mRoundScreen = std::make_shared<RoundScreenView>();
 					if (!mRoundScreen->Update(WrapRoundScreenUpdate())) {
@@ -66,7 +84,7 @@ namespace fknd {
 					}
 					mRenderManager.RenderFrame(mRoundScreen->GetDrawables());
 					break;
-				case Game::State::END_SCREEN:
+				case State::END_SCREEN:
 					if (mEndScreenView == nullptr)
 						mEndScreenView = std::make_shared<EndScreenView>();
 					if (!mEndScreenView->Update(WrapEndScreenUpdate())) {
@@ -117,6 +135,13 @@ namespace fknd {
 			return a.score > b.score;
 		}
 		);
+	}
+
+	MenuScreenView::MenuScreenUpdate Game::WrapMenuScreenUpdate() {
+		return {
+				mInput.action,
+				mInput.menu
+		};
 	}
 
 	TitleScreenView::TitleScreenUpdate Game::WrapTitleScreenUpdate() {

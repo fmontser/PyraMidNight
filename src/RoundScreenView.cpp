@@ -16,7 +16,7 @@ namespace fknd {
 		mCreditsTxt->setCharacterSize(ROUND_TXT_CHAR_SZ);
 		mCreditsTxt->setFillColor(ROUND_TXT_FILLCOL);
 		mCreditsTxt->setOutlineColor(ROUND_TXT_OUTCOL);
-		mCreditsTxt->setOutlineThickness(1);
+		mCreditsTxt->setOutlineThickness(ROUND_TXT_OUTLINE_SZ);
 		mCreditsTxt->setPosition({128.0f, 864.0f});
 
 		mScoreTxt = std::make_shared<sf::Text>(*mFont);

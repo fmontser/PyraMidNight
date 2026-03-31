@@ -41,6 +41,18 @@ namespace fknd {
 	inline constexpr float            CUR_BLINK_TIME_SEC = 0.3f;
 	inline constexpr std::string_view CUR_CHAR_SET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
+	//MenuScreenView
+		inline constexpr float            MENU_TXT_OFFSET_Y = -96.0f;
+		inline constexpr sf::Color        MENU_TXT_FILLCOL = sf::Color::White;
+		inline constexpr sf::Color        MENU_TXT_OUTCOL = sf::Color::Blue;
+		inline constexpr float            MENU_TXT_OUTLINE_SZ = 1.0f;
+		inline constexpr uint32_t         MENU_TXT_CHAR_SZ = 48;
+		inline constexpr std::string_view MENU_VOL_MUS_STR = "BGM VOLUME ";
+		inline constexpr std::string_view MENU_VOL_SFX_STR = "SFX VOLUME ";
+		inline constexpr std::string_view MENU_EXIT_STR = "EXIT GAME";
+		//Bg
+		inline constexpr sf::Color        MENU_BG_TINT = sf::Color({255, 255, 255, 96});
+
 	//TitleScreenView
 		//Text
 		inline constexpr float            TITLE_CREDITS_BLINK_TIME_SEC = 0.5f;
