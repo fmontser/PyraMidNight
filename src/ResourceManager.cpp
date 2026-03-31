@@ -2,6 +2,8 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include <filesystem>
+#include <fstream>
 #include <iostream>
 
 #include "ResourceManager.hpp"
@@ -16,7 +18,9 @@ namespace fknd {
 		LoadAudio();
 	}
 
-	void ResourceManager::Init() { instance(); }
+	void ResourceManager::Init() { 
+		instance().InitSaveData();
+	}
 
 	std::shared_ptr<sf::Texture> ResourceManager::GetTexture(const std::string_view path) {
 		auto& vect = instance().mTextures;
@@ -45,7 +49,81 @@ namespace fknd {
 			return it->audio;
 	}
 
-	void ResourceManager::ValidateLevels() {
+	
+	void ResourceManager::SaveUserData(SaveData& data)
+	{
+		try {
+			uint32_t count = static_cast<uint32_t>(data.ranking.size());
+			std::ofstream os("save.dat", std::ios::binary);
+
+			os.write((char*)&data.bgmVol, sizeof(data.bgmVol));
+			os.write((char*)&data.sfxVol, sizeof(data.sfxVol));
+			os.write((char*)&count, sizeof(count));
+
+			for (const auto& e : data.ranking) {
+				uint32_t len = static_cast<uint32_t>(e.name.size());
+
+				os.write((char*)&len, sizeof(len));
+				os.write(e.name.data(), len);
+				os.write((char*)&e.score, sizeof(e.score));
+			}
+		} catch (const std::exception& e){
+			std::cerr << "Error: Filesystem error for save data file: " << e.what() << '\n';
+		}
+	}
+
+	ResourceManager::SaveData ResourceManager::LoadUserData() {
+		SaveData data;
+		try {
+			uint32_t count;
+			std::ifstream is("save.dat", std::ios::binary);
+
+			is.read((char*)&data.bgmVol, sizeof(data.bgmVol));
+			is.read((char*)&data.sfxVol, sizeof(data.sfxVol));
+			is.read((char*)&count, sizeof(count));
+			data.ranking.resize(count);
+
+			for (auto& e : data.ranking) {
+				uint32_t len;
+
+				is.read((char*)&len, sizeof(len));
+				e.name.resize(len);
+				is.read(&e.name[0], len);
+				is.read((char*)&e.score, sizeof(e.score));
+			}
+		}
+		catch(const std::exception& e) {
+			std::cerr << "Error: Filesystem error for save data file: " << e.what() << '\n';
+		}
+		return data;
+	}
+
+	void ResourceManager::InitSaveData() {
+		SaveData data;
+		std::vector<ScoreEntry> ranking;
+		
+		if (std::filesystem::exists(PATH_SAVE_DATA))
+			return;
+			
+		ranking.push_back({"RAA", 100000});
+		ranking.push_back({"ELI", 90000});
+		ranking.push_back({"JMA", 80000});
+		ranking.push_back({"IOQ", 70000});
+		ranking.push_back({"FFF", 60000});
+		ranking.push_back({"ISS", 3000});
+		ranking.push_back({"YSS", 1000});
+		ranking.push_back({"PAS", 500});
+		ranking.push_back({"TOI", 200});
+		ranking.push_back({"CAN", 10});
+		
+		data.bgmVol = VOL_AUD_BGM;
+		data.sfxVol = VOL_AUD_SFX;
+		data.ranking = ranking;
+		SaveUserData(data);
+	}
+
+	void ResourceManager::ValidateLevels()
+	{
 		assert(!ROUNDS.empty()
 			&& "Error: No levels present");
 		assert(GAME_FINAL_ROUND_ID == (ROUNDS.size() - 1)
@@ -135,4 +213,5 @@ namespace fknd {
 			exit(1);
 		}
 	}
+
 }

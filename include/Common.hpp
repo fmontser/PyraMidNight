@@ -100,6 +100,7 @@ namespace fknd {
 		inline constexpr sf::Color END_BG_TINT = sf::Color({64, 0, 0, 255});
 
 	//Assets
+	inline constexpr std::string_view PATH_SAVE_DATA = "save.dat";
 	inline constexpr std::string_view PATH_FONT = "assets/fonts/ClearSans-Regular.ttf";
 
 	inline constexpr std::string_view PATH_TEX_BG = "assets/textures/Background.png";

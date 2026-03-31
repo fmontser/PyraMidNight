@@ -5,24 +5,22 @@
 
 namespace fknd {
 
-	AudioManager::AudioManager() {
-		mBgmVolume = VOL_AUD_BGM;
-		mSfxVolume = VOL_AUD_SFX;
-	}
+	AudioManager::AudioManager() {}
 
 	void AudioManager::SetBgmVolume(float volume) {
 		auto& bgm = instance().mBgm;
-		instance().mBgmVolume = std::clamp(volume, VOL_AUD_MIN, VOL_AUD_MAX);
+		instance().mBgmVolume = volume;
+		auto test = instance().mBgmVolume;
 		for (auto& sound : bgm){
-			sound->setVolume(instance().mBgmVolume);
+			sound->setVolume(volume);
 		}
 	}
 
 	void AudioManager::SetSfxVolume(float volume) {
 		auto& sfx = instance().mSfx;
-		instance().mSfxVolume = std::clamp(volume, VOL_AUD_MIN, VOL_AUD_MAX);
+		instance().mSfxVolume = volume;
 		for (auto& sound : sfx){
-			sound->setVolume(instance().mSfxVolume);
+			sound->setVolume(volume);
 		}
 	}
 
@@ -30,16 +28,21 @@ namespace fknd {
 
 	uint8_t AudioManager::GetSfxVolume() { return instance().mSfxVolume; }
 
-	void AudioManager::Init() { instance(); }
+	void AudioManager::Init() { instance();	}
 
 	void fknd::AudioManager::Play(const std::string_view path, float volume, bool loop) {
 		auto sound = std::make_shared<sf::Sound>(*ResourceManager::GetAudio(path));
-		if (path.find("Music",0) != std::string::npos)
+		if (path.find("Music",0) != std::string::npos) {
 			instance().mBgm.push_back(sound);
-		else
+			sound->setVolume(std::clamp(instance().mBgmVolume * volume, VOL_AUD_MIN, VOL_AUD_MAX));
+			SetBgmVolume(instance().mBgmVolume);
+		}
+		else {
 			instance().mSfx.push_back(sound);
+			sound->setVolume(std::clamp(instance().mSfxVolume * volume, VOL_AUD_MIN, VOL_AUD_MAX));
+			SetSfxVolume(instance().mSfxVolume);
+		}
 		sound->setLooping(loop);
-		sound->setVolume(sound->getVolume() * volume);
 		sound->play();
 	}
 }
