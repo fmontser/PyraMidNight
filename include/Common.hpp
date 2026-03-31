@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <cstdint>
+#include <limits>
 #include <SFML/Graphics.hpp>
 
 namespace fknd {
@@ -85,7 +86,7 @@ namespace fknd {
 		//Bg
 		inline constexpr sf::Color        ROUND_BG_TINT = sf::Color({0, 0, 255, 128});
 		//Level
-		inline constexpr u_int8_t         LVL_DIMENSIONS2 = 9;
+		inline constexpr uint8_t          LVL_DIMENSIONS2 = 9;
 		inline constexpr std::string_view LVL_CHAR_SET = "0123";
 
 	//EndScreenView
