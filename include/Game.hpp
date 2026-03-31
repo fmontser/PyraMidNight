@@ -23,6 +23,7 @@ namespace fknd {
 			void Run();
 
 		private:
+			sf::RenderWindow& mWindow;
 			State    mState;
 			State    mPrevState;
 			uint8_t  mCredits;

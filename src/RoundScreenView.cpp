@@ -1,5 +1,6 @@
 #include <cmath>
 #include <algorithm>
+#include <string>
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 #include "RoundScreenView.hpp"
@@ -9,6 +10,8 @@ namespace fknd {
 
 	RoundScreenView::RoundScreenView() : ScreenView() {
 		mLvlIsLoaded = false;
+		mShaking = false;
+		mShaketime = 0.0f;
 		mFont = ResourceManager::GetFont(PATH_FONT);
 
 		mCreditsTxt = std::make_shared<sf::Text>(*mFont);
@@ -84,8 +87,9 @@ namespace fknd {
 		else if (update.holdRight)
 			mBumper->Move(1, update.deltaTime, update.fine, update.coarse);
 
+		ScreenShake(update.window, update.deltaTime, mShaketime);
 		UpdateBall(update.score, update.deltaTime);
-		UpdateBlocks();
+		UpdateBlocks(update.deltaTime);
 		UpdateCredits(update.credits);
 		UpdateScore(update.score);
 		if (!UpdateGame(update.score, update.credits))
@@ -101,7 +105,7 @@ namespace fknd {
 		for (const auto& str : level) {
 			for (const auto chara : str) {
 				if (chara != '0') {
-					auto block = std::make_shared<Block>(*mBlockTex, 1); //TODO set block variants when available
+					auto block = std::make_shared<Block>(*mBlockTex, chara - '0');
 					block->setPosition(actualPos);
 					mBlockVector.push_back(block);
 				}
@@ -143,7 +147,11 @@ namespace fknd {
 	}
 
 
-	void RoundScreenView::UpdateBlocks() {
+	void RoundScreenView::UpdateBlocks(sf::Time& deltaTime) {
+		for (auto& block : mBlockVector) {
+			block->Update(deltaTime);
+		}
+
 		for (const auto& sprt : mDestroyedSprites) {
 			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprt);
 			if (itBlock != mBlockVector.end())
@@ -203,6 +211,7 @@ namespace fknd {
 		}
 		mBall->ResetPos(mBumper->getPosition());
 		AudioManager::Play(PATH_AUD_BALL_LOSE, VOL_AUD_BALL_LOSE, false);
+		mShaketime = 1.0f;
 		return true;
 	};
 
@@ -223,6 +232,28 @@ namespace fknd {
 		if (credits > 0)
 			credits--;
 	}
-	
+
+	void RoundScreenView::ScreenShake(sf::RenderWindow& window, sf::Time& deltaTime, float& shakeTime)
+	{
+		auto view = window.getView();
+		float force = 2.1f;
+
+		if (!mShaking && shakeTime > 0.0f) {
+			mShakeOldCenter = view.getCenter();
+			mShaking = true;
+		}
+		if (shakeTime > 0.0f) {
+			shakeTime -= deltaTime.asSeconds();
+			float offsetX = ((float)rand() / RAND_MAX * 2.f - 1.f) * force;
+			float offsetY = ((float)rand() / RAND_MAX * 2.f - 1.f) * force;
+			view.setCenter({mShakeOldCenter.x + offsetX, mShakeOldCenter.y + offsetY});
+		}
+		else if (mShaking) {
+			view.setCenter(mShakeOldCenter);
+			mShaking = false;
+		}
+		window.setView(view);
+	}
+		
 	bool RoundScreenView::Update() { return false; }
 }

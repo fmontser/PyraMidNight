@@ -10,15 +10,16 @@ namespace fknd {
 	class RoundScreenView : public ScreenView {
 		public:
 			struct RoundScreenUpdate {
-				uint8_t&  roundId;
-				sf::Time& deltaTime;
-				bool      holdLeft;
-				bool      holdRight;
-				bool      coarse;
-				bool      fine;
-				bool      action;
-				uint8_t&  credits;
-				uint32_t& score;
+				uint8_t&          roundId;
+				sf::RenderWindow& window;
+				sf::Time&         deltaTime;
+				bool              holdLeft;
+				bool              holdRight;
+				bool              coarse;
+				bool              fine;
+				bool              action;
+				uint8_t&          credits;
+				uint32_t&         score;
 			};
 
 			RoundScreenView();
@@ -26,7 +27,11 @@ namespace fknd {
 			bool Update(RoundScreenUpdate update);
 
 		private:
-			bool mLvlIsLoaded;
+			bool         mLvlIsLoaded;
+			bool         mShaking;
+			float        mShaketime;
+			sf::Vector2f mShakeOldCenter;
+
 			std::shared_ptr<sf::Font>    mFont;
 			std::shared_ptr<sf::Text>    mCreditsTxt;
 			std::shared_ptr<sf::Text>    mScoreTxt;
@@ -52,7 +57,7 @@ namespace fknd {
 
 			bool LoadLevel(uint8_t& roundId);
 			void UpdateBall(uint32_t& score, const sf::Time& deltaTime);
-			void UpdateBlocks();
+			void UpdateBlocks(sf::Time& deltaTime);
 			bool UpdateGame(uint32_t& score, uint8_t& credits);
 			void UpdateCredits(uint8_t& credits);
 			void UpdateScore(uint32_t& score);
@@ -61,6 +66,7 @@ namespace fknd {
 			float GetBallDistance(const sf::Sprite& obj);
 			void AddScore(uint32_t& score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
+			void ScreenShake(sf::RenderWindow &window, sf::Time &deltaTime, float &mShakeTime);
 			bool Update();
 	};
 

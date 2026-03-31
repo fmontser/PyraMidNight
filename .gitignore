@@ -43,6 +43,7 @@
 # Misc
 misc/
 .directory
+save.dat
 
 # build directory
 build/

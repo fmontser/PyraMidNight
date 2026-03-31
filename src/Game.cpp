@@ -5,7 +5,7 @@
 
 namespace fknd {
 	
-	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
+	Game::Game() : mRenderManager(), mWindow(mRenderManager.GetWindow()) , mInputManager(mRenderManager.GetWindow()) {
 		ResourceManager::Init();
 		mSaveData = std::make_shared<ResourceManager::SaveData>(ResourceManager::LoadUserData());
 		AudioManager::Init();
@@ -26,7 +26,6 @@ namespace fknd {
 	
 	// main loop
 	void Game::Run() {
-
 		while (mRenderManager.GetWindow().isOpen()) {
 			mInput = mInputManager.FetchInput();
 			mDeltaTime = mRenderManager.GetDeltaTime();
@@ -171,6 +170,7 @@ namespace fknd {
 	RoundScreenView::RoundScreenUpdate Game::WrapRoundScreenUpdate() {
 		return {
 				mRound,
+				mWindow,
 				mDeltaTime,
 				mInput.holdLeft,
 				mInput.holdRight,
