@@ -123,6 +123,8 @@ namespace fknd {
 	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
 
 	//AudioManager
+	inline constexpr float VOL_AUD_BGM = 40.0f;
+	inline constexpr float VOL_AUD_SFX = 50.0f;
 	inline constexpr float VOL_AUD_BALL_BOUNCE = 0.6f;
 	inline constexpr float VOL_AUD_BALL_LOSE = 1.0f;
 	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;

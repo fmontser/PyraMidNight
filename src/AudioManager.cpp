@@ -4,21 +4,28 @@
 
 namespace fknd {
 
-	AudioManager::AudioManager() {}
+	AudioManager::AudioManager() {
+		mBgmVolume = VOL_AUD_BGM;
+		mSfxVolume = VOL_AUD_SFX;
+	}
 
-	void AudioManager::SetBgmVolume(uint32_t volume) {
+	void AudioManager::SetBgmVolume(float volume) {
 		auto& bgm = instance().mBgm;
 		for (auto& sound : bgm){
 			sound->setVolume(volume);
 		}
 	}
 
-	void AudioManager::SetSfxVolume(uint32_t volume) {
+	void AudioManager::SetSfxVolume(float volume) {
 		auto& sfx = instance().mSfx;
 		for (auto& sound : sfx){
 			sound->setVolume(volume);
 		}
 	}
+
+	float AudioManager::GetBgmVolume() { return instance().mBgmVolume; }
+
+	float AudioManager::GetSfxVolume() { return instance().mSfxVolume; }
 
 	void AudioManager::Init() { instance(); }
 
