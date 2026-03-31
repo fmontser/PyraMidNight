@@ -54,6 +54,7 @@ namespace fknd {
 		mTexts.push_back(mBgmTxt);
 		mTexts.push_back(mSfxTxt);
 		mTexts.push_back(mExitTxt);
+		InvertOptionColors(mBgmTxt);
 	}
 
 	bool MenuScreenView::Update(MenuScreenUpdate update) {

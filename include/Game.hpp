@@ -45,6 +45,9 @@ namespace fknd {
 			void ResetScore();
 			void ResetCredits();
 			void SortRanking();
+			void Pause();
+			void Resume();
+			
 			MenuScreenView::MenuScreenUpdate     WrapMenuScreenUpdate();
 			TitleScreenView::TitleScreenUpdate   WrapTitleScreenUpdate();
 			RoundScreenView::RoundScreenUpdate   WrapRoundScreenUpdate();

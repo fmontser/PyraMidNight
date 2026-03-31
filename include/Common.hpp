@@ -127,8 +127,8 @@ namespace fknd {
 	//AudioManager
 	inline constexpr float VOL_AUD_MAX = 100.0f;
 	inline constexpr float VOL_AUD_MIN = 0.0f;
-	inline constexpr float VOL_AUD_BGM = 40.0f;
-	inline constexpr float VOL_AUD_SFX = 50.0f;
+	inline constexpr float VOL_AUD_BGM = 60.0f;
+	inline constexpr float VOL_AUD_SFX = 60.0f;
 	inline constexpr float VOL_AUD_BALL_BOUNCE = 0.6f;
 	inline constexpr float VOL_AUD_BALL_LOSE = 1.0f;
 	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;

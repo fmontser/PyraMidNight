@@ -54,11 +54,14 @@ namespace fknd {
 
 			switch (mState) {
 				case State::MENU:
-					if (mMenuScreen == nullptr)
+					if (mMenuScreen == nullptr) {
+						Pause();
 						mMenuScreen = std::make_shared<MenuScreenView>();
+					}
 					if (!mMenuScreen->Update(WrapMenuScreenUpdate())) {
 						mState = mPrevState;
 						mMenuScreen = nullptr;
+						Resume();
 						break;
 					}
 					mRenderManager.RenderFrame(mMenuScreen->GetDrawables());
@@ -134,6 +137,24 @@ namespace fknd {
 			return a.score > b.score;
 		}
 		);
+	}
+
+	void Game::Pause() {
+		if (mTitleScreen != nullptr)
+			mTitleScreen->Pause();
+		if (mRoundScreen != nullptr)
+			mRoundScreen->Pause();
+		if (mEndScreenView != nullptr)
+			mEndScreenView->Pause();
+	}
+
+	void Game::Resume() {
+		if (mTitleScreen != nullptr)
+			mTitleScreen->Resume();
+		if (mRoundScreen != nullptr)
+			mRoundScreen->Resume();
+		if (mEndScreenView != nullptr)
+			mEndScreenView->Resume();
 	}
 
 	MenuScreenView::MenuScreenUpdate Game::WrapMenuScreenUpdate() {

@@ -50,8 +50,6 @@ namespace fknd {
 			std::vector<std::shared_ptr<Block>>      mBlockVector;
 			std::vector<std::shared_ptr<sf::Sprite>> mDestroyedSprites;
 
-			sf::Clock mClock;
-
 			bool LoadLevel(uint8_t& roundId);
 			void UpdateBall(uint32_t& score, const sf::Time& deltaTime);
 			void UpdateBlocks();
