@@ -1,5 +1,6 @@
 #include <cmath>
 #include <algorithm>
+#include <string>
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 #include "RoundScreenView.hpp"
@@ -85,7 +86,7 @@ namespace fknd {
 			mBumper->Move(1, update.deltaTime, update.fine, update.coarse);
 
 		UpdateBall(update.score, update.deltaTime);
-		UpdateBlocks();
+		UpdateBlocks(update.deltaTime);
 		UpdateCredits(update.credits);
 		UpdateScore(update.score);
 		if (!UpdateGame(update.score, update.credits))
@@ -101,7 +102,7 @@ namespace fknd {
 		for (const auto& str : level) {
 			for (const auto chara : str) {
 				if (chara != '0') {
-					auto block = std::make_shared<Block>(*mBlockTex, 1); //TODO set block variants when available
+					auto block = std::make_shared<Block>(*mBlockTex, chara - '0');
 					block->setPosition(actualPos);
 					mBlockVector.push_back(block);
 				}
@@ -143,7 +144,11 @@ namespace fknd {
 	}
 
 
-	void RoundScreenView::UpdateBlocks() {
+	void RoundScreenView::UpdateBlocks(sf::Time& deltaTime) {
+		for (auto& block : mBlockVector) {
+			block->Update(deltaTime);
+		}
+
 		for (const auto& sprt : mDestroyedSprites) {
 			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprt);
 			if (itBlock != mBlockVector.end())

@@ -8,7 +8,7 @@ namespace fknd {
 	inline constexpr uint32_t GAME_MAX_SCORE = std::numeric_limits<uint32_t>::max();
 	inline constexpr uint8_t  GAME_MAX_CREDITS = std::numeric_limits<uint8_t>::max();
 	inline constexpr uint8_t  GAME_RANK_SIZE = 10;
-	inline constexpr uint8_t  GAME_FINAL_ROUND_ID = 1;
+	inline constexpr uint8_t  GAME_FINAL_ROUND_ID = 3;
 
 	//Ball
 	inline constexpr float        BALL_INIT_SPEED = 0.6f;
@@ -26,6 +26,9 @@ namespace fknd {
 	inline constexpr float BMPR_ATK_PWR = 2.22f;
 
 	//Blocks
+	inline constexpr float   BLOCK_ROT_MIN = -4.0f;
+	inline constexpr float   BLOCK_ROT_MAX = -4.0f;
+	inline constexpr float   BLOCK_FLASH_TIME = 0.15f;
 	
 	//Score
 	inline constexpr float   SCORE_BLOCK_MOD = 25.0f;
@@ -83,7 +86,7 @@ namespace fknd {
 		inline constexpr sf::Color        ROUND_BG_TINT = sf::Color({0, 0, 255, 128});
 		//Level
 		inline constexpr u_int8_t         LVL_DIMENSIONS2 = 9;
-		inline constexpr std::string_view LVL_CHAR_SET = "01";
+		inline constexpr std::string_view LVL_CHAR_SET = "0123";
 
 	//EndScreenView
 		//Text
@@ -134,7 +137,7 @@ namespace fknd {
 	inline constexpr float VOL_AUD_BALL_LOSE = 1.0f;
 	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;
 	inline constexpr float VOL_AUD_BLOCK_DESTROY = 0.9f;
-	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 1.0f; //TODO
+	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 0.002f;
 	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO enemies feature
 	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.4f;
 	inline constexpr float VOL_AUD_PWRUP_0 = 1.0f;
@@ -142,7 +145,7 @@ namespace fknd {
 	inline constexpr float VOL_AUD_CURSOR = 1.0f;
 	inline constexpr float VOL_AUD_NEXTROUND = 1.0f;
 	inline constexpr float VOL_AUD_GAMEOVER = 1.0f;
-	inline constexpr float VOL_AUD_MUSIC_0 = 0.2f;
+	inline constexpr float VOL_AUD_MUSIC_0 = 0.25f;
 
 	//RenderManager (DO NOT EDIT RESOLUTION!!!)
 	inline constexpr std::string_view RNDR_WINDOW_NAME = "FranKanoid";

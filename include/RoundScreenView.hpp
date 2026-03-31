@@ -52,7 +52,7 @@ namespace fknd {
 
 			bool LoadLevel(uint8_t& roundId);
 			void UpdateBall(uint32_t& score, const sf::Time& deltaTime);
-			void UpdateBlocks();
+			void UpdateBlocks(sf::Time& deltaTime);
 			bool UpdateGame(uint32_t& score, uint8_t& credits);
 			void UpdateCredits(uint8_t& credits);
 			void UpdateScore(uint32_t& score);
