@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include "ResourceManager.hpp"
 #include "ScreenView.hpp"
 #include "Cursor.hpp"
 #include "Common.hpp"
@@ -9,11 +10,6 @@ namespace fknd {
 	class EndScreenView : public ScreenView {
 		public:
 		
-			struct ScoreEntry {
-				std::string name;
-				uint32_t    score;
-			};
-
 			struct EndScreenUpdate {
 				bool      left;
 				bool      right;
@@ -21,7 +17,7 @@ namespace fknd {
 				bool      down;
 				bool      action;
 				uint32_t& score;
-				std::vector<ScoreEntry>& ranking;
+				std::vector<ResourceManager::ScoreEntry>& ranking;
 			};
 			
 			EndScreenView();
@@ -47,8 +43,8 @@ namespace fknd {
 			bool mIsRankingDraw;
 			bool mIsNameSet;
 	
-			bool DrawPlayerRanking(std::vector<ScoreEntry>& ranking);
-			std::string* GetGameEntryName(std::vector<ScoreEntry>& ranking); 
+			bool DrawPlayerRanking(std::vector<ResourceManager::ScoreEntry>& ranking);
+			std::string* GetGameEntryName(std::vector<ResourceManager::ScoreEntry>& ranking); 
 			std::string PadZeroScore(uint32_t score, uint32_t digits);
 			bool Update();
 	};

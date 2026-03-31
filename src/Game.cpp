@@ -1,14 +1,17 @@
 #include <limits>
 #include <algorithm>
 #include "Game.hpp"
-#include "ResourceManager.hpp"
 #include "AudioManager.hpp"
 
 namespace fknd {
 	
 	Game::Game() : mRenderManager(), mInputManager(mRenderManager.GetWindow()) {
 		ResourceManager::Init();
+		mSaveData = std::make_shared<ResourceManager::SaveData>(ResourceManager::LoadUserData());
 		AudioManager::Init();
+		AudioManager::SetBgmVolume(mSaveData->bgmVol);
+		AudioManager::SetSfxVolume(mSaveData->sfxVol);
+
 		mState = State::TITLE_SCREEN;
 		mCredits = 0;
 		mRound = 0;
@@ -18,21 +21,7 @@ namespace fknd {
 		mTitleScreen = nullptr;
 		mRoundScreen = nullptr;
 		mEndScreenView = nullptr;
-	
-		//TODO make score persistent
-		//Fake data
-		mRanking.push_back({"RAA", 1000000});
-		mRanking.push_back({"ELI", 900000});
-		mRanking.push_back({"JMA", 800000});
-		mRanking.push_back({"IOQ", 700000});
-		mRanking.push_back({"FFF", 600000});
-		mRanking.push_back({"ISS", 3000});
-		mRanking.push_back({"YSS", 1000});
-		mRanking.push_back({"PAS", 500});
-		mRanking.push_back({"TOI", 200});
-		mRanking.push_back({"CAN", 1});
 		SortRanking();
-
 	}
 	
 	// main loop
@@ -62,6 +51,7 @@ namespace fknd {
 						mState = mPrevState;
 						mMenuScreen = nullptr;
 						Resume();
+						ResourceManager::SaveUserData(*mSaveData);
 						break;
 					}
 					mRenderManager.RenderFrame(mMenuScreen->GetDrawables());
@@ -92,6 +82,7 @@ namespace fknd {
 					if (!mEndScreenView->Update(WrapEndScreenUpdate())) {
 						mState = State::TITLE_SCREEN;
 						mEndScreenView = nullptr;
+						ResourceManager::SaveUserData(*mSaveData);
 						break;
 					}
 					mRenderManager.RenderFrame(mEndScreenView->GetDrawables());
@@ -121,10 +112,10 @@ namespace fknd {
 	}
 
 	void Game::RecordScore() {
-		mRanking.push_back({"   ", mScore});
+		mSaveData->ranking.push_back({"   ", mScore});
 		SortRanking();
-		if (mRanking.size() > GAME_RANK_SIZE)
-			mRanking.pop_back();
+		if (mSaveData->ranking.size() > GAME_RANK_SIZE)
+			mSaveData->ranking.pop_back();
 	}
 
 	void Game::ResetScore() { mScore = 0; }
@@ -132,8 +123,8 @@ namespace fknd {
 	void Game::ResetCredits() { mCredits = 0; }
 
 	void Game::SortRanking() {
-		std::sort(mRanking.begin(), mRanking.end(),
-		[](const EndScreenView::ScoreEntry& a, const EndScreenView::ScoreEntry& b) {
+		std::sort(mSaveData->ranking.begin(), mSaveData->ranking.end(),
+		[](const ResourceManager::ScoreEntry& a, const ResourceManager::ScoreEntry& b) {
 			return a.score > b.score;
 		}
 		);
@@ -164,7 +155,8 @@ namespace fknd {
 				mInput.left,
 				mInput.right,
 				mInput.up,
-				mInput.down
+				mInput.down,
+				mSaveData
 		};
 	}
 
@@ -198,7 +190,7 @@ namespace fknd {
 			mInput.down,
 			mInput.action,
 			mScore,
-			mRanking
+			mSaveData->ranking
 		};
 	}
 }

@@ -109,7 +109,7 @@ namespace fknd {
 		return true;
 	}
 	
-	bool EndScreenView::DrawPlayerRanking(std::vector<ScoreEntry>& ranking) {
+	bool EndScreenView::DrawPlayerRanking(std::vector<ResourceManager::ScoreEntry>& ranking) {
 		size_t i = 0;
 	
 		for (auto& gameEntry : ranking) {
@@ -122,7 +122,7 @@ namespace fknd {
 		return true;
 	}
 	
-	std::string* EndScreenView::GetGameEntryName(std::vector<ScoreEntry>& ranking) {
+	std::string* EndScreenView::GetGameEntryName(std::vector<ResourceManager::ScoreEntry>& ranking) {
 		for (auto& gameEntry : ranking) {
 			if (gameEntry.name == "   ")
 				return &gameEntry.name;

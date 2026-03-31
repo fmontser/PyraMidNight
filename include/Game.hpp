@@ -5,6 +5,7 @@
 #include "TitleScreenView.hpp"
 #include "RoundScreenView.hpp"
 #include "EndScreenView.hpp"
+#include "ResourceManager.hpp"
 #include "RenderManager.hpp"
 #include "InputManager.hpp"
 #include "Common.hpp"
@@ -28,7 +29,7 @@ namespace fknd {
 			uint8_t  mRound;
 			uint8_t  mFinalRound;
 			uint32_t mScore;
-			std::vector<EndScreenView::ScoreEntry> mRanking;
+			std::shared_ptr<ResourceManager::SaveData> mSaveData;
 			
 			InputManager         mInputManager;
 			InputManager::Input  mInput;

@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "ScreenView.hpp"
+#include "ResourceManager.hpp"
 #include "Common.hpp"
 
 namespace fknd {
@@ -12,13 +13,13 @@ namespace fknd {
 			};
 
 			struct MenuScreenUpdate {
-				//TODO
 				bool action;
 				bool menu;
 				bool left;
 				bool right;
 				bool up;
 				bool down;
+				std::shared_ptr<ResourceManager::SaveData>& mSaveData;
 			};
 			
 			MenuScreenView();
@@ -41,8 +42,8 @@ namespace fknd {
 			Option  option;
 			std::vector<std::shared_ptr<sf::Text>> mTexts;
 
-			void UpdateBgmVolume(float volume);
-			void UpdateSfxVolume(float volume);
+			void UpdateBgmVolume(float volume, float& saveBgmVol);
+			void UpdateSfxVolume(float volume, float& saveSfxVol);
 			void SelectOption(bool up, bool down);
 			void InvertOptionColors(std::shared_ptr<sf::Text> option);
 	

@@ -1,6 +1,5 @@
 #include <string>
 #include <algorithm>
-#include <iostream> //TODO delete
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 #include "MenuScreenView.hpp"
@@ -60,33 +59,37 @@ namespace fknd {
 	bool MenuScreenView::Update(MenuScreenUpdate update) {
 		SelectOption(update.up, update.down);
 		if (option == Option::BGM && (update.left || update.right)) {
-			if (update.left) UpdateBgmVolume(-MENU_VOL_STEP_SZ);
-			else if (update.right) UpdateBgmVolume(MENU_VOL_STEP_SZ);
+			if (update.left) UpdateBgmVolume(-MENU_VOL_STEP_SZ, update.mSaveData->bgmVol);
+			else if (update.right) UpdateBgmVolume(MENU_VOL_STEP_SZ, update.mSaveData->bgmVol);
 		}
 		else if (option == Option::SFX && (update.left || update.right)) {
-			if (update.left) UpdateSfxVolume(-MENU_VOL_STEP_SZ);
-			else if (update.right) UpdateSfxVolume(MENU_VOL_STEP_SZ);
+			if (update.left) UpdateSfxVolume(-MENU_VOL_STEP_SZ, update.mSaveData->sfxVol);
+			else if (update.right) UpdateSfxVolume(MENU_VOL_STEP_SZ, update.mSaveData->sfxVol);
 		}
-		else if (option == Option::EXIT && update.action)
+		else if (option == Option::EXIT && update.action) {
+			ResourceManager::SaveUserData(*update.mSaveData);
 			exit(0);
+		}
 		else if (update.menu)
 			return false;
 		return true;
 	}
 
-	void MenuScreenView::UpdateBgmVolume(float volume) {
+	void MenuScreenView::UpdateBgmVolume(float volume, float& saveBgmVol) {
 		mBgmVolume = std::clamp( mBgmVolume + volume, VOL_AUD_MIN, VOL_AUD_MAX);
 		mBgmTxt->setString(std::string(MENU_VOL_MUS_STR)
 		.append(std::to_string(mBgmVolume)));
 		AudioManager::SetBgmVolume(mBgmVolume);
+		saveBgmVol = AudioManager::GetBgmVolume();
 		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 	}
 
-	void MenuScreenView::UpdateSfxVolume(float volume) {
+	void MenuScreenView::UpdateSfxVolume(float volume, float& saveSfxVol) {
 		mSfxVolume = std::clamp( mSfxVolume + volume, VOL_AUD_MIN, VOL_AUD_MAX);
 		mSfxTxt->setString(std::string(MENU_VOL_SFX_STR)
 		.append(std::to_string(mSfxVolume)));
 		AudioManager::SetSfxVolume(mSfxVolume);
+		saveSfxVol = AudioManager::GetSfxVolume();
 		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 	}
 
