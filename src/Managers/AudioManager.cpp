@@ -10,7 +10,6 @@ namespace fknd {
 	void AudioManager::SetBgmVolume(float volume) {
 		auto& bgm = instance().mBgm;
 		instance().mBgmVolume = volume;
-		auto test = instance().mBgmVolume;
 		for (auto& sound : bgm){
 			sound->setVolume(volume);
 		}

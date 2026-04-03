@@ -25,15 +25,16 @@ namespace fknd {
 			case Input::LEFT:
 				if (mEntryIndex > 0) {
 					move({-CUR_MV_OFFSET,0});
-					mEntryIndex = std::clamp(--mEntryIndex, (size_t)0, (size_t)2);
+					--mEntryIndex;
+					mEntryIndex = std::clamp<size_t>(mEntryIndex, 0, 2);
 					SelectChar(Input::LEFT);
 				}
 				break;
 			case Input::RIGHT:
-	
 				if (mEntryIndex < 2) {
 					move({CUR_MV_OFFSET,0});
-					mEntryIndex = std::clamp(++mEntryIndex, (size_t)0, (size_t)2);
+					++mEntryIndex;
+					mEntryIndex = std::clamp<size_t>(mEntryIndex, 0, 2);
 					SelectChar(Input::RIGHT);
 				}
 				break;

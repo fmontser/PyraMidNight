@@ -5,7 +5,7 @@
 
 namespace fknd {
 	
-	Game::Game() : mRenderManager(), mWindow(mRenderManager.GetWindow()) , mInputManager(mRenderManager.GetWindow()) {
+	Game::Game() : mRenderManager(), mWindow(mRenderManager.GetWindow()), mInputManager(mRenderManager.GetWindow()) {
 		ResourceManager::Init();
 		mSaveData = std::make_shared<ResourceManager::SaveData>(ResourceManager::LoadUserData());
 		AudioManager::Init();

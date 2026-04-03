@@ -23,7 +23,6 @@ namespace fknd {
 			void Run();
 
 		private:
-			sf::RenderWindow& mWindow;
 			State    mState;
 			State    mPrevState;
 			uint8_t  mCredits;
@@ -32,9 +31,11 @@ namespace fknd {
 			uint32_t mScore;
 			std::shared_ptr<ResourceManager::SaveData> mSaveData;
 			
-			InputManager         mInputManager;
 			InputManager::Input  mInput;
 			RenderManager        mRenderManager;
+			sf::RenderWindow& mWindow;
+			InputManager         mInputManager;
+
 			sf::Time             mDeltaTime;
 			std::shared_ptr<MenuScreenView>  mMenuScreen;
 			std::shared_ptr<TitleScreenView> mTitleScreen;
