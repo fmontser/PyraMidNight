@@ -18,9 +18,9 @@ namespace fknd {
 			void Blink();
 	
 		private:
-			sf::Text* mEntryTxt;
-			sf::Font& mFont;
-			size_t    mEntryIndex;
+			sf::Text*  mEntryTxt;
+			sf::Font&  mFont;
+			size_t     mEntryIndex;
 			sf::Clock& mClock;
 			
 			void ChangeChar(Input action);

@@ -24,7 +24,7 @@ namespace fknd {
 
 			RoundScreenView();
 
-			bool Update(RoundScreenUpdate update);
+			bool Update(const RoundScreenUpdate& update);
 
 		private:
 			bool         mLvlIsLoaded;
@@ -55,18 +55,17 @@ namespace fknd {
 			std::vector<std::shared_ptr<Block>>      mBlockVector;
 			std::vector<std::shared_ptr<sf::Sprite>> mDestroyedSprites;
 
-			bool LoadLevel(uint8_t& roundId);
+			bool LoadLevel(const uint8_t& roundId);
 			void UpdateBall(uint32_t& score, const sf::Time& deltaTime);
-			void UpdateBlocks(sf::Time& deltaTime);
+			void UpdateBlocks(const sf::Time& deltaTime);
 			bool UpdateGame(uint32_t& score, uint8_t& credits);
-			void UpdateCredits(uint8_t& credits);
+			void UpdateCreditsTxt(const uint8_t& credits);
 			void UpdateScore(uint32_t& score);
 			void ScoreTimePenalty(uint32_t& score);
 			bool LoseBall(uint32_t& score, uint8_t& credits);
-			float GetBallDistance(const sf::Sprite& obj);
 			void AddScore(uint32_t& score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
-			void ScreenShake(sf::RenderWindow &window, sf::Time &deltaTime, float &mShakeTime);
+			void ScreenShake(sf::RenderWindow &window,const sf::Time &deltaTime, float &mShakeTime);
 			bool Update();
 	};
 

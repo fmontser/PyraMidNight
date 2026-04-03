@@ -6,7 +6,7 @@ namespace fknd {
 		mFrameInput = {};
 	}
 	
-	InputManager::Input& InputManager::FetchInput() {
+	const InputManager::Input& InputManager::FetchInput() {
 		ResetReleased();
 		while (const auto event = mWindow.pollEvent()) {
 			

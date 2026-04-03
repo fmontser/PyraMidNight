@@ -73,7 +73,7 @@ namespace fknd {
 		mDrawables.push_back(mCursor);
 	}
 
-	bool EndScreenView::Update(EndScreenUpdate update) {
+	bool EndScreenView::Update(const EndScreenUpdate& update) {
 
 		if (!mIsRankingDraw) {
 			auto isEntryFound = false;
@@ -109,7 +109,7 @@ namespace fknd {
 		return true;
 	}
 	
-	bool EndScreenView::DrawPlayerRanking(std::vector<ResourceManager::ScoreEntry>& ranking) {
+	bool EndScreenView::DrawPlayerRanking(const std::vector<ResourceManager::ScoreEntry>& ranking) {
 		size_t i = 0;
 	
 		for (auto& gameEntry : ranking) {
@@ -122,6 +122,7 @@ namespace fknd {
 		return true;
 	}
 	
+	//TODO DEBT dataflow view <-> cursor
 	std::string* EndScreenView::GetGameEntryName(std::vector<ResourceManager::ScoreEntry>& ranking) {
 		for (auto& gameEntry : ranking) {
 			if (gameEntry.name == "   ")

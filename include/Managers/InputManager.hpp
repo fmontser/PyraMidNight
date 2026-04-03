@@ -23,7 +23,7 @@ namespace fknd {
 	
 			InputManager(sf::RenderWindow& window);
 	
-			Input& FetchInput();
+			const Input& FetchInput();
 	
 		private:
 			void ResetReleased();

@@ -56,7 +56,7 @@ namespace fknd {
 		InvertOptionColors(mBgmTxt);
 	}
 
-	bool MenuScreenView::Update(MenuScreenUpdate update) {
+	bool MenuScreenView::Update(const MenuScreenUpdate& update) {
 		SelectOption(update.up, update.down);
 		if (option == Option::BGM && (update.left || update.right)) {
 			if (update.left) UpdateBgmVolume(-MENU_VOL_STEP_SZ, update.mSaveData->bgmVol);
@@ -111,7 +111,7 @@ namespace fknd {
 		}
 	}
 
-	void MenuScreenView::InvertOptionColors(std::shared_ptr<sf::Text> option) {
+	void MenuScreenView::InvertOptionColors(const std::shared_ptr<sf::Text>& option) {
 		for (auto& text : mTexts){
 			if (text.get() == option.get()){
 				text->setFillColor(MENU_TXT_OUTCOL);

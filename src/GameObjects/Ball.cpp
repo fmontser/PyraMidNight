@@ -69,7 +69,7 @@ namespace fknd {
 		AudioManager::Play(PATH_AUD_BUMPER_BOUNCE, VOL_AUD_BUMPER_BOUNCE, false);
 	}
 
-	float Ball::GetBallDistance(const sf::Sprite& obj) {
+	float Ball::GetBallDistance(const sf::Sprite& obj) const {
 		auto bPos = getPosition();
 		auto rect = obj.getGlobalBounds();
 		float closestX = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);
@@ -80,7 +80,7 @@ namespace fknd {
 	}
 
 	const Ball::State &Ball::GetState() const { return mState; }
-	const float Ball::GetRadius() const { return mRadius; }
+	float Ball::GetRadius() const { return mRadius; }
 
 
 	void Ball::Move(const sf::Time& deltaTime) {

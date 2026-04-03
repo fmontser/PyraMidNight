@@ -24,7 +24,7 @@ namespace fknd {
 			
 			MenuScreenView();
 
-			bool Update(MenuScreenUpdate update);
+			bool Update(const MenuScreenUpdate& update);
 
 
 
@@ -45,7 +45,7 @@ namespace fknd {
 			void UpdateBgmVolume(float volume, float& saveBgmVol);
 			void UpdateSfxVolume(float volume, float& saveSfxVol);
 			void SelectOption(bool up, bool down);
-			void InvertOptionColors(std::shared_ptr<sf::Text> option);
+			void InvertOptionColors(const std::shared_ptr<sf::Text>& option);
 	
 			bool Update();
 	};

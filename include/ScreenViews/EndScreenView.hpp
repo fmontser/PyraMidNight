@@ -22,7 +22,7 @@ namespace fknd {
 			
 			EndScreenView();
 
-			bool Update(EndScreenUpdate update);
+			bool Update(const EndScreenUpdate& update);
 			
 		private:
 			
@@ -43,7 +43,7 @@ namespace fknd {
 			bool mIsRankingDraw;
 			bool mIsNameSet;
 	
-			bool DrawPlayerRanking(std::vector<ResourceManager::ScoreEntry>& ranking);
+			bool DrawPlayerRanking(const std::vector<ResourceManager::ScoreEntry>& ranking);
 			std::string* GetGameEntryName(std::vector<ResourceManager::ScoreEntry>& ranking); 
 			std::string PadZeroScore(uint32_t score, uint32_t digits);
 			bool Update();
