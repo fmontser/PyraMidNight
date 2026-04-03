@@ -19,25 +19,26 @@ namespace pyramidnight {
 			};
 
 			static void Init();
-			static void SaveUserData();
-			static void LoadUserData();
-			static void SaveBgmVolume();
-			static void SaveSfxVolume();
-			static void SaveScoreRanking();
-
-		private:
+			static void SaveBgmVolume(float volume);
+			static void SaveSfxVolume(float volume);
+			static void SaveRecord(const std::string& name, uint32_t score);
+			
+			private:
 			UserDataManager();
 			UserDataManager(const UserDataManager& src) = delete;
 			UserDataManager& operator=(const UserDataManager& src) = delete;
-
+			
 			static UserDataManager& instance() {
 				static UserDataManager inst;
 				return inst;
 			}
-
+			
 			SaveData mSaveData;
-
+			
 			void InitSaveData();
-	};
-
-}
+			void SaveUserData();
+			void LoadUserData();
+			void SortRanking();
+		};
+		
+	}

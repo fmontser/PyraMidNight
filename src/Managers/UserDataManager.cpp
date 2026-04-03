@@ -1,3 +1,4 @@
+#include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <iostream>
@@ -12,17 +13,16 @@ namespace pyramidnight {
 
 	void UserDataManager::SaveUserData() {
 		std::string path(PATH_SAVE_DATA);
-		auto& data = instance().mSaveData;
 
 		try {
-			uint32_t count = static_cast<uint32_t>(data.ranking.size());
+			uint32_t count = static_cast<uint32_t>(mSaveData.ranking.size());
 			std::ofstream outStream(path, std::ios::binary);
 
-			outStream.write((char*)&data.bgmVol, sizeof(data.bgmVol));
-			outStream.write((char*)&data.sfxVol, sizeof(data.sfxVol));
+			outStream.write((char*)&mSaveData.bgmVol, sizeof(mSaveData.bgmVol));
+			outStream.write((char*)&mSaveData.sfxVol, sizeof(mSaveData.sfxVol));
 
 			outStream.write((char*)&count, sizeof(count));
-			for (const auto& record : data.ranking) {
+			for (const auto& record : mSaveData.ranking) {
 				uint32_t len = static_cast<uint32_t>(record.name.size());
 
 				outStream.write((char*)&len, sizeof(len));
@@ -36,18 +36,17 @@ namespace pyramidnight {
 
 	void UserDataManager::LoadUserData() {
 		std::string path(PATH_SAVE_DATA);
-		auto& data = instance().mSaveData;
 
 		try {
 			uint32_t count {};
 			std::ifstream inStream(path, std::ios::binary);
 
-			inStream.read((char*)&data.bgmVol, sizeof(data.bgmVol));
-			inStream.read((char*)&data.sfxVol, sizeof(data.sfxVol));
+			inStream.read((char*)&mSaveData.bgmVol, sizeof(mSaveData.bgmVol));
+			inStream.read((char*)&mSaveData.sfxVol, sizeof(mSaveData.sfxVol));
 			inStream.read((char*)&count, sizeof(count));
 
-			data.ranking.resize(count);
-			for (auto& record : data.ranking) {
+			mSaveData.ranking.resize(count);
+			for (auto& record : mSaveData.ranking) {
 				uint32_t len {};
 
 				inStream.read((char*)&len, sizeof(len));
@@ -61,17 +60,35 @@ namespace pyramidnight {
 		}
 	}
 
-	void UserDataManager::SaveBgmVolume() {
-		//TODO
+	void UserDataManager::SaveBgmVolume(float volume) {
+		instance().mSaveData.bgmVol =  volume;
+		instance().SaveUserData();
 	}
 
-	void UserDataManager::SaveSfxVolume() {
-		//TODO
+	void UserDataManager::SaveSfxVolume(float volume) {
+		instance().mSaveData.sfxVol =  volume;
+		instance().SaveUserData();
 	}
 
-	void UserDataManager::SaveScoreRanking() {
-		//TODO
+	void UserDataManager::SaveRecord(const std::string& name, uint32_t score) {
+		auto& data = instance().mSaveData;
+
+		data.ranking.push_back({name, score});
+		instance().SortRanking();
+		if (data.ranking.size() > GAME_RANK_SIZE)
+			data.ranking.pop_back();
+		instance().SaveUserData();
 	}
+
+	void UserDataManager::SortRanking() {
+		auto& data = instance().mSaveData;
+
+		std::sort(data.ranking.begin(), data.ranking.end(),
+		[](const ScoreEntry& a, const ScoreEntry& b) {
+			return a.score > b.score;
+		});
+	}
+
 
 	void UserDataManager::InitSaveData() {
 		auto& data = instance().mSaveData;
@@ -80,7 +97,7 @@ namespace pyramidnight {
 		if (std::filesystem::exists(PATH_SAVE_DATA))
 			return;
 			
-		ranking.push_back({"RAA", 100000});
+		ranking.push_back({"RA ", 100000});
 		ranking.push_back({"ELI", 90000});
 		ranking.push_back({"JMA", 80000});
 		ranking.push_back({"IOQ", 70000});
