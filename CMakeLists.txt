@@ -41,19 +41,19 @@ FetchContent_MakeAvailable(SFML)
 set(APP_SOURCES
 	src/main.cpp
 	src/Game.cpp
-	src/AudioManager.cpp
-	src/RenderManager.cpp
-	src/ResourceManager.cpp
-	src/InputManager.cpp
-	src/ScreenView.cpp
-	src/MenuScreenView.cpp
-	src/TitleScreenView.cpp
-	src/RoundScreenView.cpp
-	src/EndScreenView.cpp
-	src/Bumper.cpp
-	src/Ball.cpp
-	src/Block.cpp
-	src/Cursor.cpp
+	src/Managers/AudioManager.cpp
+	src/Managers/RenderManager.cpp
+	src/Managers/ResourceManager.cpp
+	src/Managers/InputManager.cpp
+	src/ScreenViews/ScreenView.cpp
+	src/ScreenViews/MenuScreenView.cpp
+	src/ScreenViews/TitleScreenView.cpp
+	src/ScreenViews/RoundScreenView.cpp
+	src/ScreenViews/EndScreenView.cpp
+	src/GameObjects/Bumper.cpp
+	src/GameObjects/Ball.cpp
+	src/GameObjects/Block.cpp
+	src/GameObjects/Cursor.cpp
 )
 
 set(APP_LIBS
@@ -66,6 +66,9 @@ set(APP_LIBS
 add_executable(FranKanoid ${APP_SOURCES})
 
 target_include_directories(FranKanoid PUBLIC include)
+target_include_directories(FranKanoid PUBLIC include/GameObjects)
+target_include_directories(FranKanoid PUBLIC include/ScreenViews)
+target_include_directories(FranKanoid PUBLIC include/Managers)
 target_link_libraries(FranKanoid PRIVATE ${APP_LIBS})
 
 # MultiPlatform setting
