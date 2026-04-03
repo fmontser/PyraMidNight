@@ -1,7 +1,7 @@
 #include "Block.hpp"
 #include "AudioManager.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 
 	Block::Block(const sf::Texture& texture, int8_t hitPoints) : sf::Sprite(texture) {
 		mHitPoints = hitPoints;

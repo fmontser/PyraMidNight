@@ -1,6 +1,6 @@
 #include "InputManager.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	InputManager::InputManager(sf::RenderWindow &window) : mWindow(window) {
 		mFrameInput = {};

@@ -5,7 +5,7 @@
 #include "Cursor.hpp"
 #include "Common.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	class EndScreenView : public ScreenView {
 		public:

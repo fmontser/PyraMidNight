@@ -10,7 +10,7 @@
 #include "Levels.hpp"
 #include "FailSafeData.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	ResourceManager::ResourceManager() {
 		ValidateLevels();

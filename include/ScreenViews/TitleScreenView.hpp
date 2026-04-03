@@ -3,7 +3,7 @@
 #include "ScreenView.hpp"
 #include "Common.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	class TitleScreenView : public ScreenView {
 		public:

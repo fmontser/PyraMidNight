@@ -3,7 +3,7 @@
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 
 	AudioManager::AudioManager() {}
 
@@ -29,7 +29,7 @@ namespace fknd {
 
 	void AudioManager::Init() { instance();	}
 
-	void fknd::AudioManager::Play(const std::string_view& path, float volume, bool loop) {
+	void pyramidnight::AudioManager::Play(const std::string_view& path, float volume, bool loop) {
 		auto sound = std::make_shared<sf::Sound>(*ResourceManager::GetAudio(path));
 		if (path.find("Music",0) != std::string::npos) {
 			instance().mBgm.push_back(sound);

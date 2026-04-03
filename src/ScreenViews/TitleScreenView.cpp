@@ -3,7 +3,7 @@
 #include "Game.hpp"
 #include "AudioManager.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	TitleScreenView::TitleScreenView() : ScreenView() {
 		mFont = ResourceManager::GetFont(PATH_FONT);

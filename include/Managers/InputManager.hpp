@@ -2,7 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include "Common.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	class InputManager {
 		public:

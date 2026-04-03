@@ -3,7 +3,7 @@
 #include "Ball.hpp"
 #include "AudioManager.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 
 	Ball::Ball(const sf::Texture& texture) : sf::Sprite(texture) {
 		mSpeed = BALL_INIT_SPEED;

@@ -6,7 +6,7 @@
 #include "Game.hpp"
 #include "Cursor.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	MenuScreenView::MenuScreenView() : ScreenView() {
 		mBgmVolume = AudioManager::GetBgmVolume();

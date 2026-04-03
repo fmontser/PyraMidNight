@@ -5,7 +5,7 @@
 #include "Game.hpp"
 #include "Cursor.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	EndScreenView::EndScreenView() : ScreenView() {
 		mIsRankingDraw = false;

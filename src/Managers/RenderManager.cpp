@@ -1,6 +1,6 @@
 #include "RenderManager.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	RenderManager::RenderManager() :
 		mWindow(sf::VideoMode(RNDR_RESOLUTION),

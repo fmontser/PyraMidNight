@@ -4,7 +4,7 @@
 int main(int argc, char* argv[]) {
 	(void)argc;
 	(void)argv;
-	fknd::Game game;
+	pyramidnight::Game game;
 	game.Run();
 	return (0);
 }

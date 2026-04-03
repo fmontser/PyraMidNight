@@ -3,7 +3,7 @@
 #include <memory>
 #include "Common.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	class AudioManager {
 		public:

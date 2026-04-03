@@ -3,7 +3,7 @@
 #include <array>
 #include "Common.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 
 	const std::array<const std::string, LVL_DIMENSIONS2> LEVEL0 = {
 		"000000000",

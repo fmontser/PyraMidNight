@@ -4,7 +4,7 @@
 #include "ResourceManager.hpp"
 #include "Common.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	class MenuScreenView : public ScreenView {
 		public:

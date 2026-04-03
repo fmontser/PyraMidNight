@@ -10,7 +10,7 @@
 #include "InputManager.hpp"
 #include "Common.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 
 	class Game {
 		public:

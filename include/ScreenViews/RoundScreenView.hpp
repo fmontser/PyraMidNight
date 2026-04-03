@@ -5,7 +5,7 @@
 #include "Block.hpp"
 #include "Common.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 
 	class RoundScreenView : public ScreenView {
 		public:

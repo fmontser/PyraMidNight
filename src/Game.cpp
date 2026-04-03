@@ -3,7 +3,7 @@
 #include "Game.hpp"
 #include "AudioManager.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	Game::Game() : mRenderManager(), mWindow(mRenderManager.GetWindow()), mInputManager(mRenderManager.GetWindow()) {
 		ResourceManager::Init();

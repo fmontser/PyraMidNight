@@ -4,7 +4,7 @@
 #include <limits>
 #include <SFML/Graphics.hpp>
 
-namespace fknd {
+namespace pyramidnight {
 	//Game
 	inline constexpr uint32_t GAME_MAX_SCORE = std::numeric_limits<uint32_t>::max();
 	inline constexpr uint8_t  GAME_MAX_CREDITS = std::numeric_limits<uint8_t>::max();

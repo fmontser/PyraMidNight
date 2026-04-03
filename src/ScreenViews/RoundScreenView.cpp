@@ -6,7 +6,7 @@
 #include "RoundScreenView.hpp"
 #include "Levels.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 
 	RoundScreenView::RoundScreenView() : ScreenView() {
 		mLvlIsLoaded = false;

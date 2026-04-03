@@ -2,7 +2,7 @@
 #include "Cursor.hpp"
 #include "AudioManager.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	Cursor::Cursor(sf::Font& font, sf::Clock& clock) : mFont(font), mClock(clock) {
 		mEntryTxt = nullptr;

@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "Bumper.hpp"
 
-namespace fknd {
+namespace pyramidnight {
 	
 	Bumper::Bumper(const sf::Texture& texture) : sf::Sprite(texture) {
 		mSpeed = BMPR_INIT_SPEED;
