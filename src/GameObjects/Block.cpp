@@ -14,7 +14,7 @@ namespace fknd {
 		mTint = getColor();
 	}
 
-	void Block::Update(sf::Time& deltaTime) {
+	void Block::Update(const sf::Time& deltaTime) {
 		if (mFlashTimer > 0.0f) {
 			mFlashTimer -= deltaTime.asSeconds();
 			setColor(sf::Color(sf::Color::White)); 
@@ -39,5 +39,5 @@ namespace fknd {
 		return false;
 	}
 
-	int32_t Block::GetScore() { return mScorePoints; }
+	int32_t Block::GetScore() const { return mScorePoints; }
 }

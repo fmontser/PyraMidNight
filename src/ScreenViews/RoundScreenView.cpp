@@ -77,7 +77,7 @@ namespace fknd {
 		mColdetVector.push_back(mBumper);
 	}
 
-	bool RoundScreenView::Update(RoundScreenUpdate update) {
+	bool RoundScreenView::Update(const RoundScreenUpdate& update) {
  		if (!mLvlIsLoaded)
 			mLvlIsLoaded = LoadLevel(update.roundId);
 		if (update.action)
@@ -90,14 +90,14 @@ namespace fknd {
 		ScreenShake(update.window, update.deltaTime, mShaketime);
 		UpdateBall(update.score, update.deltaTime);
 		UpdateBlocks(update.deltaTime);
-		UpdateCredits(update.credits);
+		UpdateCreditsTxt(update.credits);
 		UpdateScore(update.score);
 		if (!UpdateGame(update.score, update.credits))
 			return false;
 		return true;
 	}
 
-	bool RoundScreenView::LoadLevel(uint8_t& roundId) {
+	bool RoundScreenView::LoadLevel(const uint8_t& roundId) {
 		auto& level = ROUNDS[roundId];
 		const auto offset =sf::Vector2f(64,32);
 		auto actualPos = sf::Vector2f(32,32);
@@ -147,7 +147,7 @@ namespace fknd {
 	}
 
 
-	void RoundScreenView::UpdateBlocks(sf::Time& deltaTime) {
+	void RoundScreenView::UpdateBlocks(const sf::Time& deltaTime) {
 		for (auto& block : mBlockVector) {
 			block->Update(deltaTime);
 		}
@@ -181,7 +181,7 @@ namespace fknd {
 		return true;
 	}
 
-	void RoundScreenView::UpdateCredits(uint8_t& credits) {
+	void RoundScreenView::UpdateCreditsTxt(const uint8_t& credits) {
 		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR)
 			.append(std::to_string(credits)));
 	}
@@ -233,7 +233,7 @@ namespace fknd {
 			credits--;
 	}
 
-	void RoundScreenView::ScreenShake(sf::RenderWindow& window, sf::Time& deltaTime, float& shakeTime)
+	void RoundScreenView::ScreenShake(sf::RenderWindow& window,const sf::Time& deltaTime, float& shakeTime)
 	{
 		auto view = window.getView();
 		float force = 2.1f;

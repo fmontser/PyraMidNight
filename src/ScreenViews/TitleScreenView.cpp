@@ -44,7 +44,7 @@ namespace fknd {
 		AudioManager::Play(PATH_AUD_MUSIC_0, VOL_AUD_MUSIC_0, true);
 	}
 
-	bool TitleScreenView::Update(TitleScreenUpdate update)
+	bool TitleScreenView::Update(const TitleScreenUpdate& update)
 	{
 		BlinkStartText();
 		if (update.coin) {

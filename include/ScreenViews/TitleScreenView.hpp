@@ -15,7 +15,7 @@ namespace fknd {
 
 			TitleScreenView();
 
-			bool Update(TitleScreenUpdate update);
+			bool Update(const TitleScreenUpdate& update);
 	
 		private:
 			std::shared_ptr<sf::Font> mFont;

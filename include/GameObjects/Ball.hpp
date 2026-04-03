@@ -18,9 +18,9 @@ namespace fknd {
 		void Bounce(const sf::Sprite &obj, float distance);
 		void ApplyBumperMod(const sf::Sprite& bumper);
 
-		float GetBallDistance(const sf::Sprite &obj);
-		const State &GetState() const;
-		const float GetRadius() const;
+		float GetBallDistance(const sf::Sprite &obj) const;
+		const State& GetState() const;
+		float GetRadius() const;
 		
 	private:
 		State           mState;

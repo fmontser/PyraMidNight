@@ -19,7 +19,6 @@ namespace fknd {
 				std::vector<ResourceManager::ScoreEntry> ranking;
 			};
 
-
 			static void Init();
 			static std::shared_ptr<sf::Texture> GetTexture(const std::string_view path);
 			static std::shared_ptr<sf::Font> GetFont(const std::string_view path);

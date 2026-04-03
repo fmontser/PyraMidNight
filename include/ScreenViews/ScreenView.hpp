@@ -7,8 +7,6 @@ namespace fknd {
 	
 	class ScreenView {
 		public:
-			struct ScreenUpdate {};
-
 			virtual bool Update() = 0;
 			std::vector<std::shared_ptr<sf::Drawable>>& GetDrawables();
 
@@ -16,7 +14,7 @@ namespace fknd {
 			void Resume();
 			
 		protected:
-			ScreenView();
+			ScreenView() = default;
 			
 			sf::Clock mClock;
 			std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
