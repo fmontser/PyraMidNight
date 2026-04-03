@@ -152,5 +152,4 @@ namespace fknd {
 	inline constexpr std::string_view RNDR_WINDOW_NAME = "FranKanoid";
 	inline constexpr sf::Vector2u     RNDR_RESOLUTION = {640, 896};
 	inline constexpr uint32_t         RNDR_FRAME_LIMIT = 60;
-
 }

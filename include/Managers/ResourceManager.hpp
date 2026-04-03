@@ -20,9 +20,9 @@ namespace fknd {
 			};
 
 			static void Init();
-			static std::shared_ptr<sf::Texture> GetTexture(const std::string_view path);
-			static std::shared_ptr<sf::Font> GetFont(const std::string_view path);
-			static std::shared_ptr<sf::SoundBuffer> GetAudio(const std::string_view path);
+			static std::shared_ptr<sf::Texture> GetTexture(const std::string_view& path);
+			static std::shared_ptr<sf::Font> GetFont(const std::string_view& path);
+			static std::shared_ptr<sf::SoundBuffer> GetAudio(const std::string_view& path);
 			static void SaveUserData(SaveData& data);
 			static SaveData LoadUserData();
 			
@@ -46,9 +46,12 @@ namespace fknd {
 			ResourceManager(const ResourceManager&) = delete;
 			ResourceManager& operator=(const ResourceManager&) = delete;
 
-			std::vector<Texture> mTextures;
-			std::vector<Font>    mFonts;
-			std::vector<Audio>   mAudios;
+			std::vector<Texture>             mTextures;
+			std::shared_ptr<sf::Texture>     mFailSafeTexture;
+			std::vector<Font>                mFonts;
+			std::shared_ptr<sf::Font>        mFailSafeFont;
+			std::vector<Audio>               mAudios;
+			std::shared_ptr<sf::SoundBuffer> mFailSafeSound;
 
 			void InitSaveData();
 			void ValidateLevels();

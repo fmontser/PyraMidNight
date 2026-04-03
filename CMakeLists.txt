@@ -4,6 +4,7 @@ project(FranKanoid VERSION 0.1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
+#add_compile_options(-Wall -Wextra -Werror)
 
 # SFML local dependencies
 set(SFML_STATIC_LIBRARIES ON CACHE BOOL "" FORCE)
@@ -27,7 +28,6 @@ if(ENABLE_ASAN)
 		message(STATUS "AddressSanitizer enabled (GCC)")
 	endif()
 endif()
-
 # Unzip SFML
 include(FetchContent)
 FetchContent_Declare(
@@ -66,6 +66,7 @@ set(APP_LIBS
 add_executable(FranKanoid ${APP_SOURCES})
 
 target_include_directories(FranKanoid PUBLIC include)
+target_include_directories(FranKanoid PUBLIC include/Data)
 target_include_directories(FranKanoid PUBLIC include/GameObjects)
 target_include_directories(FranKanoid PUBLIC include/ScreenViews)
 target_include_directories(FranKanoid PUBLIC include/Managers)

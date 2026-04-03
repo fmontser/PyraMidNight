@@ -8,6 +8,7 @@
 
 #include "ResourceManager.hpp"
 #include "Levels.hpp"
+#include "FailSafeData.hpp"
 
 namespace fknd {
 	
@@ -22,31 +23,43 @@ namespace fknd {
 		instance().InitSaveData();
 	}
 
-	std::shared_ptr<sf::Texture> ResourceManager::GetTexture(const std::string_view path) {
+	std::shared_ptr<sf::Texture> ResourceManager::GetTexture(const std::string_view& path) {
 		auto& vect = instance().mTextures;
 		auto it = std::find_if(vect.begin(), vect.end(), [path](const Texture& tex) {
 			return tex.path == path;
 		});
 		if (it != vect.end())
 			return it->texture;
+		else {
+			std::cerr << "Error: Missing texture, failsafe loaded\n";
+			return instance().mFailSafeTexture;
+		}
 	}
 
-	std::shared_ptr<sf::Font> ResourceManager::GetFont(const std::string_view path) {
+	std::shared_ptr<sf::Font> ResourceManager::GetFont(const std::string_view& path) {
 		auto& vect = instance().mFonts;
 		auto it = std::find_if(vect.begin(), vect.end(), [path](const Font& font) {
 			return font.path == path;
 		});
 		if (it != vect.end())
 			return it->font;
+		else {
+			std::cerr << "Error: Missing font, failsafe loaded\n";
+			return instance().mFailSafeFont;
+		}
 	}
 
-	std::shared_ptr<sf::SoundBuffer> ResourceManager::GetAudio(const std::string_view path) {
+	std::shared_ptr<sf::SoundBuffer> ResourceManager::GetAudio(const std::string_view& path) {
 		auto& vect = instance().mAudios;
 		auto it = std::find_if(vect.begin(), vect.end(), [path](const Audio& audio) {
 			return audio.path == path;
 		});
 		if (it != vect.end())
 			return it->audio;
+		else {
+			std::cerr << "Error: Missing sound, failsafe loaded\n";
+			return instance().mFailSafeSound;
+		}
 	}
 
 	
@@ -151,6 +164,7 @@ namespace fknd {
 			PATH_TEX_BLOCK
 		};
 
+		mFailSafeTexture = std::make_shared<sf::Texture>(FAILSAFE_TEXTURE_DATA, FAILSAFE_TEXTURE_DATA_SZ);
 		try {
 				for (const auto& path : filePaths) {
 					auto texture = Texture {
@@ -161,7 +175,6 @@ namespace fknd {
 				}
 		} catch(const sf::Exception& e) {
 			std::cerr << "Error: Missing or wrong texture file: " << e.what() << '\n';
-			exit(1);
 		}
 	}
 	void ResourceManager::LoadFonts()
@@ -170,6 +183,7 @@ namespace fknd {
 			PATH_FONT
 		};
 
+		mFailSafeFont = std::make_shared<sf::Font>(FAILSAFE_FONT_DATA, FAILSAFE_FONT_DATA_SZ);
 		try {
 				for (const auto& path : filePaths) {
 					auto font = Font {
@@ -200,6 +214,7 @@ namespace fknd {
 			PATH_AUD_MUSIC_0
 		};
 
+		mFailSafeSound = std::make_shared<sf::SoundBuffer>(FAILSAFE_SOUND_DATA, FAILSAFE_SOUND_DATA_SZ);
 		try {
 				for (const auto& path : filePaths) {
 					auto audio = Audio {
