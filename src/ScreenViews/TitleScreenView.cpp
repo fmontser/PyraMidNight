@@ -15,7 +15,7 @@ namespace fknd {
 		mTitleTxt->setPosition({100.f, 100.f});
 		mTitleTxt->setOutlineColor(TITLE_TXT_OUTCOL);
 		mTitleTxt->setOutlineThickness(TITLE_TXT_OUTLINE_SZ);
-	
+
 		mCreditsTxt = std::make_shared<sf::Text>(*mFont);
 		mCreditsTxt->setString(std::string(TITLE_CREDITS_STR).append("0"));
 		mCreditsTxt->setCharacterSize(TITLE_TXT_CREDITS_CHAR_SZ);
