@@ -30,8 +30,6 @@ namespace pyramidnight {
 			mInput = mInputManager.FetchInput();
 			mDeltaTime = mRenderManager.GetDeltaTime();
 
-			if (mInput.close)
-				mRenderManager.GetWindow().close();
 			if (mInput.menu) {
 				if (mState != State::MENU) {
 					mPrevState = mState;
@@ -39,7 +37,7 @@ namespace pyramidnight {
 					mInput.menu = false;
 				}
 			}
-
+			
 			switch (mState) {
 				case State::MENU:
 					if (mMenuScreen == nullptr) {

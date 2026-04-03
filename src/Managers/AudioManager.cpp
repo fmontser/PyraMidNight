@@ -5,6 +5,7 @@
 
 namespace pyramidnight {
 
+	//TODO fix independent channel (per instance) mixing
 	AudioManager::AudioManager() {}
 
 	void AudioManager::SetBgmVolume(float volume) {

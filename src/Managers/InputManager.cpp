@@ -9,9 +9,8 @@ namespace pyramidnight {
 	const InputManager::Input& InputManager::FetchInput() {
 		ResetReleased();
 		while (const auto event = mWindow.pollEvent()) {
-			
 			if (event->getIf<sf::Event::Closed>())
-				mFrameInput.close = true;
+				mWindow.close();
 	
 			mFrameInput.holdLeft  = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
 			mFrameInput.holdRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);

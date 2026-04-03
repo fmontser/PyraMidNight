@@ -82,7 +82,6 @@ namespace pyramidnight {
 	const Ball::State &Ball::GetState() const { return mState; }
 	float Ball::GetRadius() const { return mRadius; }
 
-
 	void Ball::Move(const sf::Time& deltaTime) {
 		sf::Vector2f position = getPosition();
 		auto deltaTimeMs = deltaTime.asMilliseconds();
