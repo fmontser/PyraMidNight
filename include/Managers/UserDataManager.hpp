@@ -22,6 +22,7 @@ namespace pyramidnight {
 			static void SaveBgmVolume(float volume);
 			static void SaveSfxVolume(float volume);
 			static void SaveRecord(const std::string& name, uint32_t score);
+			static SaveData& GetUserData();
 			
 			private:
 			UserDataManager();
