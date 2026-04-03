@@ -1,4 +1,4 @@
-# FranKanoid
+# PyraMidNight
 Work in progress!
 
 A tribute to classic game Arkanoid!

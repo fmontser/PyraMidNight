@@ -4,7 +4,7 @@ namespace fknd {
 	
 	RenderManager::RenderManager() :
 		mWindow(sf::VideoMode(RNDR_RESOLUTION),
-		"FranKanoid",
+		"PyraMidNight",
 		sf::Style::Titlebar | sf::Style::Close) {
 			mWindow.setFramerateLimit(RNDR_FRAME_LIMIT);
 	}

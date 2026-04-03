@@ -12,7 +12,7 @@ namespace fknd {
 		mTitleTxt->setString(std::string(TITLE_STR));
 		mTitleTxt->setCharacterSize(TITLE_TXT_CHAR_SZ);
 		mTitleTxt->setFillColor(TITLE_TXT_FILLCOL);
-		mTitleTxt->setPosition({100.f, 100.f});
+		mTitleTxt->setPosition({55.0f, 100.0f});
 		mTitleTxt->setOutlineColor(TITLE_TXT_OUTCOL);
 		mTitleTxt->setOutlineThickness(TITLE_TXT_OUTLINE_SZ);
 
@@ -20,7 +20,7 @@ namespace fknd {
 		mCreditsTxt->setString(std::string(TITLE_CREDITS_STR).append("0"));
 		mCreditsTxt->setCharacterSize(TITLE_TXT_CREDITS_CHAR_SZ);
 		mCreditsTxt->setFillColor(TITLE_TXT_FILLCOL);
-		mCreditsTxt->setPosition({100.f, 500.f});
+		mCreditsTxt->setPosition({100.0f, 500.0f});
 		mCreditsTxt->setOutlineColor(TITLE_TXT_OUTCOL);
 		mCreditsTxt->setOutlineThickness(TITLE_TXT_OUTLINE_SZ);
 	
@@ -29,7 +29,7 @@ namespace fknd {
 		mStartTxt->setString(std::string(TITLE_START_STR));
 		mStartTxt->setCharacterSize(TITLE_TXT_START_CHAR_SZ);
 		mStartTxt->setFillColor(TITLE_TXT_FILLCOL);
-		mStartTxt->setPosition({130.f, 600.f});
+		mStartTxt->setPosition({130.0f, 600.0f});
 		mStartTxt->setOutlineColor(TITLE_TXT_OUTCOL);
 		mStartTxt->setOutlineThickness(TITLE_TXT_OUTLINE_SZ);
 	

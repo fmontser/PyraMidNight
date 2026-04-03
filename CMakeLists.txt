@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 
-project(FranKanoid VERSION 0.1)
+project(PyraMidNight VERSION 0.1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
@@ -63,23 +63,23 @@ set(APP_LIBS
 	sfml-audio
 )
 
-add_executable(FranKanoid ${APP_SOURCES})
+add_executable(PyraMidNight ${APP_SOURCES})
 
-target_include_directories(FranKanoid PUBLIC include)
-target_include_directories(FranKanoid PUBLIC include/Data)
-target_include_directories(FranKanoid PUBLIC include/GameObjects)
-target_include_directories(FranKanoid PUBLIC include/ScreenViews)
-target_include_directories(FranKanoid PUBLIC include/Managers)
-target_link_libraries(FranKanoid PRIVATE ${APP_LIBS})
+target_include_directories(PyraMidNight PUBLIC include)
+target_include_directories(PyraMidNight PUBLIC include/Data)
+target_include_directories(PyraMidNight PUBLIC include/GameObjects)
+target_include_directories(PyraMidNight PUBLIC include/ScreenViews)
+target_include_directories(PyraMidNight PUBLIC include/Managers)
+target_link_libraries(PyraMidNight PRIVATE ${APP_LIBS})
 
 # MultiPlatform setting
 
 if(WIN32)
 	# needed for windows main type
-	target_link_libraries(FranKanoid PRIVATE sfml-main)
+	target_link_libraries(PyraMidNight PRIVATE sfml-main)
 	# avoid terminal window spawning Windows
-	target_link_options(FranKanoid PRIVATE "/SUBSYSTEM:WINDOWS")
-	target_compile_definitions(FranKanoid PUBLIC SFML_STATIC)
+	target_link_options(PyraMidNight PRIVATE "/SUBSYSTEM:WINDOWS")
+	target_compile_definitions(PyraMidNight PUBLIC SFML_STATIC)
 endif()
 
 # Assets copy

@@ -68,7 +68,7 @@ namespace fknd {
 		inline constexpr uint32_t         TITLE_TXT_CHAR_SZ = 90;
 		inline constexpr uint32_t         TITLE_TXT_CREDITS_CHAR_SZ = 48;
 		inline constexpr uint32_t         TITLE_TXT_START_CHAR_SZ = 40;
-		inline constexpr std::string_view TITLE_STR = "FranKanoid";
+		inline constexpr std::string_view TITLE_STR = "PyraMidNight";
 		inline constexpr std::string_view TITLE_CREDITS_STR = "Insert coin! credits ";
 		inline constexpr std::string_view TITLE_START_STR = "Press SPACE to start!";
 		//Bg
@@ -149,7 +149,7 @@ namespace fknd {
 	inline constexpr float VOL_AUD_MUSIC_0 = 0.25f;
 
 	//RenderManager (DO NOT EDIT RESOLUTION!!!)
-	inline constexpr std::string_view RNDR_WINDOW_NAME = "FranKanoid";
+	inline constexpr std::string_view RNDR_WINDOW_NAME = "PyraMidNight";
 	inline constexpr sf::Vector2u     RNDR_RESOLUTION = {640, 896};
 	inline constexpr uint32_t         RNDR_FRAME_LIMIT = 60;
 }
