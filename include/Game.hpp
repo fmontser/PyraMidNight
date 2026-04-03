@@ -29,11 +29,11 @@ namespace pyramidnight {
 			uint8_t  mRound;
 			uint8_t  mFinalRound;
 			uint32_t mScore;
-			std::shared_ptr<ResourceManager::SaveData> mSaveData;
+			
 			
 			InputManager::Input  mInput;
 			RenderManager        mRenderManager;
-			sf::RenderWindow& mWindow;
+			sf::RenderWindow&    mWindow;
 			InputManager         mInputManager;
 
 			sf::Time             mDeltaTime;
