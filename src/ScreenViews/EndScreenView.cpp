@@ -100,8 +100,7 @@ namespace pyramidnight {
 		return true;
 	}
 	
-	bool EndScreenView::DrawPlayerRanking()
-	{
+	bool EndScreenView::DrawPlayerRanking() {
 		size_t i = 0;
 		
 		for (auto& entry : UserDataManager::GetUserData().ranking) {
@@ -139,8 +138,7 @@ namespace pyramidnight {
 		entry->name = mRecordNameTxt->getString();
 	}
 
-	Cursor::CursorUpdate EndScreenView::WrapCursorUpdate(const EndScreenUpdate &update)
-	{
+	Cursor::CursorUpdate EndScreenView::WrapCursorUpdate(const EndScreenUpdate &update) {
 		return {
 			update.left,
 			update.right,
