@@ -1,16 +1,20 @@
 #include <limits>
 #include <algorithm>
 #include "Game.hpp"
+#include "UserDataManager.hpp"
 #include "AudioManager.hpp"
+
+#include <iostream>
 
 namespace pyramidnight {
 	
 	Game::Game() : mRenderManager(), mWindow(mRenderManager.GetWindow()), mInputManager(mRenderManager.GetWindow()) {
 		ResourceManager::Init();
-		mSaveData = std::make_shared<ResourceManager::SaveData>(ResourceManager::LoadUserData());
+
+		
 		AudioManager::Init();
-		AudioManager::SetBgmVolume(mSaveData->bgmVol);
-		AudioManager::SetSfxVolume(mSaveData->sfxVol);
+		AudioManager::SetBgmVolume(UserDataManager::GetUserData().bgmVol);
+		AudioManager::SetSfxVolume(UserDataManager::GetUserData().sfxVol);
 
 		mState = State::TITLE_SCREEN;
 		mCredits = 0;
@@ -21,7 +25,6 @@ namespace pyramidnight {
 		mTitleScreen = nullptr;
 		mRoundScreen = nullptr;
 		mEndScreenView = nullptr;
-		SortRanking();
 	}
 	
 	// main loop
@@ -48,7 +51,6 @@ namespace pyramidnight {
 						mState = mPrevState;
 						mMenuScreen = nullptr;
 						Resume();
-						ResourceManager::SaveUserData(*mSaveData);
 						break;
 					}
 					mRenderManager.RenderFrame(mMenuScreen->GetDrawables());
@@ -79,53 +81,37 @@ namespace pyramidnight {
 					if (!mEndScreenView->Update(WrapEndScreenUpdate())) {
 						mState = State::TITLE_SCREEN;
 						mEndScreenView = nullptr;
-						ResourceManager::SaveUserData(*mSaveData);
+						UserDataManager::SaveRanking();
+						ResetScore();
 						break;
 					}
 					mRenderManager.RenderFrame(mEndScreenView->GetDrawables());
 					break;
-				default:
+					default:
 					break;
+				}
 			}
 		}
-	}
-	
-	void Game::SetNextRound() {
-		if (mRound < mFinalRound && mCredits > 0) {
-			mRound++;
-			mRoundScreen = std::make_shared<RoundScreenView>();
+		
+		void Game::SetNextRound() {
+			if (mRound < mFinalRound && mCredits > 0) {
+				mRound++;
+				mRoundScreen = std::make_shared<RoundScreenView>();
+			}
+			else {
+				mRound = 0;
+				GameOver();
+			}
 		}
-		else {
-			mRound = 0;
-			GameOver();
-		}
-	}
-	
-	void Game::GameOver() {
-		mState = State::END_SCREEN;
-		RecordScore();
-		ResetScore();
-		ResetCredits();
-	}
-
-	void Game::RecordScore() {
-		mSaveData->ranking.push_back({"   ", mScore});
-		SortRanking();
-		if (mSaveData->ranking.size() > GAME_RANK_SIZE)
-			mSaveData->ranking.pop_back();
+		
+		void Game::GameOver() {
+			mState = State::END_SCREEN;
+			ResetCredits();
 	}
 
 	void Game::ResetScore() { mScore = 0; }
 
 	void Game::ResetCredits() { mCredits = 0; }
-
-	void Game::SortRanking() {
-		std::sort(mSaveData->ranking.begin(), mSaveData->ranking.end(),
-		[](const ResourceManager::ScoreEntry& a, const ResourceManager::ScoreEntry& b) {
-			return a.score > b.score;
-		}
-		);
-	}
 
 	void Game::Pause() {
 		if (mTitleScreen != nullptr)
@@ -152,8 +138,7 @@ namespace pyramidnight {
 				mInput.left,
 				mInput.right,
 				mInput.up,
-				mInput.down,
-				mSaveData
+				mInput.down
 		};
 	}
 
@@ -182,13 +167,12 @@ namespace pyramidnight {
 
 	EndScreenView::EndScreenUpdate Game::WrapEndScreenUpdate() {
 		return {
-			mInput.left,
-			mInput.right,
-			mInput.up,
-			mInput.down,
-			mInput.action,
-			mScore,
-			mSaveData->ranking
+				mInput.left,
+				mInput.right,
+				mInput.up,
+				mInput.down,
+				mInput.action,
+				mScore
 		};
 	}
 }

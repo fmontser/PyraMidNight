@@ -87,12 +87,9 @@ namespace pyramidnight {
 		else if (update.holdRight)
 			mBumper->Move(1, update.deltaTime, update.fine, update.coarse);
 
+		//TODO move screenshake to RenderManager
 		ScreenShake(update.window, update.deltaTime, mShaketime);
-		UpdateBall(update.score, update.deltaTime);
-		UpdateBlocks(update.deltaTime);
-		UpdateCreditsTxt(update.credits);
-		UpdateScore(update.score);
-		if (!UpdateGame(update.score, update.credits))
+		if (!UpdateGame(update))
 			return false;
 		return true;
 	}
@@ -168,10 +165,15 @@ namespace pyramidnight {
 		mDestroyedSprites.clear();
 	}
 
-	bool RoundScreenView::UpdateGame(uint32_t &score, uint8_t& credits) {
+	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
+		UpdateBall(update.score, update.deltaTime);
+		UpdateBlocks(update.deltaTime);
+		UpdateTexts(update);
+		ScoreTimePenalty(update.score);
+
 		//Lose
 		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
-			return LoseBall(score, credits);;
+			return LoseBall(update);;
 		}
 		//Win
 		if (mBlockVector.empty()) {
@@ -181,31 +183,28 @@ namespace pyramidnight {
 		return true;
 	}
 
-	void RoundScreenView::UpdateCreditsTxt(const uint8_t& credits) {
+	void RoundScreenView::UpdateTexts(const RoundScreenUpdate &update) {
 		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR)
-			.append(std::to_string(credits)));
-	}
-
-	void RoundScreenView::UpdateScore(uint32_t& score) {
-		ScoreTimePenalty(score);
+			.append(std::to_string(update.credits)));
 		mScoreTxt->setString(std::string(ROUND_SCORE_STR)
-			.append(std::to_string(score)));
+			.append(std::to_string(update.score)));
 	}
 
+	//TODO class clock should not be restarted!!!!
 	void RoundScreenView::ScoreTimePenalty(uint32_t &score) {
 		static float timeElapsed = 0;
 		timeElapsed += mClock.restart().asSeconds();
 
-			if (timeElapsed >= 1.0f) {
-				AddScore(score, SCORE_TIME_PENALTY);
-				timeElapsed -= 1.0f;
-			}
+		if (timeElapsed >= 1.0f) {
+			AddScore(score, SCORE_TIME_PENALTY);
+			timeElapsed -= 1.0f;
+		}
 	}
 
-	bool RoundScreenView::LoseBall(uint32_t& score ,uint8_t& credits) {
-		ConsumeCredit(credits);
-		AddScore(score, SCORE_LOSE_BALL);
-		if (credits == 0) {
+	bool RoundScreenView::LoseBall(const RoundScreenUpdate &update) {
+		ConsumeCredit(update.credits);
+		AddScore(update.score, SCORE_LOSE_BALL);
+		if (update.credits == 0) {
 			AudioManager::Play(PATH_AUD_GAMEOVER, VOL_AUD_GAMEOVER, false);
 			return false;
 		}
@@ -233,6 +232,7 @@ namespace pyramidnight {
 			credits--;
 	}
 
+	//TODO move out the class
 	void RoundScreenView::ScreenShake(sf::RenderWindow& window,const sf::Time& deltaTime, float& shakeTime)
 	{
 		auto view = window.getView();
@@ -254,6 +254,6 @@ namespace pyramidnight {
 		}
 		window.setView(view);
 	}
-		
+
 	bool RoundScreenView::Update() { return false; }
 }

@@ -98,6 +98,7 @@ namespace pyramidnight {
 		inline constexpr uint32_t         END_TXT_CHAR_SZ = 80;
 		inline constexpr uint32_t         END_TXT_CONT_CHAR_SZ = 40;
 		inline constexpr uint32_t         END_TXT_RANK_CHAR_SZ = 48;
+		inline constexpr std::string_view END_EMPTY_NAME_STR = "   ";
 		inline constexpr std::string_view END_STR = "GAME OVER!";
 		inline constexpr std::string_view END_CONT_STR = "Press SPACE to continue!";
 		//Bg

@@ -24,14 +24,18 @@ namespace pyramidnight {
 		instance().SaveUserData();
 	}
 
-	void UserDataManager::SaveRecord(const std::string& name, uint32_t score) {
-		auto& data = instance().mSaveData;
-
-		data.ranking.push_back({name, score});
+	void UserDataManager::SaveRanking() {
 		instance().SortRanking();
-		if (data.ranking.size() > GAME_RANK_SIZE)
-			data.ranking.pop_back();
 		instance().SaveUserData();
+	}
+
+	void UserDataManager::SortRanking() {
+		auto& ranking = instance().mSaveData.ranking;
+		
+		std::sort(ranking.begin(), ranking.end(),
+		[](const ScoreEntry& a, const ScoreEntry& b) {
+			return a.score > b.score;
+		});
 	}
 
 	UserDataManager::SaveData& UserDataManager::GetUserData() { return instance().mSaveData; }
@@ -91,28 +95,21 @@ namespace pyramidnight {
 		if (std::filesystem::exists(PATH_SAVE_DATA))
 			return;
 		
-		ranking.push_back({"RA ", 100000});
-		ranking.push_back({"ELI", 90000});
-		ranking.push_back({"JMA", 80000});
-		ranking.push_back({"IOQ", 70000});
-		ranking.push_back({"FFF", 60000});
-		ranking.push_back({"ISS", 3000});
-		ranking.push_back({"YSS", 1000});
-		ranking.push_back({"PAS", 500});
-		ranking.push_back({"TOI", 200});
-		ranking.push_back({"CAN", 10});
+		ranking.push_back({"RA ", 100000, false});
+		ranking.push_back({"ELI", 90000, false});
+		ranking.push_back({"JMA", 80000, false});
+		ranking.push_back({"IOQ", 70000, false});
+		ranking.push_back({"FFF", 60000, false});
+		ranking.push_back({"ISS", 3000, false});
+		ranking.push_back({"YSS", 1000, false});
+		ranking.push_back({"PAS", 500, false});
+		ranking.push_back({"TOI", 200, false});
+		ranking.push_back({"CAN", 10, false});
 		
 		mSaveData.bgmVol = VOL_AUD_BGM;
 		mSaveData.sfxVol = VOL_AUD_SFX;
 		mSaveData.ranking = ranking;
 		SaveUserData();
-	}
-	
-	void UserDataManager::SortRanking() {
-		std::sort(mSaveData.ranking.begin(), mSaveData.ranking.end(),
-		[](const ScoreEntry& a, const ScoreEntry& b) {
-			return a.score > b.score;
-		});
 	}
 }
 

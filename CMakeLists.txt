@@ -28,6 +28,7 @@ if(ENABLE_ASAN)
 		message(STATUS "AddressSanitizer enabled (GCC)")
 	endif()
 endif()
+
 # Unzip SFML
 include(FetchContent)
 FetchContent_Declare(
@@ -42,9 +43,10 @@ set(APP_SOURCES
 	src/main.cpp
 	src/Game.cpp
 	src/Managers/AudioManager.cpp
+	src/Managers/InputManager.cpp
 	src/Managers/RenderManager.cpp
 	src/Managers/ResourceManager.cpp
-	src/Managers/InputManager.cpp
+	src/Managers/UserDataManager.cpp
 	src/ScreenViews/ScreenView.cpp
 	src/ScreenViews/MenuScreenView.cpp
 	src/ScreenViews/TitleScreenView.cpp

@@ -19,17 +19,13 @@ namespace pyramidnight {
 				bool right;
 				bool up;
 				bool down;
-				std::shared_ptr<ResourceManager::SaveData>& mSaveData;
 			};
 			
 			MenuScreenView();
 
 			bool Update(const MenuScreenUpdate& update);
 
-
-
 		private:
-
 			std::shared_ptr<sf::Font>           mFont;
 			std::shared_ptr<sf::Text>           mBgmTxt;
 			std::shared_ptr<sf::Text>           mSfxTxt;
@@ -42,8 +38,8 @@ namespace pyramidnight {
 			Option  option;
 			std::vector<std::shared_ptr<sf::Text>> mTexts;
 
-			void UpdateBgmVolume(float volume, float& saveBgmVol);
-			void UpdateSfxVolume(float volume, float& saveSfxVol);
+			void UpdateBgmVolume(float volume);
+			void UpdateSfxVolume(float volume);
 			void SelectOption(bool up, bool down);
 			void InvertOptionColors(const std::shared_ptr<sf::Text>& option);
 	

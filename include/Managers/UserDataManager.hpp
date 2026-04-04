@@ -10,6 +10,7 @@ namespace pyramidnight {
 			struct ScoreEntry {
 				std::string name;
 				uint32_t    score;
+				bool        actual;
 			};
 
 			struct SaveData {
@@ -17,11 +18,12 @@ namespace pyramidnight {
 				float sfxVol;
 				std::vector<ScoreEntry> ranking;
 			};
-
+			
 			static void Init();
 			static void SaveBgmVolume(float volume);
 			static void SaveSfxVolume(float volume);
-			static void SaveRecord(const std::string& name, uint32_t score);
+			static void SaveRanking();
+			static void SortRanking();
 			static SaveData& GetUserData();
 			
 			private:
@@ -39,7 +41,5 @@ namespace pyramidnight {
 			void InitSaveData();
 			void SaveUserData();
 			void LoadUserData();
-			void SortRanking();
-		};
-		
+	};
 	}
