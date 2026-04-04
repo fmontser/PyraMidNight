@@ -6,25 +6,29 @@ namespace pyramidnight {
 	
 	class Cursor : public sf::RectangleShape {
 		public:
-			enum class Input {
-				LEFT, RIGHT, UP, DOWN, ACTION
+			struct CursorUpdate {
+				bool left;
+				bool right;
+				bool up;
+				bool down;
+				bool action;
+				std::shared_ptr<sf::Text> nameText;
 			};
-	
+
 			Cursor(sf::Font& font, sf::Clock& clock);
 	
-			void Update(Input action);
-			bool SetEntry(sf::Text* entry);
-			bool Accept(std::string* gameEntryName);
-			void Blink();
-	
-		private:
-			sf::Text*  mEntryTxt;
-			sf::Font&  mFont;
-			size_t     mEntryIndex;
-			sf::Clock& mClock;
+			bool Update(const CursorUpdate& update);
 			
-			void ChangeChar(Input action);
-			char SelectChar(Input action);
+			private:
+			sf::Font&  mFont;
+			sf::Clock& mClock;
+			size_t     mNameIndex;
+			bool       mIsEnabled;
+			
+			void SetPosition(const sf::Text& nameText);
+			void ChangeChar(const CursorUpdate& update);
+			char SelectChar(const CursorUpdate& update);
+			void Blink();
 	};
 
 }

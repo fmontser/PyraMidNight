@@ -23,17 +23,17 @@ namespace pyramidnight {
 			void Run();
 
 		private:
-			State    mState;
-			State    mPrevState;
-			uint8_t  mCredits;
-			uint8_t  mRound;
-			uint8_t  mFinalRound;
-			uint32_t mScore;
-			std::shared_ptr<ResourceManager::SaveData> mSaveData;
+			State       mState;
+			State       mPrevState;
+			uint8_t     mCredits;
+			uint8_t     mRound;
+			uint8_t     mFinalRound;
+			uint32_t    mScore;
+			
 			
 			InputManager::Input  mInput;
 			RenderManager        mRenderManager;
-			sf::RenderWindow& mWindow;
+			sf::RenderWindow&    mWindow;
 			InputManager         mInputManager;
 
 			sf::Time             mDeltaTime;

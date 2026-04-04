@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <sstream>
+#include "UserDataManager.hpp"
 #include "ResourceManager.hpp"
 #include "EndScreenView.hpp"
 #include "Game.hpp"
@@ -10,7 +11,6 @@ namespace pyramidnight {
 	EndScreenView::EndScreenView() : ScreenView() {
 		mIsRankingDraw = false;
 		mIsNameSet =  false;
-	
 		mFont = ResourceManager::GetFont(PATH_FONT);
 		mCursor = std::make_shared<Cursor>(*mFont, mClock);
 	
@@ -46,7 +46,7 @@ namespace pyramidnight {
 			scoreEntry->setPosition(rankingEntryPos);
 			rankingEntryPos.x -= textOffset.x;
 	
-			mRankingTxt.push_back({nameEntry, scoreEntry});
+			mRankingTxt.push_back({nameEntry, scoreEntry, false});
 		}
 		
 		mContTxt = std::make_shared<sf::Text>(*mFont);
@@ -74,61 +74,45 @@ namespace pyramidnight {
 	}
 
 	bool EndScreenView::Update(const EndScreenUpdate& update) {
-
 		if (!mIsRankingDraw) {
-			auto isEntryFound = false;
-			mIsRankingDraw = DrawPlayerRanking(update.ranking);
-			//Find record for cursor
-			for (auto& text : mRankingTxt) {
-				if (text.name->getString() == "   ")
-					isEntryFound = mCursor->SetEntry(text.name.get());
-			}
-			if (isEntryFound)
+			auto& ranking = UserDataManager::GetUserData().ranking;
+			ranking.push_back({std::string(END_EMPTY_NAME_STR), update.score, true});
+			UserDataManager::SortRanking();
+			if (ranking.size() > GAME_RANK_SIZE)
+				ranking.pop_back();
+			mIsRankingDraw = DrawPlayerRanking();
+			mRecordNameTxt = FindRecordNameTxt();
+			if (mRecordNameTxt != nullptr)
 				mContTxt->setScale({0,0});
 			else
 				mIsNameSet = true;
 		}
 		if (!mIsNameSet) {
-			mCursor->Blink();
-			if (update.left)
-				mCursor->Update(Cursor::Input::LEFT);
-			else if (update.right)
-				mCursor->Update(Cursor::Input::RIGHT);
-			else if (update.up)
-				mCursor->Update(Cursor::Input::UP);
-			else if (update.down)
-				mCursor->Update(Cursor::Input::DOWN);
-			else if (update.action) {
-				mIsNameSet = mCursor->Accept(GetGameEntryName(update.ranking));
+			if (!mCursor->Update(WrapCursorUpdate(update))) {
+				SetRecordName();
 				mContTxt->setScale({1,1});
+				mIsNameSet = true;
 				return true;
 			}
 		}
-		if (update.action && mIsNameSet)
-			return false;
+		if (mIsNameSet && update.action)
+		return false;
 		return true;
 	}
 	
-	bool EndScreenView::DrawPlayerRanking(const std::vector<ResourceManager::ScoreEntry>& ranking) {
+	bool EndScreenView::DrawPlayerRanking()
+	{
 		size_t i = 0;
-	
-		for (auto& gameEntry : ranking) {
+		
+		for (auto& entry : UserDataManager::GetUserData().ranking) {
 			if (i < mRankingTxt.size()) {
-				mRankingTxt[i].name->setString(gameEntry.name);
-				mRankingTxt[i].score->setString(PadZeroScore(gameEntry.score, 10));
+				mRankingTxt[i].name->setString(entry.name);
+				mRankingTxt[i].score->setString(PadZeroScore(entry.score, 10));
+				mRankingTxt[i].actual = entry.actual;
 			}
 			i++;
 		}
 		return true;
-	}
-	
-	//TODO DEBT dataflow view <-> cursor
-	std::string* EndScreenView::GetGameEntryName(std::vector<ResourceManager::ScoreEntry>& ranking) {
-		for (auto& gameEntry : ranking) {
-			if (gameEntry.name == "   ")
-				return &gameEntry.name;
-		}
-		return nullptr;
 	}
 	
 	std::string EndScreenView::PadZeroScore(uint32_t score, uint32_t digits) {
@@ -136,6 +120,35 @@ namespace pyramidnight {
 	
 		ss << std::setw(digits) << std::setfill('0') << score;
 		return ss.str();
+	}
+	
+	std::shared_ptr<sf::Text> EndScreenView::FindRecordNameTxt() {
+		for (auto& text : mRankingTxt) {
+			if (text.actual)
+			return text.name;
+		}
+		return nullptr;
+	}
+
+	void EndScreenView::SetRecordName() {
+		auto& ranking = UserDataManager::GetUserData().ranking;
+		auto entry = std::find_if(ranking.begin(), ranking.end(),
+		[](const UserDataManager::ScoreEntry& entry){
+			return entry.actual == true;
+		});
+		entry->name = mRecordNameTxt->getString();
+	}
+
+	Cursor::CursorUpdate EndScreenView::WrapCursorUpdate(const EndScreenUpdate &update)
+	{
+		return {
+			update.left,
+			update.right,
+			update.up,
+			update.down,
+			update.action,
+			mRecordNameTxt
+		};
 	}
 
 	bool EndScreenView::Update() { return false; }

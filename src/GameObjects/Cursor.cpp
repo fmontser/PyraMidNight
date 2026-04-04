@@ -5,8 +5,8 @@
 namespace pyramidnight {
 	
 	Cursor::Cursor(sf::Font& font, sf::Clock& clock) : mFont(font), mClock(clock) {
-		mEntryTxt = nullptr;
-		mEntryIndex = 0;
+		mNameIndex = 0;
+		mIsEnabled = false;
 		auto cursorSize =  sf::Vector2f({});
 		cursorSize.x =	mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.x;
 		cursorSize.y =	mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.y;
@@ -17,55 +17,45 @@ namespace pyramidnight {
 		setOutlineThickness(CUR_OUTLINE_SZ);
 	}
 	
-	void Cursor::Update(Input action) {
-		if (mEntryTxt == nullptr)
-			return;
-		switch (action)
-		{
-			case Input::LEFT:
-				if (mEntryIndex > 0) {
-					move({-CUR_MV_OFFSET,0});
-					--mEntryIndex;
-					mEntryIndex = std::clamp<size_t>(mEntryIndex, 0, 2);
-					SelectChar(Input::LEFT);
-				}
-				break;
-			case Input::RIGHT:
-				if (mEntryIndex < 2) {
-					move({CUR_MV_OFFSET,0});
-					++mEntryIndex;
-					mEntryIndex = std::clamp<size_t>(mEntryIndex, 0, 2);
-					SelectChar(Input::RIGHT);
-				}
-				break;
-			case Input::UP:
-				ChangeChar(Input::UP);
-				break;
-			case Input::DOWN:
-				ChangeChar(Input::DOWN);
-				break;
-			default:
-				break;
+
+	bool Cursor::Update(const CursorUpdate& update) {
+		if (update.nameText.get() == nullptr)
+			return true;
+		else if (!mIsEnabled)
+			SetPosition(*update.nameText);
+		if (update.left) {
+			if (mNameIndex > 0) {
+				move({-CUR_MV_OFFSET,0});
+				--mNameIndex;
+				mNameIndex = std::clamp<size_t>(mNameIndex, 0, 2);
+				SelectChar(update);
+			}
+		} else if (update.right) {
+			if (mNameIndex < 2) {
+				move({CUR_MV_OFFSET,0});
+				++mNameIndex;
+				mNameIndex = std::clamp<size_t>(mNameIndex, 0, 2);
+				SelectChar(update);
+			}
+		} else if (update.up || update.down) 
+			ChangeChar(update);
+		else if (update.action) {
+			setOutlineColor(sf::Color::Transparent);
+			return false;
 		}
-	}
-	
-	bool Cursor::SetEntry(sf::Text* entry) {
-		mEntryTxt = entry;
-		auto offset = sf::Vector2f({5.0f, -30.0f});
-		move(mEntryTxt->getGlobalBounds().position + offset);
-		return true;
-	}
-	
-	bool Cursor::Accept(std::string* gameEntryName) {
-		if (gameEntryName != nullptr)
-			*gameEntryName = mEntryTxt->getString();
-		setOutlineColor(sf::Color::Transparent);
+		Blink();
 		return true;
 	}
 
+	void Cursor::SetPosition(const sf::Text& nameText) {
+		auto offset = sf::Vector2f({5.0f, -30.0f});
+		move(nameText.getGlobalBounds().position + offset);
+		mIsEnabled = true;
+	}
+	
+
+	//TODO move blink to render manager??
 	void Cursor::Blink() {
-		if (mEntryTxt == nullptr)
-			return;
 		static float timeElapsed = 0;
 		static sf::Color color = sf::Color::Transparent;
 		timeElapsed += mClock.restart().asSeconds();
@@ -77,35 +67,29 @@ namespace pyramidnight {
 		}
 	}
 
-	void Cursor::ChangeChar(Input action) {
-		char selected = SelectChar(action);
-		std::string str = mEntryTxt->getString();
-		
-		str[mEntryIndex] = selected;
-		mEntryTxt->setString(str);
+	void Cursor::ChangeChar(const CursorUpdate& update) {
+		char selected = SelectChar(update);
+		std::string str = (*update.nameText).getString();
+		str[mNameIndex] = selected;
+		(*update.nameText).setString(str);
 		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 	}
 	
-	char Cursor::SelectChar(Input action) {
+	char Cursor::SelectChar(const CursorUpdate& update) {
 		static int index = 0;
 		char selected = 'A';
 		const int max = CUR_CHAR_SET.size();
-	
-		switch (action)	{
-			case Input::UP:
-				index =  (index + 1) % max;
-				selected = CUR_CHAR_SET[index];
-				break;
-			case Input::DOWN:
-				index = (index - 1 + max) % max;
-				selected = CUR_CHAR_SET[index];
-				break;
-			default:
-				index = 0;
-				break;
+
+		if (update.up) {
+			index =  (index + 1) % max;
+			selected = CUR_CHAR_SET[index];
 		}
+		else if (update.down) {
+			index = (index - 1 + max) % max;
+			selected = CUR_CHAR_SET[index];
+		} else
+			index = 0;
 		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
 		return selected;
 	}
-
 }
