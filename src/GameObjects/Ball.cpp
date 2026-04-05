@@ -68,8 +68,6 @@ namespace pyramidnight {
 		// keep upwards
 		mDirection.y = -std::sqrt(std::max(0.0f, std::powf(normSpeed, 2) - std::powf(mDirection.x, 2)));
 		AudioManager::Play({PATH_AUD_BUMPER_BOUNCE, VOL_AUD_BUMPER_BOUNCE, PolySound::Type::SFX, false});
-
-		
 	}
 
 	float Ball::GetBallDistance(const sf::Sprite& obj) const {
