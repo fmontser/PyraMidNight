@@ -24,7 +24,11 @@ namespace pyramidnight {
 	}
 
 	void AudioManager::Update() {
-		//TODO
+		static sf::Clock cleanTimer;
+		if (cleanTimer.getElapsedTime().asSeconds() > CLK_AUD_CLEAN_TIMER_S) {
+			instance().Clean();
+			cleanTimer.restart();
+		}
 	}
 
 	void AudioManager::SetBgmVolume(float volume) {
@@ -48,20 +52,18 @@ namespace pyramidnight {
 	uint8_t AudioManager::GetSfxVolume() { return instance().mSfxVolume; }
 
 	void AudioManager::Clean() {
-		auto& sfx = instance().mSfx;
-
-		sfx.erase(std::remove_if(sfx.begin(), sfx.end(),
+		mSfx.erase(std::remove_if(mSfx.begin(), mSfx.end(),
 			[](const std::unique_ptr<PolySound>& sound) {
 				return !sound || (sound->getStatus() == PolySound::Status::Stopped);
 			}),
-			sfx.end()
+			mSfx.end()
 		);
 
-		sfx.erase(std::remove_if(sfx.begin(), sfx.end(),
+		mBgm.erase(std::remove_if(mBgm.begin(), mBgm.end(),
 			[](const std::unique_ptr<PolySound>& sound) {
 				return !sound || (sound->getStatus() == PolySound::Status::Stopped);
 			}),
-			sfx.end()
+			mBgm.end()
 		);
 	}
 

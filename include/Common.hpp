@@ -131,6 +131,7 @@ namespace pyramidnight {
 	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
 
 	//AudioManager
+	inline constexpr float CLK_AUD_CLEAN_TIMER_S = 5.0f;
 	inline constexpr float VOL_AUD_MAX = 100.0f;
 	inline constexpr float VOL_AUD_MIN = 0.0f;
 	inline constexpr float VOL_AUD_BGM = 60.0f;

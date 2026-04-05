@@ -22,7 +22,6 @@ namespace pyramidnight {
 			AudioManager(const AudioManager&) = delete;
 			AudioManager& operator=(const AudioManager&) = delete;
 			
-			sf::Clock                               mClock;
 			float                                   mBgmVolume;
 			float                                   mSfxVolume;
 			std::vector<std::unique_ptr<PolySound>> mBgm;
