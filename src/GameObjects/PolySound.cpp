@@ -3,11 +3,12 @@
 #include "PolySound.hpp"
 
 namespace pyramidnight {
-	PolySound::PolySound(const std::string_view& path, float gain, Type type)
-		: sf::Sound(*ResourceManager::GetAudio(path))
+
+	PolySound::PolySound(Args args)
+		: sf::Sound(*ResourceManager::GetAudio(args.path))
 	{
-		mType = type;
-		mGain = gain;
+		mType = args.type;
+		mGain = args.gain;
 		setVolume(GetTypeVolume() * mGain);
 	}
 

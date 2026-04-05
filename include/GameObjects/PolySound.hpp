@@ -9,8 +9,15 @@ namespace pyramidnight {
 			enum class Type {
 				SFX, BGM
 			};
-	
-			PolySound(const std::string_view& path, float gain, Type type);
+
+			struct Args {
+				const std::string_view& path;
+				float                   gain;
+				Type                    type;
+				bool                    loop;
+			};
+
+			PolySound(Args args);
 			void SetInstanceVolume(float instanceGain);
 
 		private:
