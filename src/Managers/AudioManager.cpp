@@ -3,15 +3,11 @@
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 
-//TODO delete
-#include <iostream>
-
 namespace pyramidnight {
 
 	AudioManager::AudioManager() {}
 
 	//TODO Master volume levels
-
 	void AudioManager::Play(PolySound::Args args) {
 		auto sound = std::make_unique<PolySound>(args);
 		
@@ -25,6 +21,7 @@ namespace pyramidnight {
 
 	void AudioManager::Update() {
 		static sf::Clock cleanTimer;
+
 		if (cleanTimer.getElapsedTime().asSeconds() > CLK_AUD_CLEAN_TIMER_S) {
 			instance().Clean();
 			cleanTimer.restart();
