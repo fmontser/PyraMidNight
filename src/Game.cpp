@@ -46,7 +46,7 @@ namespace pyramidnight {
 				case State::MENU:
 					if (mMenuScreen == nullptr) {
 						Pause();
-						mMenuScreen = std::make_shared<MenuScreenView>();
+						mMenuScreen = std::make_unique<MenuScreenView>();
 					}
 					if (!mMenuScreen->Update(WrapMenuScreenUpdate())) {
 						mState = mPrevState;
@@ -58,7 +58,7 @@ namespace pyramidnight {
 					break;
 				case State::TITLE_SCREEN:
 					if (mTitleScreen == nullptr)
-						mTitleScreen = std::make_shared<TitleScreenView>();
+						mTitleScreen = std::make_unique<TitleScreenView>();
 					if (!mTitleScreen->Update(WrapTitleScreenUpdate())) {
 						mState = State::ROUND_SCREEN;
 						mTitleScreen = nullptr;
@@ -68,7 +68,7 @@ namespace pyramidnight {
 					break;
 				case State::ROUND_SCREEN:
 					if (mRoundScreen == nullptr)
-						mRoundScreen = std::make_shared<RoundScreenView>();
+						mRoundScreen = std::make_unique<RoundScreenView>();
 					if (!mRoundScreen->Update(WrapRoundScreenUpdate())) {
 						mRoundScreen = nullptr;
 						SetNextRound();
@@ -78,7 +78,7 @@ namespace pyramidnight {
 					break;
 				case State::END_SCREEN:
 					if (mEndScreenView == nullptr)
-						mEndScreenView = std::make_shared<EndScreenView>();
+						mEndScreenView = std::make_unique<EndScreenView>();
 					if (!mEndScreenView->Update(WrapEndScreenUpdate())) {
 						mState = State::TITLE_SCREEN;
 						mEndScreenView = nullptr;
@@ -97,7 +97,7 @@ namespace pyramidnight {
 		void Game::SetNextRound() {
 			if (mRound < mFinalRound && mCredits > 0) {
 				mRound++;
-				mRoundScreen = std::make_shared<RoundScreenView>();
+				mRoundScreen = std::make_unique<RoundScreenView>();
 			}
 			else {
 				mRound = 0;

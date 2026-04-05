@@ -36,10 +36,10 @@ namespace pyramidnight {
 			InputManager        mInputManager;
 			sf::Time            mDeltaTime;
 
-			std::shared_ptr<MenuScreenView>  mMenuScreen;
-			std::shared_ptr<TitleScreenView> mTitleScreen;
-			std::shared_ptr<RoundScreenView> mRoundScreen;
-			std::shared_ptr<EndScreenView>   mEndScreenView;
+			std::unique_ptr<MenuScreenView>  mMenuScreen;
+			std::unique_ptr<TitleScreenView> mTitleScreen;
+			std::unique_ptr<RoundScreenView> mRoundScreen;
+			std::unique_ptr<EndScreenView>   mEndScreenView;
 			
 			void SetNextRound();
 			void GameOver();
