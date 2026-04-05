@@ -19,7 +19,7 @@ namespace pyramidnight {
 
 	void ResourceManager::Init() { instance(); }
 
-	std::shared_ptr<sf::Texture> ResourceManager::GetTexture(const std::string_view& path) {
+	const std::shared_ptr<sf::Texture>& ResourceManager::GetTexture(const std::string_view& path) {
 		auto& vect = instance().mTextures;
 		auto it = std::find_if(vect.begin(), vect.end(), [path](const Texture& tex) {
 			return tex.path == path;
@@ -32,7 +32,7 @@ namespace pyramidnight {
 		}
 	}
 
-	std::shared_ptr<sf::Font> ResourceManager::GetFont(const std::string_view& path) {
+	const std::shared_ptr<sf::Font>& ResourceManager::GetFont(const std::string_view& path) {
 		auto& vect = instance().mFonts;
 		auto it = std::find_if(vect.begin(), vect.end(), [path](const Font& font) {
 			return font.path == path;
@@ -45,8 +45,7 @@ namespace pyramidnight {
 		}
 	}
 
-	//TODO change return const buffer&
-	std::shared_ptr<sf::SoundBuffer> ResourceManager::GetAudio(const std::string_view& path) {
+	const std::shared_ptr<sf::SoundBuffer>& ResourceManager::GetAudio(const std::string_view& path) {
 		auto& vect = instance().mAudios;
 		auto it = std::find_if(vect.begin(), vect.end(), [path](const Audio& audio) {
 			return audio.path == path;
