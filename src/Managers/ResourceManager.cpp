@@ -45,6 +45,7 @@ namespace pyramidnight {
 		}
 	}
 
+	//TODO change return const buffer&
 	std::shared_ptr<sf::SoundBuffer> ResourceManager::GetAudio(const std::string_view& path) {
 		auto& vect = instance().mAudios;
 		auto it = std::find_if(vect.begin(), vect.end(), [path](const Audio& audio) {

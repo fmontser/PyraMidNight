@@ -56,6 +56,7 @@ set(APP_SOURCES
 	src/GameObjects/Ball.cpp
 	src/GameObjects/Block.cpp
 	src/GameObjects/Cursor.cpp
+	src/GameObjects/PolySound.cpp
 )
 
 set(APP_LIBS
