@@ -72,7 +72,7 @@ namespace pyramidnight {
 		std::string str = (*update.nameText).getString();
 		str[mNameIndex] = selected;
 		(*update.nameText).setString(str);
-		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
+		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
 	}
 	
 	char Cursor::SelectChar(const CursorUpdate& update) {
@@ -89,7 +89,7 @@ namespace pyramidnight {
 			selected = CUR_CHAR_SET[index];
 		} else
 			index = 0;
-		AudioManager::Play(PATH_AUD_CURSOR, VOL_AUD_CURSOR, false);
+		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
 		return selected;
 	}
 }

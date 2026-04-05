@@ -3,6 +3,7 @@
 #include "Ball.hpp"
 #include "AudioManager.hpp"
 
+
 namespace pyramidnight {
 
 	Ball::Ball(const sf::Texture& texture) : sf::Sprite(texture) {
@@ -16,7 +17,7 @@ namespace pyramidnight {
 	void Ball::Launch() {
 		if (mState == State::DOCKED) {
 			mState = State::PLAYING;
-			AudioManager::Play(PATH_AUD_BALL_LAUNCH, VOL_AUD_BALL_LAUNCH, false);
+			AudioManager::Play({PATH_AUD_BALL_LAUNCH, VOL_AUD_BALL_LAUNCH, PolySound::Type::SFX, false});
 		}
 	}
 
@@ -50,7 +51,7 @@ namespace pyramidnight {
 			mDirection.x = -mDirection.x;
 		else if (isBounceVertical)
 			mDirection.y = -mDirection.y;
-		AudioManager::Play(PATH_AUD_BALL_BOUNCE, VOL_AUD_BALL_BOUNCE, false);
+		AudioManager::Play({PATH_AUD_BALL_BOUNCE, VOL_AUD_BALL_BOUNCE, PolySound::Type::SFX, false});
 	}
 
 	void Ball::ApplyBumperMod(const sf::Sprite& bumper) {
@@ -66,7 +67,9 @@ namespace pyramidnight {
 
 		// keep upwards
 		mDirection.y = -std::sqrt(std::max(0.0f, std::powf(normSpeed, 2) - std::powf(mDirection.x, 2)));
-		AudioManager::Play(PATH_AUD_BUMPER_BOUNCE, VOL_AUD_BUMPER_BOUNCE, false);
+		AudioManager::Play({PATH_AUD_BUMPER_BOUNCE, VOL_AUD_BUMPER_BOUNCE, PolySound::Type::SFX, false});
+
+		
 	}
 
 	float Ball::GetBallDistance(const sf::Sprite& obj) const {
