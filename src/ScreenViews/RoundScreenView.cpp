@@ -177,7 +177,7 @@ namespace pyramidnight {
 		}
 		//Win
 		if (mBlockVector.empty()) {
-			AudioManager::Play(PATH_AUD_NEXTROUND, VOL_AUD_NEXTROUND, false);
+			AudioManager::Play({PATH_AUD_NEXTROUND, VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
 			return false;
 		}
 		return true;
@@ -205,11 +205,11 @@ namespace pyramidnight {
 		ConsumeCredit(update.credits);
 		AddScore(update.score, SCORE_LOSE_BALL);
 		if (update.credits == 0) {
-			AudioManager::Play(PATH_AUD_GAMEOVER, VOL_AUD_GAMEOVER, false);
+			AudioManager::Play({PATH_AUD_GAMEOVER, VOL_AUD_GAMEOVER, PolySound::Type::SFX, false});
 			return false;
 		}
 		mBall->ResetPos(mBumper->getPosition());
-		AudioManager::Play(PATH_AUD_BALL_LOSE, VOL_AUD_BALL_LOSE, false);
+		AudioManager::Play({PATH_AUD_BALL_LOSE, VOL_AUD_BALL_LOSE, PolySound::Type::SFX, false});
 		mShaketime = 1.0f;
 		return true;
 	};

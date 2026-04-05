@@ -5,14 +5,34 @@
 
 namespace pyramidnight {
 
-	//TODO fix independent channel (per instance) mixing
 	AudioManager::AudioManager() {}
+
+	//TODO Master volume levels
+	void AudioManager::Play(PolySound::Args args) {
+		auto sound = std::make_unique<PolySound>(args);
+		
+		sound->play();
+		switch (args.type) {
+			case PolySound::Type::BGM: instance().mBgm.push_back(std::move(sound)); break;
+			case PolySound::Type::SFX: instance().mSfx.push_back(std::move(sound)); break;
+			default: break;
+		}
+	}
+
+	void AudioManager::Update() {
+		static sf::Clock cleanTimer;
+
+		if (cleanTimer.getElapsedTime().asSeconds() > CLK_AUD_CLEAN_TIMER_S) {
+			instance().Clean();
+			cleanTimer.restart();
+		}
+	}
 
 	void AudioManager::SetBgmVolume(float volume) {
 		auto& bgm = instance().mBgm;
 		instance().mBgmVolume = volume;
 		for (auto& sound : bgm){
-			sound->setVolume(volume);
+			sound->SetInstanceVolume(1.0f);
 		}
 	}
 
@@ -20,7 +40,7 @@ namespace pyramidnight {
 		auto& sfx = instance().mSfx;
 		instance().mSfxVolume = volume;
 		for (auto& sound : sfx){
-			sound->setVolume(volume);
+			sound->SetInstanceVolume(1.0f);
 		}
 	}
 
@@ -28,21 +48,21 @@ namespace pyramidnight {
 
 	uint8_t AudioManager::GetSfxVolume() { return instance().mSfxVolume; }
 
-	void AudioManager::Init() { instance();	}
+	void AudioManager::Clean() {
+		mSfx.erase(std::remove_if(mSfx.begin(), mSfx.end(),
+			[](const std::unique_ptr<PolySound>& sound) {
+				return !sound || (sound->getStatus() == PolySound::Status::Stopped);
+			}),
+			mSfx.end()
+		);
 
-	void pyramidnight::AudioManager::Play(const std::string_view& path, float volume, bool loop) {
-		auto sound = std::make_shared<sf::Sound>(*ResourceManager::GetAudio(path));
-		if (path.find("Music",0) != std::string::npos) {
-			instance().mBgm.push_back(sound);
-			sound->setVolume(std::clamp(instance().mBgmVolume * volume, VOL_AUD_MIN, VOL_AUD_MAX));
-			SetBgmVolume(instance().mBgmVolume);
-		}
-		else {
-			instance().mSfx.push_back(sound);
-			sound->setVolume(std::clamp(instance().mSfxVolume * volume, VOL_AUD_MIN, VOL_AUD_MAX));
-			SetSfxVolume(instance().mSfxVolume);
-		}
-		sound->setLooping(loop);
-		sound->play();
+		mBgm.erase(std::remove_if(mBgm.begin(), mBgm.end(),
+			[](const std::unique_ptr<PolySound>& sound) {
+				return !sound || (sound->getStatus() == PolySound::Status::Stopped);
+			}),
+			mBgm.end()
+		);
 	}
+
+	void AudioManager::Init() { instance();	}
 }

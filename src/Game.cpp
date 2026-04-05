@@ -30,6 +30,7 @@ namespace pyramidnight {
 	// main loop
 	void Game::Run() {
 		while (mRenderManager.GetWindow().isOpen()) {
+			AudioManager::Update();
 			mInput = mInputManager.FetchInput();
 			mDeltaTime = mRenderManager.GetDeltaTime();
 

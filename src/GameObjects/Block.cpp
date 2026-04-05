@@ -30,10 +30,10 @@ namespace pyramidnight {
 						/ (static_cast<float>(RAND_MAX) / BLOCK_ROT_MAX);
 		mHitPoints--;
 		if (mHitPoints == 0) {
-			AudioManager::Play(PATH_AUD_BLOCK_DESTROY, VOL_AUD_BLOCK_DESTROY, false);
+			AudioManager::Play({PATH_AUD_BLOCK_DESTROY, VOL_AUD_BLOCK_DESTROY, PolySound::Type::SFX, false});
 			return true;
 		}
-		AudioManager::Play(PATH_AUD_BLOCK_DAMAGE, VOL_AUD_BLOCK_DAMAGE, false);
+		AudioManager::Play({PATH_AUD_BLOCK_DAMAGE, VOL_AUD_BLOCK_DAMAGE, PolySound::Type::SFX, false});
 		mFlashTimer = BLOCK_FLASH_TIME;
 		setRotation(sf::degrees(randomValue));
 		return false;

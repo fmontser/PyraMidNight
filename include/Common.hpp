@@ -131,6 +131,7 @@ namespace pyramidnight {
 	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
 
 	//AudioManager
+	inline constexpr float CLK_AUD_CLEAN_TIMER_S = 5.0f;
 	inline constexpr float VOL_AUD_MAX = 100.0f;
 	inline constexpr float VOL_AUD_MIN = 0.0f;
 	inline constexpr float VOL_AUD_BGM = 60.0f;
@@ -139,7 +140,7 @@ namespace pyramidnight {
 	inline constexpr float VOL_AUD_BALL_LOSE = 1.0f;
 	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;
 	inline constexpr float VOL_AUD_BLOCK_DESTROY = 0.9f;
-	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 0.002f;
+	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 0.5f;
 	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO enemies feature
 	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.4f;
 	inline constexpr float VOL_AUD_PWRUP_0 = 1.0f;
@@ -147,7 +148,7 @@ namespace pyramidnight {
 	inline constexpr float VOL_AUD_CURSOR = 1.0f;
 	inline constexpr float VOL_AUD_NEXTROUND = 1.0f;
 	inline constexpr float VOL_AUD_GAMEOVER = 1.0f;
-	inline constexpr float VOL_AUD_MUSIC_0 = 0.25f;
+	inline constexpr float VOL_AUD_MUSIC_0 = 1.0f;
 
 	//RenderManager (DO NOT EDIT RESOLUTION!!!)
 	inline constexpr std::string_view RNDR_WINDOW_NAME = "PyraMidNight";

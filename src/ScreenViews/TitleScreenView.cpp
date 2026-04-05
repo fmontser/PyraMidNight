@@ -41,7 +41,7 @@ namespace pyramidnight {
 		mDrawables.push_back(mTitleTxt);
 		mDrawables.push_back(mCreditsTxt);
 		mDrawables.push_back(mStartTxt);
-		AudioManager::Play(PATH_AUD_MUSIC_0, VOL_AUD_MUSIC_0, true);
+		AudioManager::Play({PATH_AUD_MUSIC_0, VOL_AUD_MUSIC_0, PolySound::Type::BGM, true});
 	}
 
 	bool TitleScreenView::Update(const TitleScreenUpdate& update)
@@ -60,7 +60,7 @@ namespace pyramidnight {
 	void TitleScreenView::UpdateCredits(uint8_t& credits) {
 		if (credits < GAME_MAX_CREDITS) {
 			credits++;
-			AudioManager::Play(PATH_AUD_COIN_IN, VOL_AUD_COIN_IN, false);
+			AudioManager::Play({PATH_AUD_COIN_IN, VOL_AUD_COIN_IN, PolySound::Type::SFX, false});
 		}
 		mCreditsStr = std::string(TITLE_CREDITS_STR).append(
 			std::to_string(credits));

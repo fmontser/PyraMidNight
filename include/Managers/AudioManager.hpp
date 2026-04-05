@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Audio.hpp>
 #include <memory>
+#include "PolySound.hpp"
 #include "Common.hpp"
 
 namespace pyramidnight {
@@ -9,26 +10,29 @@ namespace pyramidnight {
 		public:
 			static void Init();
 
-			static void Play(const std::string_view& path, float volume, bool loop);
+			static void Play(PolySound::Args args);
 			static void SetBgmVolume(float volume);
 			static void SetSfxVolume(float volume);
+			static void Update();
 			static uint8_t GetBgmVolume();
 			static uint8_t GetSfxVolume();
-
+			
 		private:
 			AudioManager();
 			AudioManager(const AudioManager&) = delete;
 			AudioManager& operator=(const AudioManager&) = delete;
-
-			float mBgmVolume;
-			float mSfxVolume;
-			std::vector<std::shared_ptr<sf::Sound>> mBgm;
-			std::vector<std::shared_ptr<sf::Sound>> mSfx;
+			
+			float                                   mBgmVolume;
+			float                                   mSfxVolume;
+			std::vector<std::unique_ptr<PolySound>> mBgm;
+			std::vector<std::unique_ptr<PolySound>> mSfx;
+			
+			void Clean();
 
 			static AudioManager& instance() {
 				static AudioManager inst;
 				return inst;
 			}
-	};
-
+		};
+		
 }
