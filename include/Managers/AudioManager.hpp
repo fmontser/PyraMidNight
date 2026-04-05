@@ -9,11 +9,12 @@ namespace pyramidnight {
 	class AudioManager {
 		public:
 			static void Init();
-
 			static void Play(PolySound::Args args);
+			static void FadeOutBgm();
 			static void SetBgmVolume(float volume);
 			static void SetSfxVolume(float volume);
 			static void Update();
+
 			static uint8_t GetBgmVolume();
 			static uint8_t GetSfxVolume();
 			
@@ -28,6 +29,7 @@ namespace pyramidnight {
 			std::vector<std::unique_ptr<PolySound>> mSfx;
 			
 			void Clean();
+			void FadeOut(std::unique_ptr<PolySound>& sound);
 
 			static AudioManager& instance() {
 				static AudioManager inst;

@@ -84,11 +84,12 @@ namespace pyramidnight {
 						mEndScreenView = nullptr;
 						UserDataManager::SaveRanking();
 						ResetScore();
+						AudioManager::FadeOutBgm();
 						break;
 					}
 					mRenderManager.RenderFrame(mEndScreenView->GetDrawables());
 					break;
-					default:
+				default:
 					break;
 				}
 			}

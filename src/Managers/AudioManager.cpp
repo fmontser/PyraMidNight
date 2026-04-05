@@ -7,7 +7,6 @@ namespace pyramidnight {
 
 	AudioManager::AudioManager() {}
 
-	//TODO Master volume levels
 	void AudioManager::Play(PolySound::Args args) {
 		auto sound = std::make_unique<PolySound>(args);
 		
@@ -18,13 +17,26 @@ namespace pyramidnight {
 			default: break;
 		}
 	}
+	
+	void AudioManager::FadeOutBgm() {
+		for (auto& sound: instance().mBgm) {
+			sound->IsFadingOut = true;
+		}
+	}
 
 	void AudioManager::Update() {
 		static sf::Clock cleanTimer;
-
+		
+		// clean stopped
 		if (cleanTimer.getElapsedTime().asSeconds() > CLK_AUD_CLEAN_TIMER_S) {
 			instance().Clean();
 			cleanTimer.restart();
+		}
+
+		// fade bgm
+		for (auto& sound: instance().mBgm) {
+			if (sound->IsFadingOut)
+				sound->FadeOut(0.65f);
 		}
 	}
 
