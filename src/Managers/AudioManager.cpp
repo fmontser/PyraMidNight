@@ -7,7 +7,6 @@ namespace pyramidnight {
 
 	AudioManager::AudioManager() {}
 
-	//TODO Master volume levels
 	void AudioManager::Play(PolySound::Args args) {
 		auto sound = std::make_unique<PolySound>(args);
 		
