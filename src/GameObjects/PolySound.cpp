@@ -13,7 +13,7 @@ namespace pyramidnight {
 		setLooping(args.loop);
 	}
 
-	void PolySound::SetInstanceVolume(float instanceGain) {
+	void PolySound::SetInstanceVolume(float instanceGain = 1.0f) {
 		setVolume(GetTypeVolume() * mGain * instanceGain);
 	}
 

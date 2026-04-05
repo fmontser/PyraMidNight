@@ -18,7 +18,9 @@ namespace pyramidnight {
 			};
 
 			PolySound(Args args);
+
 			void SetInstanceVolume(float instanceGain);
+			Type GetType() const;
 
 		private:
 			Type  mType;
