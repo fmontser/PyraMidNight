@@ -15,6 +15,8 @@ namespace pyramidnight {
 			sf::RenderWindow& GetWindow();
 	
 		private:
+			
+
 			sf::RenderWindow mWindow;
 			sf::Clock        mClock;
 			sf::Time         mDeltaTime;
