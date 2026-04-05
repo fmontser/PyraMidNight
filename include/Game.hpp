@@ -23,20 +23,19 @@ namespace pyramidnight {
 			void Run();
 
 		private:
-			State       mState;
-			State       mPrevState;
-			uint8_t     mCredits;
-			uint8_t     mRound;
-			uint8_t     mFinalRound;
-			uint32_t    mScore;
+			State    mState;
+			State    mPrevState;
+			uint8_t  mCredits;
+			uint8_t  mRound;
+			uint8_t  mFinalRound;
+			uint32_t mScore;
 			
-			
-			InputManager::Input  mInput;
-			RenderManager        mRenderManager;
-			sf::RenderWindow&    mWindow;
-			InputManager         mInputManager;
+			InputManager::Input mInput;
+			RenderManager       mRenderManager;
+			sf::RenderWindow&   mWindow;
+			InputManager        mInputManager;
+			sf::Time            mDeltaTime;
 
-			sf::Time             mDeltaTime;
 			std::shared_ptr<MenuScreenView>  mMenuScreen;
 			std::shared_ptr<TitleScreenView> mTitleScreen;
 			std::shared_ptr<RoundScreenView> mRoundScreen;
@@ -51,11 +50,10 @@ namespace pyramidnight {
 			void Pause();
 			void Resume();
 			
-			MenuScreenView::MenuScreenUpdate     WrapMenuScreenUpdate();
-			TitleScreenView::TitleScreenUpdate   WrapTitleScreenUpdate();
-			RoundScreenView::RoundScreenUpdate   WrapRoundScreenUpdate();
-			EndScreenView::EndScreenUpdate       WrapEndScreenUpdate();
-		};
-
+			MenuScreenView::MenuScreenUpdate   WrapMenuScreenUpdate();
+			TitleScreenView::TitleScreenUpdate WrapTitleScreenUpdate();
+			RoundScreenView::RoundScreenUpdate WrapRoundScreenUpdate();
+			EndScreenView::EndScreenUpdate     WrapEndScreenUpdate();
+	};
 }
 
