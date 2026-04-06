@@ -81,7 +81,7 @@ namespace pyramidnight {
 			ranking.push_back({std::string(END_EMPTY_NAME_STR), update.score, true});
 			UserDataManager::SortRanking();
 			if (ranking.size() > GAME_RANK_SIZE)
-			ranking.pop_back();
+				ranking.pop_back();
 			mIsRankingDraw = DrawPlayerRanking();
 			mRecordNameTxt = FindRecordNameTxt();
 			if (mRecordNameTxt != nullptr)
@@ -99,7 +99,7 @@ namespace pyramidnight {
 				return true;
 			}
 		}
-		else if (update.action)
+		if (mIsNameSet && update.action)
 			return false;
 		return true;
 	}
@@ -128,7 +128,7 @@ namespace pyramidnight {
 	std::shared_ptr<sf::Text> EndScreenView::FindRecordNameTxt() {
 		for (auto& text : mRankingTxt) {
 			if (text.actual)
-			return text.name;
+				return text.name;
 		}
 		return nullptr;
 	}
@@ -136,10 +136,11 @@ namespace pyramidnight {
 	void EndScreenView::SetRecordName() {
 		auto& ranking = UserDataManager::GetUserData().ranking;
 		auto entry = std::find_if(ranking.begin(), ranking.end(),
-		[](const UserDataManager::ScoreEntry& entry){
-			return entry.actual == true;
+			[](const UserDataManager::ScoreEntry& entry){
+				return entry.actual == true;
 		});
 		entry->name = mRecordNameTxt->getString();
+		entry->actual = false;
 	}
 
 	Cursor::CursorUpdate EndScreenView::WrapCursorUpdate(const EndScreenUpdate &update) {
