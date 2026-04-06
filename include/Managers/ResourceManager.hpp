@@ -30,8 +30,8 @@ namespace pyramidnight {
 			};
 
 			ResourceManager();
-			ResourceManager(const ResourceManager&) = delete;
-			ResourceManager& operator=(const ResourceManager&) = delete;
+			ResourceManager(const ResourceManager& src) = delete;
+			ResourceManager& operator=(const ResourceManager& src) = delete;
 
 			std::vector<Texture>             mTextures;
 			std::shared_ptr<sf::Texture>     mFailSafeTexture;

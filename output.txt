@@ -1,0 +1,2500 @@
+#include <algorithm>
+#include <sstream>
+#include "UserDataManager.hpp"
+#include "ResourceManager.hpp"
+#include "EndScreenView.hpp"
+#include "Game.hpp"
+#include "Cursor.hpp"
+#include "Blink.hpp"
+
+namespace pyramidnight {
+	
+	EndScreenView::EndScreenView() : ScreenView() {
+		mIsRankingDraw = false;
+		mIsNameSet =  false;
+		mFont = ResourceManager::GetFont(PATH_FONT);
+		mCursor = std::make_shared<Cursor>(*mFont);
+	
+		mTitleTxt = std::make_shared<sf::Text>(*mFont);
+		mTitleTxt->setString(std::string(END_STR));
+		mTitleTxt->setCharacterSize(END_TXT_CHAR_SZ);
+		mTitleTxt->setFillColor(END_TXT_FILLCOL);
+		mTitleTxt->setOutlineColor(END_TXT_OUTCOL);
+		mTitleTxt->setOutlineThickness(END_TXT_OUTLINE_SZ);
+		mTitleTxt->setPosition({100.f, 100.f});
+
+		auto rankingEntryPos = sf::Vector2f({100.0f, 160.0f});
+		for (size_t i = 0; i < 10; i++) {
+			auto nameEntry = std::make_shared<sf::Text>(*mFont);
+			nameEntry->setString("   ");
+			auto textOffset = sf::Vector2f({160.0f, 40.0f});
+	
+			rankingEntryPos.y += textOffset.y;
+			nameEntry->setCharacterSize(END_TXT_RANK_CHAR_SZ);
+			nameEntry->setFillColor(sf::Color::White);
+			nameEntry->setOutlineColor(sf::Color::Blue);
+			nameEntry->setOutlineThickness(END_TXT_RANK_OUTLINE_SZ);
+			nameEntry->setPosition(rankingEntryPos);
+	
+			auto scoreEntry = std::make_shared<sf::Text>(*mFont);
+			scoreEntry->setString("0000000000");
+	
+			rankingEntryPos.x += textOffset.x;
+			scoreEntry->setCharacterSize(END_TXT_RANK_CHAR_SZ);
+			scoreEntry->setFillColor(sf::Color::White);
+			scoreEntry->setOutlineColor(sf::Color::Blue);
+			scoreEntry->setOutlineThickness(END_TXT_RANK_OUTLINE_SZ);
+			scoreEntry->setPosition(rankingEntryPos);
+			rankingEntryPos.x -= textOffset.x;
+	
+			mRankingTxt.push_back({nameEntry, scoreEntry, false});
+		}
+		
+		mContTxt = std::make_shared<sf::Text>(*mFont);
+		mContTxt->setString(std::string(END_CONT_STR));
+		mContTxt->setCharacterSize(END_TXT_CONT_CHAR_SZ);
+		mContTxt->setFillColor(END_TXT_FILLCOL);
+		mContTxt->setOutlineColor(END_TXT_OUTCOL);
+		mContTxt->setOutlineThickness(END_TXT_OUTLINE_SZ);
+		mContTxt->setPosition({100.f, 650.f});
+		mContTxt->setScale({0,0});
+	
+		mBackgroundTex = ResourceManager::GetTexture(PATH_TEX_BG);
+		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
+		mBackground->setColor(END_BG_TINT);
+	
+		mDrawables.push_back(mBackground);
+		mDrawables.push_back(mTitleTxt);
+		mDrawables.push_back(mContTxt);
+	
+		for (const auto& entry : mRankingTxt) {
+			mDrawables.push_back(entry.name);
+			mDrawables.push_back(entry.score);
+		}
+		mDrawables.push_back(mCursor);
+		RenderManager::DisplayEffect(std::make_unique<Blink>(-1.0f, 0.2f, mCursor));
+	}
+	
+	bool EndScreenView::Update(const EndScreenUpdate& update) {
+		if (!mIsRankingDraw) {
+			auto& ranking = UserDataManager::GetUserData().ranking;
+			ranking.push_back({std::string(END_EMPTY_NAME_STR), update.score, true});
+			UserDataManager::SortRanking();
+			if (ranking.size() > GAME_RANK_SIZE)
+				ranking.pop_back();
+			mIsRankingDraw = DrawPlayerRanking();
+			mRecordNameTxt = FindRecordNameTxt();
+			if (mRecordNameTxt != nullptr)
+				mContTxt->setScale({0,0});
+			else {
+				RenderManager::DisplayEffect(std::make_unique<Blink>(-1.0f, 0.3f, mContTxt));
+				mIsNameSet = true;
+			}
+		}
+		if (!mIsNameSet) {
+			if (!mCursor->Update(WrapCursorUpdate(update))) {
+				RenderManager::DisplayEffect(std::make_unique<Blink>(-1.0f, 0.3f, mContTxt));
+				SetRecordName();
+				mIsNameSet = true;
+				return true;
+			}
+		}
+		if (mIsNameSet && update.action)
+			return false;
+		return true;
+	}
+	
+	bool EndScreenView::DrawPlayerRanking() {
+		size_t i = 0;
+		
+		for (auto& entry : UserDataManager::GetUserData().ranking) {
+			if (i < mRankingTxt.size()) {
+				mRankingTxt[i].name->setString(entry.name);
+				mRankingTxt[i].score->setString(PadZeroScore(entry.score, 10));
+				mRankingTxt[i].actual = entry.actual;
+			}
+			i++;
+		}
+		return true;
+	}
+	
+	std::string EndScreenView::PadZeroScore(uint32_t score, uint32_t digits) {
+		std::ostringstream ss;
+	
+		ss << std::setw(digits) << std::setfill('0') << score;
+		return ss.str();
+	}
+	
+	std::shared_ptr<sf::Text> EndScreenView::FindRecordNameTxt() {
+		for (auto& text : mRankingTxt) {
+			if (text.actual)
+				return text.name;
+		}
+		return nullptr;
+	}
+
+	void EndScreenView::SetRecordName() {
+		auto& ranking = UserDataManager::GetUserData().ranking;
+		auto entry = std::find_if(ranking.begin(), ranking.end(),
+			[](const UserDataManager::ScoreEntry& entry){
+				return entry.actual == true;
+		});
+		entry->name = mRecordNameTxt->getString();
+		entry->actual = false;
+	}
+
+	Cursor::CursorUpdate EndScreenView::WrapCursorUpdate(const EndScreenUpdate &update) {
+		return {
+			update.left,
+			update.right,
+			update.up,
+			update.down,
+			update.action,
+			mRecordNameTxt
+		};
+	}
+
+	bool EndScreenView::Update() { return false; }
+}
+
+#include <string>
+#include <algorithm>
+#include "UserDataManager.hpp"
+#include "AudioManager.hpp"
+#include "ResourceManager.hpp"
+#include "MenuScreenView.hpp"
+#include "Game.hpp"
+#include "Cursor.hpp"
+
+namespace pyramidnight {
+	
+	MenuScreenView::MenuScreenView() : ScreenView() {
+		mBgmVolume = AudioManager::GetBgmVolume();
+		mSfxVolume = AudioManager::GetSfxVolume();
+		mOption = Option::BGM;
+		mOptionIndex = 0;
+
+		mFont = ResourceManager::GetFont(PATH_FONT);
+	
+		mBackgroundTex = ResourceManager::GetTexture(PATH_TEX_BG);
+		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
+		mBackground->setColor(MENU_BG_TINT);
+
+		mBgmTxt = std::make_shared<sf::Text>(*mFont);
+		mBgmTxt->setString(std::string(MENU_VOL_MUS_STR)
+			.append(std::to_string(mBgmVolume)));
+		mBgmTxt->setCharacterSize(MENU_TXT_CHAR_SZ);
+		mBgmTxt->setFillColor(MENU_TXT_FILLCOL);
+		mBgmTxt->setOutlineColor(MENU_TXT_OUTCOL);
+		mBgmTxt->setOutlineThickness(MENU_TXT_OUTLINE_SZ);
+		mBgmTxt->setPosition({176.0f, 384.0f + MENU_TXT_OFFSET_Y});
+		
+		mSfxTxt = std::make_shared<sf::Text>(*mFont);
+		mSfxTxt->setString(std::string(MENU_VOL_SFX_STR)
+			.append(std::to_string(mSfxVolume)));
+		mSfxTxt->setCharacterSize(MENU_TXT_CHAR_SZ);
+		mSfxTxt->setFillColor(MENU_TXT_FILLCOL);
+		mSfxTxt->setOutlineColor(MENU_TXT_OUTCOL);
+		mSfxTxt->setOutlineThickness(MENU_TXT_OUTLINE_SZ);
+		mSfxTxt->setPosition({176.0f, 448.0f + MENU_TXT_OFFSET_Y});
+
+		mExitTxt = std::make_shared<sf::Text>(*mFont);
+		mExitTxt->setString(std::string(MENU_EXIT_STR));
+		mExitTxt->setCharacterSize(MENU_TXT_CHAR_SZ);
+		mExitTxt->setFillColor(MENU_TXT_FILLCOL);
+		mExitTxt->setOutlineColor(MENU_TXT_OUTCOL);
+		mExitTxt->setOutlineThickness(MENU_TXT_OUTLINE_SZ);
+		mExitTxt->setPosition({176.0f, 512.0f + MENU_TXT_OFFSET_Y});
+
+		mDrawables.push_back(mBackground);
+		mDrawables.push_back(mBgmTxt);
+		mDrawables.push_back(mSfxTxt);
+		mDrawables.push_back(mExitTxt);
+
+		mTexts.push_back(mBgmTxt);
+		mTexts.push_back(mSfxTxt);
+		mTexts.push_back(mExitTxt);
+		InvertOptionColors(mBgmTxt);
+	}
+
+	bool MenuScreenView::Update(const MenuScreenUpdate& update) {
+		SelectOption(update.up, update.down);
+		if (mOption == Option::BGM && (update.left || update.right)) {
+			if (update.left) UpdateBgmVolume(-MENU_VOL_STEP_SZ);
+			else if (update.right) UpdateBgmVolume(MENU_VOL_STEP_SZ);
+		}
+		else if (mOption == Option::SFX && (update.left || update.right)) {
+			if (update.left) UpdateSfxVolume(-MENU_VOL_STEP_SZ);
+			else if (update.right) UpdateSfxVolume(MENU_VOL_STEP_SZ);
+		}
+		else if (mOption == Option::EXIT && update.action)
+			exit(0);
+		else if (update.menu)
+			return false;
+		return true;
+	}
+
+	void MenuScreenView::UpdateBgmVolume(float volume) {
+		mBgmVolume = std::clamp( mBgmVolume + volume, VOL_AUD_MIN, VOL_AUD_MAX);
+		mBgmTxt->setString(std::string(MENU_VOL_MUS_STR).append(std::to_string(mBgmVolume)));
+
+		AudioManager::SetBgmVolume(mBgmVolume);
+		UserDataManager::SaveBgmVolume(AudioManager::GetBgmVolume());
+		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+
+	}
+
+	void MenuScreenView::UpdateSfxVolume(float volume) {
+		mSfxVolume = std::clamp( mSfxVolume + volume, VOL_AUD_MIN, VOL_AUD_MAX);
+		mSfxTxt->setString(std::string(MENU_VOL_SFX_STR).append(std::to_string(mSfxVolume)));
+		
+		AudioManager::SetSfxVolume(mSfxVolume);
+		UserDataManager::SaveSfxVolume(AudioManager::GetSfxVolume());
+		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+	}
+
+	void MenuScreenView::SelectOption(bool up, bool down) {
+		if (up & !down)
+			mOptionIndex = (mOptionIndex - 1 + MENU_OPT_MAX) % MENU_OPT_MAX;
+		else if (!up && down)
+			mOptionIndex =  (mOptionIndex + 1) % MENU_OPT_MAX;
+		else
+			return;
+		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+		mOption = static_cast<Option>(mOptionIndex);
+		switch (mOption) {
+			case BGM: InvertOptionColors(mBgmTxt); break;
+			case SFX: InvertOptionColors(mSfxTxt); break;
+			case EXIT: InvertOptionColors(mExitTxt); break;
+			default: break;
+		}
+	}
+
+	void MenuScreenView::InvertOptionColors(const std::shared_ptr<sf::Text>& option) {
+		for (auto& text : mTexts){
+			if (text.get() == option.get()){
+				text->setFillColor(MENU_TXT_OUTCOL);
+				text->setOutlineColor(MENU_TXT_FILLCOL);
+			} else {
+				text->setFillColor(MENU_TXT_FILLCOL);
+				text->setOutlineColor(MENU_TXT_OUTCOL);
+			}
+		}
+	}
+
+	bool MenuScreenView::Update() { return false; }
+}
+
+#include <cmath>
+#include <algorithm>
+#include <string>
+#include <memory>
+#include "AudioManager.hpp"
+#include "ResourceManager.hpp"
+#include "RenderManager.hpp"
+#include "RoundScreenView.hpp"
+#include "ScreenShake.hpp"
+#include "Levels.hpp"
+
+#include <iostream>
+
+namespace pyramidnight {
+
+	RoundScreenView::RoundScreenView() : ScreenView() {
+		mLvlIsLoaded = false;
+		mElapsedTimePenalty = 0.0f;
+		mFont = ResourceManager::GetFont(PATH_FONT);
+
+		mCreditsTxt = std::make_shared<sf::Text>(*mFont);
+		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR));
+		mCreditsTxt->setCharacterSize(ROUND_TXT_CHAR_SZ);
+		mCreditsTxt->setFillColor(ROUND_TXT_FILLCOL);
+		mCreditsTxt->setOutlineColor(ROUND_TXT_OUTCOL);
+		mCreditsTxt->setOutlineThickness(ROUND_TXT_OUTLINE_SZ);
+		mCreditsTxt->setPosition({128.0f, 864.0f});
+
+		mScoreTxt = std::make_shared<sf::Text>(*mFont);
+		mScoreTxt->setString(std::string(ROUND_SCORE_STR));
+		mScoreTxt->setCharacterSize(ROUND_TXT_CHAR_SZ);
+		mScoreTxt->setFillColor(ROUND_TXT_FILLCOL);
+		mScoreTxt->setOutlineColor(ROUND_TXT_OUTCOL);
+		mScoreTxt->setOutlineThickness(ROUND_TXT_OUTLINE_SZ);
+		mScoreTxt->setPosition({352.0f, 864.f});
+		
+		mBackgroundTex = ResourceManager::GetTexture(PATH_TEX_BG);
+		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
+		mBackground->setColor(ROUND_BG_TINT);
+		
+		mWallTex = ResourceManager::GetTexture(PATH_TEX_WALL);
+		mWallTex->setRepeated(true);
+		mWallLeft = std::make_shared<sf::Sprite>(sf::Sprite(*mWallTex));
+		mWallLeft->setTextureRect({{0, 0},{32, 896}});
+		mWallLeft->setPosition({0, 32});
+		mWallRight = std::make_shared<sf::Sprite>(sf::Sprite(*mWallTex));
+		mWallRight->setTextureRect({{0, 0},{32, 896}});
+		mWallRight->setPosition({608, 32});
+
+		mCeilTex = ResourceManager::GetTexture(PATH_TEX_CEIL);
+		mCeilTex->setRepeated(true);
+		mCeil = std::make_shared<sf::Sprite>(*mCeilTex);
+		mCeil->setTextureRect({{0, 0},{640, 32}});
+
+		mBumperTex = std::make_shared<sf::Texture>(PATH_TEX_BUMP);
+		mBumper = std::make_shared<Bumper>(*mBumperTex);
+		mBumper->setPosition({256, 832});
+		
+		mBallTex = ResourceManager::GetTexture(PATH_TEX_BALL);
+		mBall = std::make_shared<Ball>(*mBallTex);
+
+		mBlockTex = ResourceManager::GetTexture(PATH_TEX_BLOCK);
+
+		mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
+		mDeathArea->setPosition({32, 864});
+		mDeathArea->setFillColor(sf::Color::Transparent);
+
+		mDrawables.push_back(mBackground);
+		mDrawables.push_back(mCreditsTxt);
+		mDrawables.push_back(mScoreTxt);
+		mDrawables.push_back(mWallLeft);
+		mDrawables.push_back(mWallRight);
+		mDrawables.push_back(mCeil);
+		mDrawables.push_back(mBumper);
+		mDrawables.push_back(mBall);
+		mDrawables.push_back(mDeathArea);
+
+		mColdetVector.push_back(mCeil);
+		mColdetVector.push_back(mWallLeft);
+		mColdetVector.push_back(mWallRight);
+		mColdetVector.push_back(mBumper);
+	}
+
+	bool RoundScreenView::Update(const RoundScreenUpdate& update) {
+ 		if (!mLvlIsLoaded)
+			mLvlIsLoaded = LoadLevel(update.roundId);
+		if (update.action)
+			mBall->Launch();
+		if (update.holdLeft)
+			mBumper->Move(-1, update.deltaTime, update.fine, update.coarse);
+		else if (update.holdRight)
+			mBumper->Move(1, update.deltaTime, update.fine, update.coarse);
+		if (!UpdateGame(update))
+			return false;
+		return true;
+	}
+
+	bool RoundScreenView::LoadLevel(const uint8_t& roundId) {
+		auto& level = ROUNDS[roundId];
+		const auto offset =sf::Vector2f(64,32);
+		auto actualPos = sf::Vector2f(32,32);
+
+		for (const auto& str : level) {
+			for (const auto chara : str) {
+				if (chara != '0') {
+					auto block = std::make_shared<Block>(*mBlockTex, chara - '0');
+					block->setPosition(actualPos);
+					mBlockVector.push_back(block);
+				}
+				actualPos.x += offset.x;
+			}
+			actualPos.x = 32;
+			actualPos.y += offset.y;
+		}
+
+		for (const auto& block : mBlockVector) {
+			mDrawables.push_back(block);
+			mColdetVector.push_back(block);
+		}
+		return true;
+	}
+
+	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime)
+	{
+		if (mBall->GetState() == Ball::State::PLAYING) {
+			for (const auto &obj : mColdetVector) {
+				float distance = mBall->GetBallDistance(*obj);
+
+				if (distance <= mBall->GetRadius()) {
+					mBall->Bounce(*obj, distance);
+					if (typeid(*obj) == typeid(Block)) {
+						auto* block = dynamic_cast<Block*>(obj.get());
+						if (block->Damage()) {
+							AddScore(score, block->GetScore());
+							mDestroyedSprites.push_back(obj);
+						}
+					} else if (typeid(*obj) == typeid(Bumper)) {
+						mBall->ApplyBumperMod(*obj);
+					}
+					break;
+				}
+			}
+		}
+		mBall->Update(mBumper->getPosition(), deltaTime);
+	}
+
+
+	void RoundScreenView::UpdateBlocks(const sf::Time& deltaTime) {
+		for (auto& block : mBlockVector) {
+			block->Update(deltaTime);
+		}
+
+		for (const auto& sprt : mDestroyedSprites) {
+			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprt);
+			if (itBlock != mBlockVector.end())
+				mBlockVector.erase(itBlock);
+
+			auto itColdet = std::find(mColdetVector.begin(), mColdetVector.end(), sprt);
+			if (itColdet != mColdetVector.end())
+				mColdetVector.erase(itColdet);
+
+			auto itDrawable = std::find(mDrawables.begin(), mDrawables.end(), sprt);
+			if (itDrawable != mDrawables.end())
+				mDrawables.erase(itDrawable);
+		}
+		mDestroyedSprites.clear();
+	}
+
+	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
+		UpdateBall(update.score, update.deltaTime);
+		UpdateBlocks(update.deltaTime);
+		UpdateTexts(update);
+		ScoreTimePenalty(update.score, update.deltaTime);
+
+		//Lose
+		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
+			return LoseBall(update);;
+		}
+		//Win
+		if (mBlockVector.empty()) {
+			AudioManager::Play({PATH_AUD_NEXTROUND, VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
+			return false;
+		}
+		return true;
+	}
+
+	void RoundScreenView::UpdateTexts(const RoundScreenUpdate &update) {
+		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR)
+			.append(std::to_string(update.credits)));
+		mScoreTxt->setString(std::string(ROUND_SCORE_STR)
+			.append(std::to_string(update.score)));
+	}
+
+	void RoundScreenView::ScoreTimePenalty(uint32_t &score, sf::Time& deltaTime) {
+		mElapsedTimePenalty += deltaTime.asSeconds();
+		if (mElapsedTimePenalty >= 1.0f) {
+			AddScore(score, SCORE_TIME_PENALTY);
+			mElapsedTimePenalty -= 1.0f;
+		}
+	}
+
+	bool RoundScreenView::LoseBall(const RoundScreenUpdate &update) {
+		ConsumeCredit(update.credits);
+		AddScore(update.score, SCORE_LOSE_BALL);
+		if (update.credits == 0) {
+			AudioManager::Play({PATH_AUD_GAMEOVER, VOL_AUD_GAMEOVER, PolySound::Type::SFX, false});
+			return false;
+		}
+		mBall->ResetPos(mBumper->getPosition());
+		RenderManager::DisplayEffect(std::make_unique<ScreenShake>(EFF_SHAKE_LOSEBALL_TIME, EFF_SHAKE_LOSEBALL_POWER));
+		AudioManager::Play({PATH_AUD_BALL_LOSE, VOL_AUD_BALL_LOSE, PolySound::Type::SFX, false});
+		return true;
+	};
+
+	void RoundScreenView::AddScore(uint32_t& score, int32_t points) {
+		int64_t score64 = static_cast<int64_t>(score);
+		int64_t points64 = static_cast<int64_t>(points);
+		int64_t maxScore64 = static_cast<int64_t>(GAME_MAX_SCORE);
+
+ 		if (points64 < 0 && score64 < std::abs(points64))
+			score = 0;
+		else if (points64 > (maxScore64 - score64))
+			score = maxScore64;
+		else
+			score += points64;
+	}
+
+	void RoundScreenView::ConsumeCredit(uint8_t& credits) {
+		if (credits > 0)
+			credits--;
+	}
+
+	bool RoundScreenView::Update() { return false; }
+}#include "ScreenView.hpp"
+
+namespace pyramidnight {
+	
+	std::vector<std::shared_ptr<sf::Drawable>>&
+	ScreenView::GetDrawables() { return mDrawables; }
+}
+#include "ResourceManager.hpp"
+#include "RenderManager.hpp"
+#include "Blink.hpp"
+#include "TitleScreenView.hpp"
+#include "Game.hpp"
+#include "AudioManager.hpp"
+
+namespace pyramidnight {
+	
+	TitleScreenView::TitleScreenView() : ScreenView() {
+		mStartTextVisible = false;
+		mFont = ResourceManager::GetFont(PATH_FONT);
+	
+		mTitleTxt = std::make_shared<sf::Text>(*mFont);
+		mTitleTxt->setString(std::string(TITLE_STR));
+		mTitleTxt->setCharacterSize(TITLE_TXT_CHAR_SZ);
+		mTitleTxt->setFillColor(TITLE_TXT_FILLCOL);
+		mTitleTxt->setPosition({55.0f, 100.0f});
+		mTitleTxt->setOutlineColor(TITLE_TXT_OUTCOL);
+		mTitleTxt->setOutlineThickness(TITLE_TXT_OUTLINE_SZ);
+
+		mCreditsTxt = std::make_shared<sf::Text>(*mFont);
+		mCreditsTxt->setString(std::string(TITLE_CREDITS_STR).append("0"));
+		mCreditsTxt->setCharacterSize(TITLE_TXT_CREDITS_CHAR_SZ);
+		mCreditsTxt->setFillColor(TITLE_TXT_FILLCOL);
+		mCreditsTxt->setPosition({100.0f, 500.0f});
+		mCreditsTxt->setOutlineColor(TITLE_TXT_OUTCOL);
+		mCreditsTxt->setOutlineThickness(TITLE_TXT_OUTLINE_SZ);
+	
+		mStartTxt = std::make_shared<sf::Text>(*mFont);
+		mStartTxt->setScale({0,0});
+		mStartTxt->setString(std::string(TITLE_START_STR));
+		mStartTxt->setCharacterSize(TITLE_TXT_START_CHAR_SZ);
+		mStartTxt->setFillColor(TITLE_TXT_FILLCOL);
+		mStartTxt->setPosition({130.0f, 600.0f});
+		mStartTxt->setOutlineColor(TITLE_TXT_OUTCOL);
+		mStartTxt->setOutlineThickness(TITLE_TXT_OUTLINE_SZ);
+	
+		mBackgroundTex = ResourceManager::GetTexture(PATH_TEX_BG);
+		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
+		mBackground->setColor(TITLE_BG_TINT);
+	
+		mDrawables.push_back(mBackground);
+		mDrawables.push_back(mTitleTxt);
+		mDrawables.push_back(mCreditsTxt);
+		mDrawables.push_back(mStartTxt);
+		AudioManager::Play({PATH_AUD_MUSIC_0, VOL_AUD_MUSIC_0, PolySound::Type::BGM, true});
+	}
+
+	bool TitleScreenView::Update(const TitleScreenUpdate& update)
+	{
+		if (update.coin) {
+			UpdateCredits(update.credits);
+			if (update.credits > 0)
+				ShowStartText();
+		}
+		if (update.action && update.credits > 0)
+			return false;
+		return true;
+	}
+
+	void TitleScreenView::UpdateCredits(uint8_t& credits) {
+		if (credits < GAME_MAX_CREDITS) {
+			credits++;
+			AudioManager::Play({PATH_AUD_COIN_IN, VOL_AUD_COIN_IN, PolySound::Type::SFX, false});
+		}
+		mCreditsStr = std::string(TITLE_CREDITS_STR).append(
+			std::to_string(credits));
+	}
+	
+	void TitleScreenView::ShowStartText() {
+		if (!mStartTextVisible) {
+			RenderManager::DisplayEffect(std::make_unique<Blink>(-1.0f, 0.3f, mStartTxt));
+			mStartTextVisible = true;
+		}
+		mCreditsTxt->setString(mCreditsStr);
+	}
+
+	bool TitleScreenView::Update() { return false;}
+}#include <algorithm>
+#include "Bumper.hpp"
+
+namespace pyramidnight {
+	
+	Bumper::Bumper(const sf::Texture& texture) : sf::Sprite(texture) {
+		mSpeed = BMPR_INIT_SPEED;
+	}
+	
+	void Bumper::Move(int8_t magnitude, sf::Time& deltaTime, bool fine, bool coarse) {
+		sf::Vector2 position = this->getPosition();
+		if (fine && !coarse)
+			mSpeed *= BMPR_FINE_SPEED_MOD;
+		else if (!fine && coarse)
+			mSpeed *= BMPR_COARSE_SPEED_MOD;
+
+		position.x += magnitude * mSpeed * deltaTime.asMilliseconds();
+		position.x = std::clamp(position.x, BMPR_MV_LIMIT_L, BMPR_MV_LIMIT_R);
+		this->setPosition(position);
+		mSpeed = BMPR_INIT_SPEED;
+	}
+
+}#include "Block.hpp"
+#include "AudioManager.hpp"
+
+namespace pyramidnight {
+
+	Block::Block(const sf::Texture& texture, int8_t hitPoints) : sf::Sprite(texture) {
+		mHitPoints = hitPoints;
+		mScorePoints = SCORE_BLOCK_MOD * mHitPoints;
+		mFlashTimer = 0.0f;
+		if (hitPoints == 2)
+			setColor({255, 128, 64 , 255});
+		else if (hitPoints == 3)
+			setColor({64, 128, 255 , 255});
+		mTint = getColor();
+	}
+
+	void Block::Update(const sf::Time& deltaTime) {
+		if (mFlashTimer > 0.0f) {
+			mFlashTimer -= deltaTime.asSeconds();
+			setColor(sf::Color(sf::Color::White)); 
+		} 
+		else {
+			setColor(mTint);
+		}
+	}
+
+	bool Block::Damage()
+	{
+		float randomValue = BLOCK_ROT_MIN + static_cast<float>(rand())
+						/ (static_cast<float>(RAND_MAX) / BLOCK_ROT_MAX);
+		mHitPoints--;
+		if (mHitPoints == 0) {
+			AudioManager::Play({PATH_AUD_BLOCK_DESTROY, VOL_AUD_BLOCK_DESTROY, PolySound::Type::SFX, false});
+			return true;
+		}
+		AudioManager::Play({PATH_AUD_BLOCK_DAMAGE, VOL_AUD_BLOCK_DAMAGE, PolySound::Type::SFX, false});
+		mFlashTimer = BLOCK_FLASH_TIME;
+		setRotation(sf::degrees(randomValue));
+		return false;
+	}
+
+	int32_t Block::GetScore() const { return mScorePoints; }
+}#include <algorithm>
+#include <cmath>
+#include "Ball.hpp"
+#include "AudioManager.hpp"
+
+
+namespace pyramidnight {
+
+	Ball::Ball(const sf::Texture& texture) : sf::Sprite(texture) {
+		mSpeed = BALL_INIT_SPEED;
+		mDirection = BALL_INIT_DIR;
+		mRadius = texture.getSize().x / 2;
+		setOrigin({mRadius,mRadius});
+		ResetPos(BALL_INIT_POS);
+	}
+
+	void Ball::Launch() {
+		if (mState == State::DOCKED) {
+			mState = State::PLAYING;
+			AudioManager::Play({PATH_AUD_BALL_LAUNCH, VOL_AUD_BALL_LAUNCH, PolySound::Type::SFX, false});
+		}
+	}
+
+	void Ball::ResetPos(const sf::Vector2f &bumperPos) {
+		auto newPos = bumperPos + BALL_DOCKED_OFFSET;
+		setPosition(newPos);
+		mDirection = BALL_INIT_DIR;
+		mState = State::DOCKED;
+	}
+
+	void Ball::Update(const sf::Vector2f &bumperPos, const sf::Time& deltaTime) {
+		switch (mState) {
+			case State::PLAYING: Move(deltaTime); break;
+			case State::DOCKED: ResetPos(bumperPos); break;
+			default: break;
+		}
+	}
+
+	void Ball::Bounce(const sf::Sprite& obj, float distance) {
+		auto rPos = obj.getPosition();
+		auto rSize = obj.getGlobalBounds().size;
+		auto bPos = getPosition();
+		
+		ResolveOverlap(distance);
+		auto isBounceHorizontal = (bPos.x < rPos.x || bPos.x > (rPos.x + rSize.x));
+		auto isBounceVertical = (bPos.y < rPos.y || bPos.y > (rPos.y + rSize.y));
+
+		if (isBounceHorizontal && isBounceVertical)
+			mDirection = -mDirection;
+		else if (isBounceHorizontal)
+			mDirection.x = -mDirection.x;
+		else if (isBounceVertical)
+			mDirection.y = -mDirection.y;
+		AudioManager::Play({PATH_AUD_BALL_BOUNCE, VOL_AUD_BALL_BOUNCE, PolySound::Type::SFX, false});
+	}
+
+	void Ball::ApplyBumperMod(const sf::Sprite& bumper) {
+		
+		float bumperWidth = bumper.getGlobalBounds().size.x;
+		float bumperX = bumper.getPosition().x + bumperWidth / 2.0f;
+		float modFactor = (getPosition().x - bumperX) / (bumperWidth / 2.0f);
+		float normSpeed = std::sqrt(std::powf(mDirection.x, 2) + std::powf(mDirection.y, 2));
+
+		if (std::abs(modFactor) < BMPR_ATK_DEADZONE)
+			modFactor = (modFactor < 0) ? -BMPR_ATK_DEADZONE : BMPR_ATK_DEADZONE;
+		mDirection.x = modFactor;
+
+		// keep upwards
+		mDirection.y = -std::sqrt(std::max(0.0f, std::powf(normSpeed, 2) - std::powf(mDirection.x, 2)));
+		AudioManager::Play({PATH_AUD_BUMPER_BOUNCE, VOL_AUD_BUMPER_BOUNCE, PolySound::Type::SFX, false});
+	}
+
+	float Ball::GetBallDistance(const sf::Sprite& obj) const {
+		auto bPos = getPosition();
+		auto rect = obj.getGlobalBounds();
+		float closestX = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);
+		float closestY = std::clamp(bPos.y, rect.position.y, rect.position.y + rect.size.y);
+		float distX = bPos.x - closestX;
+		float distY = bPos.y - closestY;
+		return std::sqrtf((distX * distX) + (distY * distY));
+	}
+
+	const Ball::State &Ball::GetState() const { return mState; }
+	float Ball::GetRadius() const { return mRadius; }
+
+	void Ball::Move(const sf::Time& deltaTime) {
+		sf::Vector2f position = getPosition();
+		auto deltaTimeMs = deltaTime.asMilliseconds();
+
+		position.x += mDirection.x * mSpeed * deltaTimeMs;
+		position.y += mDirection.y * mSpeed * deltaTimeMs;
+		setPosition(position);
+	}
+
+	void Ball::ResolveOverlap(float distance) {
+		float overlap = std::abs(distance - mRadius);
+		auto invertedDirection = -mDirection;
+		auto pos = this->getPosition();
+
+		pos += (invertedDirection.normalized() * overlap);
+		this->setPosition(pos);
+	}
+
+}
+
+
+#include <algorithm>
+#include "Cursor.hpp"
+#include "AudioManager.hpp"
+
+
+namespace pyramidnight {
+	
+	Cursor::Cursor(sf::Font& font) : mFont(font) {
+		mNameIndex = 0;
+		mCharIndex = 0;
+		mIsEnabled = false;
+		auto cursorSize =  sf::Vector2f({});
+		cursorSize.x =	mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.x;
+		cursorSize.y =	mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.y;
+	
+		setSize(cursorSize);
+		setFillColor(CUR_FILL_COL);
+		setOutlineColor(sf::Color::Transparent);
+		setOutlineThickness(CUR_OUTLINE_SZ);
+	}
+	
+
+	bool Cursor::Update(const CursorUpdate& update) {
+		if (update.nameText.get() == nullptr)
+			return true;
+		else if (!mIsEnabled){
+			setOutlineColor(CUR_OUTLINE_COL);
+			SetPosition(*update.nameText);
+		}
+		if (update.left) {
+			if (mNameIndex > 0) {
+				move({-CUR_MV_OFFSET,0});
+				--mNameIndex;
+				mNameIndex = std::clamp<size_t>(mNameIndex, 0, 2);
+				SelectChar(update);
+			}
+		} else if (update.right) {
+			if (mNameIndex < 2) {
+				move({CUR_MV_OFFSET,0});
+				++mNameIndex;
+				mNameIndex = std::clamp<size_t>(mNameIndex, 0, 2);
+				SelectChar(update);
+			}
+		} else if (update.up || update.down) 
+			ChangeChar(update);
+		else if (update.action) {
+			setOutlineColor(sf::Color::Transparent);
+			return false;
+		}
+		return true;
+	}
+
+	void Cursor::SetPosition(const sf::Text& nameText) {
+		auto offset = sf::Vector2f({5.0f, -30.0f});
+		move(nameText.getGlobalBounds().position + offset);
+		mIsEnabled = true;
+	}
+	
+	void Cursor::ChangeChar(const CursorUpdate& update) {
+		char selected = SelectChar(update);
+		std::string str = (*update.nameText).getString();
+		str[mNameIndex] = selected;
+		(*update.nameText).setString(str);
+		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+	}
+	
+	char Cursor::SelectChar(const CursorUpdate& update) {
+		char selected = 'A';
+		const int max = CUR_CHAR_SET.size();
+
+		if (update.up) {
+			mCharIndex =  (mCharIndex + 1) % max;
+			selected = CUR_CHAR_SET[mCharIndex];
+		}
+		else if (update.down) {
+			mCharIndex = (mCharIndex - 1 + max) % max;
+			selected = CUR_CHAR_SET[mCharIndex];
+		} else
+			mCharIndex = 0;
+		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+		return selected;
+	}
+}
+#include <cmath>
+#include "RenderManager.hpp"
+#include "ResourceManager.hpp"
+#include "AudioManager.hpp"
+#include "PolySound.hpp"
+
+namespace pyramidnight {
+
+	PolySound::PolySound(Args args)
+		: sf::Sound(*ResourceManager::GetAudio(args.path))
+	{
+		IsFadingOut = false;
+		mType = args.type;
+		mGain = args.gain;
+		setVolume(GetTypeVolume() * mGain);
+		setLooping(args.loop);
+	}
+
+	void PolySound::FadeOut(float gain) {
+		auto deltaTime = RenderManager::GetDeltaTime().asSeconds();
+		setVolume(getVolume() * std::pow(gain, deltaTime));
+		if (getVolume() <= 0.1f)
+			stop();
+	}
+
+	void PolySound::SetInstanceVolume(float instanceGain = 1.0f) {
+		setVolume(GetTypeVolume() * mGain * instanceGain);
+	}
+
+	float PolySound::GetTypeVolume() const
+	{
+		float typeVolume = 100.0f;
+		switch (mType) {
+			case Type::SFX: typeVolume = AudioManager::GetSfxVolume(); break;
+			case Type::BGM: typeVolume = AudioManager::GetBgmVolume(); break;
+			default: break;
+		}
+		return typeVolume;
+	}
+}
+#include "InputManager.hpp"
+#include "RenderManager.hpp"
+
+namespace pyramidnight {
+	
+	InputManager::InputManager() {
+		mFrameInput = {};
+	}
+
+	void InputManager::Init() { instance(); }
+
+	InputManager::Input &InputManager::FetchInput() {
+		auto& window = RenderManager::GetWindow();
+		auto& frameInput = instance().mFrameInput;
+
+		instance().ResetReleased();
+		while (const auto event = window.pollEvent()) {
+			if (event->getIf<sf::Event::Closed>())
+				window.close();
+
+			frameInput.holdLeft  = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
+			frameInput.holdRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
+			frameInput.coarse  = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
+			frameInput.fine = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RControl);
+	
+			if (const auto* key = event->getIf<sf::Event::KeyReleased>()) {
+				switch (key->code) {
+					case sf::Keyboard::Key::A: frameInput.left = true; break;
+					case sf::Keyboard::Key::D: frameInput.right = true; break;
+					case sf::Keyboard::Key::W: frameInput.up = true; break;
+					case sf::Keyboard::Key::S: frameInput.down = true; break;
+					case sf::Keyboard::Key::Space: frameInput.action = true; break;
+					case sf::Keyboard::Key::Num1: frameInput.coin = true; break;
+					case sf::Keyboard::Key::Escape: frameInput.menu = true; break;
+					default: break;
+				}
+			}
+		}
+		return frameInput;
+	}
+
+	void InputManager::ResetReleased() { 
+		mFrameInput.up = false;
+		mFrameInput.down = false;
+		mFrameInput.left = false;
+		mFrameInput.right = false;
+		mFrameInput.action = false;
+		mFrameInput.coin = false;
+		mFrameInput.menu = false;
+	}
+
+}
+#include <algorithm>
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include "UserDataManager.hpp"
+#include "Common.hpp"
+
+namespace pyramidnight {
+
+	UserDataManager::UserDataManager() {
+		InitSaveData();
+		LoadUserData();
+	}
+
+	void UserDataManager::Init() { instance(); }
+
+	void UserDataManager::SaveBgmVolume(float volume) {
+		instance().mSaveData.bgmVol =  volume;
+		instance().SaveUserData();
+	}
+
+	void UserDataManager::SaveSfxVolume(float volume) {
+		instance().mSaveData.sfxVol =  volume;
+		instance().SaveUserData();
+	}
+
+	void UserDataManager::SaveRanking() {
+		instance().SortRanking();
+		instance().SaveUserData();
+	}
+
+	void UserDataManager::SortRanking() {
+		auto& ranking = instance().mSaveData.ranking;
+		
+		std::sort(ranking.begin(), ranking.end(),
+		[](const ScoreEntry& a, const ScoreEntry& b) {
+			return a.score > b.score;
+		});
+	}
+
+	UserDataManager::SaveData& UserDataManager::GetUserData() { return instance().mSaveData; }
+
+	void UserDataManager::SaveUserData() {
+		std::string path(PATH_SAVE_DATA);
+
+		try {
+			uint32_t count = static_cast<uint32_t>(mSaveData.ranking.size());
+			std::ofstream outStream(path, std::ios::binary);
+
+			outStream.write((char*)&mSaveData.bgmVol, sizeof(mSaveData.bgmVol));
+			outStream.write((char*)&mSaveData.sfxVol, sizeof(mSaveData.sfxVol));
+
+			outStream.write((char*)&count, sizeof(count));
+			for (const auto& record : mSaveData.ranking) {
+				uint32_t len = static_cast<uint32_t>(record.name.size());
+
+				outStream.write((char*)&len, sizeof(len));
+				outStream.write(record.name.data(), len);
+				outStream.write((char*)&record.score, sizeof(record.score));
+			}
+		} catch (const std::exception& e){
+			std::cerr << "Error: Filesystem error for save data file: " << e.what() << '\n';
+		}
+	}
+
+	void UserDataManager::LoadUserData() {
+		std::string path(PATH_SAVE_DATA);
+
+		try {
+			uint32_t count {};
+			std::ifstream inStream(path, std::ios::binary);
+
+			inStream.read((char*)&mSaveData.bgmVol, sizeof(mSaveData.bgmVol));
+			inStream.read((char*)&mSaveData.sfxVol, sizeof(mSaveData.sfxVol));
+			inStream.read((char*)&count, sizeof(count));
+
+			mSaveData.ranking.resize(count);
+			for (auto& record : mSaveData.ranking) {
+				uint32_t len {};
+
+				inStream.read((char*)&len, sizeof(len));
+				record.name.resize(len);
+				inStream.read(&record.name[0], len);
+				inStream.read((char*)&record.score, sizeof(record.score));
+			}
+		}
+		catch(const std::exception& e) {
+			std::cerr << "Error: Filesystem error for save data file: " << e.what() << '\n';
+		}
+	}
+
+	void UserDataManager::InitSaveData() {
+		std::vector<ScoreEntry> ranking {};
+		
+		if (std::filesystem::exists(PATH_SAVE_DATA))
+			return;
+		
+		ranking.push_back({"RA ", 100000, false});
+		ranking.push_back({"ELI", 90000, false});
+		ranking.push_back({"JMA", 80000, false});
+		ranking.push_back({"IOQ", 70000, false});
+		ranking.push_back({"FFF", 60000, false});
+		ranking.push_back({"ISS", 3000, false});
+		ranking.push_back({"YSS", 1000, false});
+		ranking.push_back({"PAS", 500, false});
+		ranking.push_back({"TOI", 200, false});
+		ranking.push_back({"CAN", 10, false});
+		
+		mSaveData.bgmVol = VOL_AUD_BGM;
+		mSaveData.sfxVol = VOL_AUD_SFX;
+		mSaveData.ranking = ranking;
+		SaveUserData();
+	}
+}
+
+#include <algorithm>
+#include <cassert>
+#include <string>
+#include <vector>
+#include <iostream>
+
+#include "ResourceManager.hpp"
+#include "Levels.hpp"
+#include "FailSafeData.hpp"
+
+namespace pyramidnight {
+	
+	ResourceManager::ResourceManager() {
+		ValidateLevels();
+		LoadTextures();
+		LoadFonts();
+		LoadAudio();
+	}
+
+	void ResourceManager::Init() { instance(); }
+
+	const std::shared_ptr<sf::Texture>& ResourceManager::GetTexture(const std::string_view& path) {
+		auto& vect = instance().mTextures;
+		auto it = std::find_if(vect.begin(), vect.end(), [path](const Texture& tex) {
+			return tex.path == path;
+		});
+		if (it != vect.end())
+			return it->texture;
+		else {
+			std::cerr << "Error: Missing texture, failsafe loaded\n";
+			return instance().mFailSafeTexture;
+		}
+	}
+
+	const std::shared_ptr<sf::Font>& ResourceManager::GetFont(const std::string_view& path) {
+		auto& vect = instance().mFonts;
+		auto it = std::find_if(vect.begin(), vect.end(), [path](const Font& font) {
+			return font.path == path;
+		});
+		if (it != vect.end())
+			return it->font;
+		else {
+			std::cerr << "Error: Missing font, failsafe loaded\n";
+			return instance().mFailSafeFont;
+		}
+	}
+
+	const std::shared_ptr<sf::SoundBuffer>& ResourceManager::GetAudio(const std::string_view& path) {
+		auto& vect = instance().mAudios;
+		auto it = std::find_if(vect.begin(), vect.end(), [path](const Audio& audio) {
+			return audio.path == path;
+		});
+		if (it != vect.end())
+			return it->audio;
+		else {
+			std::cerr << "Error: Missing sound, failsafe loaded\n";
+			return instance().mFailSafeSound;
+		}
+	}
+
+	void ResourceManager::ValidateLevels()
+	{
+		assert(!ROUNDS.empty()
+			&& "Error: No levels present");
+		assert(GAME_FINAL_ROUND_ID == (ROUNDS.size() - 1)
+			&& "Error: Wrong number of levels");
+
+		for (const auto& level : ROUNDS) {
+			assert(level.size() == LVL_DIMENSIONS2
+				&& "Error: Wrong number of rows for a level");
+			for (const auto& str : level) {
+				assert(str.size() == LVL_DIMENSIONS2
+					&& "Error: Wrong number of columns for a level");
+				assert(str.find_first_not_of(LVL_CHAR_SET) == std::string::npos
+					&& "Error: Invalid character on a level");
+			}
+		}
+	}
+
+	void ResourceManager::LoadTextures() {
+		std::vector<std::string_view> filePaths {
+			PATH_TEX_BG,
+			PATH_TEX_WALL, 
+			PATH_TEX_CEIL, 
+			PATH_TEX_BUMP, 
+			PATH_TEX_BALL, 
+			PATH_TEX_BLOCK
+		};
+
+		mFailSafeTexture = std::make_shared<sf::Texture>(FAILSAFE_TEXTURE_DATA, FAILSAFE_TEXTURE_DATA_SZ);
+		try {
+				for (const auto& path : filePaths) {
+					auto texture = Texture {
+						path,
+						std::make_shared<sf::Texture>(path)
+					};
+				mTextures.push_back(texture);
+				}
+		} catch(const sf::Exception& e) {
+			std::cerr << "Error: Missing or wrong texture file: " << e.what() << '\n';
+		}
+	}
+	void ResourceManager::LoadFonts()
+	{
+		std::vector<std::string_view> filePaths {
+			PATH_FONT
+		};
+
+		mFailSafeFont = std::make_shared<sf::Font>(FAILSAFE_FONT_DATA, FAILSAFE_FONT_DATA_SZ);
+		try {
+				for (const auto& path : filePaths) {
+					auto font = Font {
+						path,
+						std::make_shared<sf::Font>(path)
+					};
+				mFonts.push_back(font);
+				}
+		} catch(const sf::Exception& e) {
+			std::cerr << "Error: Missing or wrong font file: " << e.what() << '\n';
+			exit(1);
+		}
+	}
+	void ResourceManager::LoadAudio() {
+		std::vector<std::string_view> filePaths {
+			PATH_AUD_BALL_BOUNCE,
+			PATH_AUD_BALL_LOSE,
+			PATH_AUD_BALL_LAUNCH,
+			PATH_AUD_BLOCK_DAMAGE,
+			PATH_AUD_BLOCK_DESTROY,
+			PATH_AUD_BUMPER_BOUNCE,
+			PATH_AUD_PWRUP_0,
+			PATH_AUD_ENEMY_SPAWN,
+			PATH_AUD_COIN_IN,
+			PATH_AUD_CURSOR,
+			PATH_AUD_NEXTROUND,
+			PATH_AUD_GAMEOVER,
+			PATH_AUD_MUSIC_0
+		};
+
+		mFailSafeSound = std::make_shared<sf::SoundBuffer>(FAILSAFE_SOUND_DATA, FAILSAFE_SOUND_DATA_SZ);
+		try {
+				for (const auto& path : filePaths) {
+					auto audio = Audio {
+						path,
+						std::make_shared<sf::SoundBuffer>(path)
+					};
+				mAudios.push_back(audio);
+				}
+		} catch(const sf::Exception& e) {
+			std::cerr << "Error: Missing or wrong audio file: " << e.what() << '\n';
+			exit(1);
+		}
+	}
+
+}#include <string>
+#include <algorithm>
+#include "AudioManager.hpp"
+#include "ResourceManager.hpp"
+#include "RenderManager.hpp"
+
+namespace pyramidnight {
+
+	AudioManager::AudioManager() {}
+
+	void AudioManager::Play(PolySound::Args args) {
+		auto sound = std::make_unique<PolySound>(args);
+		
+		sound->play();
+		switch (args.type) {
+			case PolySound::Type::BGM: instance().mBgm.push_back(std::move(sound)); break;
+			case PolySound::Type::SFX: instance().mSfx.push_back(std::move(sound)); break;
+			default: break;
+		}
+	}
+	
+	void AudioManager::FadeOutBgm() {
+		for (auto& sound: instance().mBgm) {
+			sound->IsFadingOut = true;
+		}
+	}
+
+	void AudioManager::Update() {
+		static float timeElapsed = 0.0f;
+
+		// clean stopped
+		timeElapsed += RenderManager::GetDeltaTime().asSeconds();
+		if (timeElapsed > CLK_AUD_CLEAN_TIMER_S) {
+			instance().Clean();
+			timeElapsed = 0.0f;
+		}
+
+		// fade bgm
+		for (auto& sound: instance().mBgm) {
+			if (sound->IsFadingOut)
+				sound->FadeOut(0.65f);
+		}
+	}
+
+	void AudioManager::SetBgmVolume(float volume) {
+		auto& bgm = instance().mBgm;
+		instance().mBgmVolume = volume;
+		for (auto& sound : bgm){
+			sound->SetInstanceVolume(1.0f);
+		}
+	}
+
+	void AudioManager::SetSfxVolume(float volume) {
+		auto& sfx = instance().mSfx;
+		instance().mSfxVolume = volume;
+		for (auto& sound : sfx){
+			sound->SetInstanceVolume(1.0f);
+		}
+	}
+
+	uint8_t AudioManager::GetBgmVolume() { return instance().mBgmVolume; }
+
+	uint8_t AudioManager::GetSfxVolume() { return instance().mSfxVolume; }
+
+	void AudioManager::Clean() {
+		mSfx.erase(std::remove_if(mSfx.begin(), mSfx.end(),
+			[](const std::unique_ptr<PolySound>& sound) {
+				return !sound || (sound->getStatus() == PolySound::Status::Stopped);
+			}),
+			mSfx.end()
+		);
+
+		mBgm.erase(std::remove_if(mBgm.begin(), mBgm.end(),
+			[](const std::unique_ptr<PolySound>& sound) {
+				return !sound || (sound->getStatus() == PolySound::Status::Stopped);
+			}),
+			mBgm.end()
+		);
+	}
+
+	void AudioManager::Init() { instance();	}
+}
+#include <algorithm>
+#include "RenderManager.hpp"
+
+namespace pyramidnight {
+	
+	RenderManager::RenderManager() :
+		mWindow(sf::VideoMode(RNDR_RESOLUTION),
+		"PyraMidNight",
+		sf::Style::Titlebar | sf::Style::Close) {
+			mWindow.setFramerateLimit(RNDR_FRAME_LIMIT);
+	}
+	
+	void RenderManager::Init() { instance(); }
+
+	void RenderManager::Update(std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
+		instance().mDeltaTime = instance().mClock.restart();
+		instance().Draw(drawables);
+		instance().DrawEffects();
+	}
+
+	void RenderManager::PauseClock() { instance().mClock.stop(); }
+
+	void RenderManager::ResumeClock() { instance().mClock.start(); }
+
+	void RenderManager::Draw(std::vector<std::shared_ptr<sf::Drawable>> &drawables) {
+		mWindow.clear();
+		for (const auto &drw : drawables) {
+			mWindow.draw(*drw);
+		}
+		mWindow.display();
+	}
+
+	void RenderManager::DrawEffects() {
+		if (!mRenderEffects.empty()) {
+			for (auto& eff : mRenderEffects) {
+				eff->Update();
+			};
+
+			mRenderEffects.erase(std::remove_if(mRenderEffects.begin(), mRenderEffects.end(),
+				[](const std::unique_ptr<RenderEffect>& eff) {
+					return eff->Disposable;
+				}),
+			mRenderEffects.end()
+			);
+		}
+	}
+
+	void RenderManager::DisplayEffect(std::unique_ptr<RenderEffect> effect) {
+		instance().mRenderEffects.push_back(std::move(effect));
+	}
+
+	sf::Time& RenderManager::GetDeltaTime() { return instance().mDeltaTime; }
+	
+	sf::RenderWindow& RenderManager::GetWindow() { return instance().mWindow; }
+}	
+#include <limits>
+#include <algorithm>
+#include "Game.hpp"
+#include "UserDataManager.hpp"
+#include "AudioManager.hpp"
+
+#include <iostream>
+
+namespace pyramidnight {
+	
+	Game::Game() {
+		AudioManager::SetBgmVolume(UserDataManager::GetUserData().bgmVol);
+		AudioManager::SetSfxVolume(UserDataManager::GetUserData().sfxVol);
+		mState = State::TITLE_SCREEN;
+		mCredits = 0;
+		mScore = 0;
+		mRound = 0;
+		mFinalRound = GAME_FINAL_ROUND_ID;
+		mTitleScreen = nullptr;
+		mRoundScreen = nullptr;
+		mEndScreenView = nullptr;
+	}
+	
+	// main loop
+	void Game::Run() {
+		while (RenderManager::GetWindow().isOpen()) {
+			AudioManager::Update();
+			mInput = InputManager::FetchInput();
+			mDeltaTime = RenderManager::GetDeltaTime();
+
+			if (mInput.menu) {
+				if (mState != State::MENU) {
+					mPrevState = mState;
+					mState = State::MENU;
+					mInput.menu = false;
+				}
+			}
+			
+			switch (mState) {
+				case State::MENU:
+					if (mMenuScreen == nullptr) {
+						RenderManager::PauseClock();
+						mMenuScreen = std::make_unique<MenuScreenView>();
+					}
+					if (!mMenuScreen->Update(WrapMenuScreenUpdate())) {
+						mState = mPrevState;
+						mMenuScreen = nullptr;
+						RenderManager::ResumeClock();
+						break;
+					}
+					RenderManager::Update(mMenuScreen->GetDrawables());
+					break;
+				case State::TITLE_SCREEN:
+					if (mTitleScreen == nullptr)
+						mTitleScreen = std::make_unique<TitleScreenView>();
+					if (!mTitleScreen->Update(WrapTitleScreenUpdate())) {
+						mState = State::ROUND_SCREEN;
+						mTitleScreen = nullptr;
+						break;
+					}
+					RenderManager::Update(mTitleScreen->GetDrawables());
+					break;
+				case State::ROUND_SCREEN:
+					if (mRoundScreen == nullptr)
+						mRoundScreen = std::make_unique<RoundScreenView>();
+					if (!mRoundScreen->Update(WrapRoundScreenUpdate())) {
+						mRoundScreen = nullptr;
+						SetNextRound();
+						break;
+					}
+					RenderManager::Update(mRoundScreen->GetDrawables());
+					break;
+				case State::END_SCREEN:
+					if (mEndScreenView == nullptr)
+						mEndScreenView = std::make_unique<EndScreenView>();
+					if (!mEndScreenView->Update(WrapEndScreenUpdate())) {
+						mState = State::TITLE_SCREEN;
+						mEndScreenView = nullptr;
+						UserDataManager::SaveRanking();
+						ResetScore();
+						AudioManager::FadeOutBgm();
+						break;
+					}
+					RenderManager::Update(mEndScreenView->GetDrawables());
+					break;
+				default:
+					break;
+				}
+			}
+		}
+		
+		void Game::SetNextRound() {
+			if (mRound < mFinalRound && mCredits > 0) {
+				mRound++;
+				mRoundScreen = std::make_unique<RoundScreenView>();
+			}
+			else {
+				mRound = 0;
+				GameOver();
+			}
+		}
+		
+		void Game::GameOver() {
+			mState = State::END_SCREEN;
+			ResetCredits();
+	}
+
+	void Game::ResetScore() { mScore = 0; }
+
+	void Game::ResetCredits() { mCredits = 0; }
+
+	MenuScreenView::MenuScreenUpdate Game::WrapMenuScreenUpdate() {
+		return {
+				mInput.action,
+				mInput.menu,
+				mInput.left,
+				mInput.right,
+				mInput.up,
+				mInput.down
+		};
+	}
+
+	TitleScreenView::TitleScreenUpdate Game::WrapTitleScreenUpdate() {
+		return {
+				mInput.action,
+				mInput.coin,
+				mCredits
+		};
+	}
+
+	RoundScreenView::RoundScreenUpdate Game::WrapRoundScreenUpdate() {
+		return {
+				mRound,
+				mDeltaTime,
+				mInput.holdLeft,
+				mInput.holdRight,
+				mInput.coarse,
+				mInput.fine,
+				mInput.action,
+				mCredits,
+				mScore
+		};
+	}
+
+	EndScreenView::EndScreenUpdate Game::WrapEndScreenUpdate() {
+		return {
+				mInput.left,
+				mInput.right,
+				mInput.up,
+				mInput.down,
+				mInput.action,
+				mScore
+		};
+	}
+}
+#include "Blink.hpp"
+#include "RenderManager.hpp"
+
+namespace pyramidnight {
+
+	Blink::Blink(float duration, float lapse, const std::shared_ptr<sf::Transformable>& transformable) :
+		RenderEffect(duration) ,mTransformable(transformable) {
+			Lapse = lapse;
+			mVisible = false;
+			mElapsedTime = 0.0f;
+	}
+
+	void Blink::Update() {
+		auto deltaTime = RenderManager::GetDeltaTime().asSeconds();
+		
+		mElapsedTime += deltaTime;
+		mDuration -= deltaTime;
+		if (mElapsedTime >= Lapse) {
+			mVisible = !mVisible;
+			mVisible ? mTransformable->setScale({1, 1}) : mTransformable->setScale({0, 0});
+			mElapsedTime = 0.0f;
+		}
+		if ((!mLoop && mDuration <= 0.0f) || mTransformable.use_count() == 1)
+			Disposable = true;
+	}
+}#include "RenderEffect.hpp"
+namespace pyramidnight {
+	RenderEffect::RenderEffect(float durationSeconds) {
+		Disposable = false;
+		mDuration = durationSeconds;
+		mDuration == -1.0f ? mLoop = true : mLoop = false;
+	}
+}
+
+#include "ScreenShake.hpp"
+#include "RenderManager.hpp"
+
+namespace pyramidnight {
+	
+	ScreenShake::ScreenShake(float duration, float power) : RenderEffect(duration) {
+		Power = power;
+		mViewOrigin = RenderManager::GetWindow().getView().getCenter();
+	}
+
+	void ScreenShake::Update() {
+		auto& window = RenderManager::GetWindow();
+		auto  deltaTime = RenderManager::GetDeltaTime();
+		auto  view = window.getView();
+
+		if (!mIsShaking && mDuration > 0.0f)
+			mIsShaking = true;
+		if (mDuration > 0.0f) {
+			mDuration -= deltaTime.asSeconds();
+			float offsetX = ((float)rand() / RAND_MAX * 2.f - 1.f) * Power;
+			float offsetY = ((float)rand() / RAND_MAX * 2.f - 1.f) * Power;
+			view.setCenter({mViewOrigin.x + offsetX, mViewOrigin.y + offsetY});
+		}
+		if (mIsShaking && mDuration <= 0.0f) {
+			view.setCenter(mViewOrigin);
+			mIsShaking = false;
+			Disposable = true;
+		}
+		window.setView(view);
+	}
+}#include <SFML/Main.hpp>
+#include "ResourceManager.hpp"
+#include "UserDataManager.hpp"
+#include "RenderManager.hpp"
+#include "AudioManager.hpp"
+#include "InputManager.hpp"
+#include "Game.hpp"
+
+int main(int argc, char* argv[]) {
+	//TODO add args for level testing
+	(void)argc;
+	(void)argv;
+
+	pyramidnight::UserDataManager::Init();
+	pyramidnight::ResourceManager::Init();
+	pyramidnight::RenderManager::Init();
+	pyramidnight::InputManager::Init();
+	pyramidnight::AudioManager::Init();
+	pyramidnight::Game game;
+	game.Run();
+	return (0);
+}#pragma once
+#include <SFML/Graphics.hpp>
+#include "Common.hpp"
+
+namespace pyramidnight {
+
+	class Bumper : public sf::Sprite {
+		public:
+			Bumper(const sf::Texture& texture);
+
+			void Move(int8_t magnitude, sf::Time &deltaTime, bool fine, bool coarse);
+	
+		private:
+			float mSpeed;
+	};
+
+}
+#pragma once
+#include <SFML/Graphics.hpp>
+#include "Common.hpp"
+
+namespace pyramidnight {
+
+	class Ball : public sf::Sprite {
+	public:
+		enum class State {
+			DOCKED, PLAYING
+		};
+
+		Ball(const sf::Texture& texture);
+
+		void Launch();
+		void ResetPos(const sf::Vector2f& bumperPos);
+		void Update(const sf::Vector2f &bumperPos, const sf::Time& deltaTime);
+		void Bounce(const sf::Sprite &obj, float distance);
+		void ApplyBumperMod(const sf::Sprite& bumper);
+
+		float GetBallDistance(const sf::Sprite &obj) const;
+		const State& GetState() const;
+		float GetRadius() const;
+		
+	private:
+		State           mState;
+		float           mSpeed;
+		sf::Vector2f    mDirection;
+		float           mRadius;
+		
+		void  Move(const sf::Time& deltaTime);
+		void  ResolveOverlap(float distance);
+	};
+
+}
+
+
+#pragma once
+#include <SFML/Graphics.hpp>
+#include "Common.hpp"
+
+namespace pyramidnight {
+
+	class Block : public sf::Sprite {
+		public:
+			Block(const sf::Texture& texture, int8_t hitPoints);
+		
+			void Update(const sf::Time& deltaTime);
+			bool Damage();
+			int32_t GetScore() const;
+
+		private:
+			int8_t    mHitPoints;
+			int32_t   mScorePoints;
+			sf::Color mTint;
+			float     mFlashTimer;
+	};
+}#pragma once
+#include <SFML/Audio.hpp>
+#include <string>
+
+namespace pyramidnight {
+	class PolySound : public sf::Sound {
+		public:
+			bool IsFadingOut;
+
+			enum class Type {
+				SFX, BGM
+			};
+
+			struct Args {
+				const std::string_view& path;
+				float                   gain;
+				Type                    type;
+				bool                    loop;
+			};
+			
+			PolySound(Args args);
+			
+			void FadeOut(float gain);
+			void SetInstanceVolume(float instanceGain);
+			Type GetType() const;
+
+		private:
+			Type  mType;
+			float mGain;
+
+			float GetTypeVolume() const;
+
+	};
+}
+#pragma once
+#include <SFML/Graphics.hpp>
+#include "Common.hpp"
+
+namespace pyramidnight {
+	
+	class Cursor : public sf::RectangleShape {
+		public:
+			struct CursorUpdate {
+				bool left;
+				bool right;
+				bool up;
+				bool down;
+				bool action;
+				std::shared_ptr<sf::Text> nameText;
+			};
+
+			Cursor(sf::Font& font);
+	
+			bool Update(const CursorUpdate& update);
+			
+			private:
+			sf::Font&  mFont;
+			size_t     mNameIndex;
+			int        mCharIndex;
+			bool       mIsEnabled;
+			
+			void SetPosition(const sf::Text& nameText);
+			void ChangeChar(const CursorUpdate& update);
+			char SelectChar(const CursorUpdate& update);
+	};
+
+}#pragma once
+#include <SFML/Graphics.hpp>
+#include "Common.hpp"
+
+namespace pyramidnight {
+	
+	class InputManager {
+		public:
+			struct Input {
+				bool left;
+				bool right;
+				bool up;
+				bool down;
+				bool holdLeft;
+				bool holdRight;
+				bool coarse;
+				bool fine;
+				bool action;
+				bool coin;
+				bool menu;
+				bool close;
+			};
+	
+			static void Init();
+			static Input& FetchInput();
+			
+		private:
+			Input             mFrameInput;
+			
+			InputManager();
+			InputManager(const InputManager& src) =  delete;
+			InputManager& operator=(const InputManager& src) = delete;
+
+			static InputManager& instance() {
+				static InputManager inst;
+				return inst;
+			}
+
+			void ResetReleased();
+			
+	};
+
+}#pragma once
+#include <string>
+#include <cstdint>
+#include <vector>
+
+namespace pyramidnight {
+
+	class UserDataManager {
+		public:
+			struct ScoreEntry {
+				std::string name;
+				uint32_t    score;
+				bool        actual;
+			};
+
+			struct SaveData {
+				float bgmVol;
+				float sfxVol;
+				std::vector<ScoreEntry> ranking;
+			};
+			
+			static void Init();
+			static void SaveBgmVolume(float volume);
+			static void SaveSfxVolume(float volume);
+			static void SaveRanking();
+			static void SortRanking();
+			static SaveData& GetUserData();
+			
+			private:
+			UserDataManager();
+			UserDataManager(const UserDataManager& src) = delete;
+			UserDataManager& operator=(const UserDataManager& src) = delete;
+			
+			static UserDataManager& instance() {
+				static UserDataManager inst;
+				return inst;
+			}
+			
+			SaveData mSaveData;
+			
+			void InitSaveData();
+			void SaveUserData();
+			void LoadUserData();
+	};
+	}#pragma once
+#include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <memory>
+#include "Common.hpp"
+
+namespace pyramidnight {
+	
+	class ResourceManager {
+		public:
+			static void Init();
+			static const std::shared_ptr<sf::Texture>&     GetTexture(const std::string_view& path);
+			static const std::shared_ptr<sf::Font>&        GetFont(const std::string_view& path);
+			static const std::shared_ptr<sf::SoundBuffer>& GetAudio(const std::string_view& path);
+
+		private:
+			struct Texture {
+				std::string_view             path;
+				std::shared_ptr<sf::Texture> texture;
+			};
+
+			struct Font {
+				std::string_view          path;
+				std::shared_ptr<sf::Font> font;
+			};
+
+			struct Audio {
+				std::string_view                 path;
+				std::shared_ptr<sf::SoundBuffer> audio;
+			};
+
+			ResourceManager();
+			ResourceManager(const ResourceManager& src) = delete;
+			ResourceManager& operator=(const ResourceManager& src) = delete;
+
+			std::vector<Texture>             mTextures;
+			std::shared_ptr<sf::Texture>     mFailSafeTexture;
+			std::vector<Font>                mFonts;
+			std::shared_ptr<sf::Font>        mFailSafeFont;
+			std::vector<Audio>               mAudios;
+			std::shared_ptr<sf::SoundBuffer> mFailSafeSound;
+
+			void ValidateLevels();
+			void LoadTextures();
+			void LoadFonts();
+			void LoadAudio();
+
+			static ResourceManager& instance() {
+				static ResourceManager inst;
+				return inst;
+			}
+	};
+
+}#pragma once
+#include <SFML/Audio.hpp>
+#include <memory>
+#include "PolySound.hpp"
+#include "Common.hpp"
+
+namespace pyramidnight {
+	
+	class AudioManager {
+		public:
+			static void Init();
+			static void Play(PolySound::Args args);
+			static void FadeOutBgm();
+			static void SetBgmVolume(float volume);
+			static void SetSfxVolume(float volume);
+			static void Update();
+
+			static uint8_t GetBgmVolume();
+			static uint8_t GetSfxVolume();
+			
+		private:
+			AudioManager();
+			AudioManager(const AudioManager& src) = delete;
+			AudioManager& operator=(const AudioManager& src) = delete;
+			
+			float                                   mBgmVolume;
+			float                                   mSfxVolume;
+			std::vector<std::unique_ptr<PolySound>> mBgm;
+			std::vector<std::unique_ptr<PolySound>> mSfx;
+			
+			void Clean();
+			void FadeOut(std::unique_ptr<PolySound>& sound);
+
+			static AudioManager& instance() {
+				static AudioManager inst;
+				return inst;
+			}
+		};
+		
+}#pragma once
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include "RenderEffect.hpp"
+#include "Common.hpp"
+
+namespace pyramidnight {
+	
+	class RenderManager {
+		public:
+			static void Init();
+			static void Update(std::vector<std::shared_ptr<sf::Drawable>> &drawables);
+			static void PauseClock();
+			static void ResumeClock();
+			static void DisplayEffect(std::unique_ptr<RenderEffect> effect);
+			static sf::Time& GetDeltaTime();
+			static sf::RenderWindow &GetWindow();
+			
+		private:
+			RenderManager();
+			RenderManager(const RenderManager& src) = delete;
+			RenderManager& operator=(const RenderManager& src) = delete;
+			
+			sf::RenderWindow          mWindow;
+			sf::Clock                 mClock;
+			sf::Time                  mDeltaTime;
+			std::vector<std::unique_ptr<RenderEffect>> mRenderEffects;
+			
+			
+			void Draw(std::vector<std::shared_ptr<sf::Drawable>> &drawables);
+			void DrawEffects();
+
+			static RenderManager& instance() {
+				static RenderManager inst;
+				return inst;
+			}
+	};
+
+}#pragma once
+#include <string>
+#include "UserDataManager.hpp"
+#include "ResourceManager.hpp"
+#include "ScreenView.hpp"
+#include "Cursor.hpp"
+#include "Common.hpp"
+
+namespace pyramidnight {
+	
+	class EndScreenView : public ScreenView {
+		public:
+		
+
+			struct EndScreenUpdate {
+				bool         left;
+				bool         right;
+				bool         up;
+				bool         down;
+				bool         action;
+				uint32_t&    score;
+			};
+			
+			EndScreenView();
+
+			bool Update(const EndScreenUpdate& update);
+			
+		private:
+			struct ScoreEntryText {
+				std::shared_ptr<sf::Text> name;
+				std::shared_ptr<sf::Text> score;
+				bool                      actual;
+			};
+			
+			std::shared_ptr<sf::Font>    mFont;
+			std::shared_ptr<sf::Text>    mTitleTxt;
+			std::shared_ptr<sf::Text>    mContTxt;
+			std::shared_ptr<sf::Texture> mBackgroundTex;
+			std::shared_ptr<sf::Sprite>  mBackground;
+			std::shared_ptr<Cursor>      mCursor;
+	
+			std::vector<ScoreEntryText>  mRankingTxt;
+			std::shared_ptr<sf::Text>    mRecordNameTxt;
+			bool                         mIsRankingDraw;
+			bool                         mIsNameSet;
+	
+			bool                      DrawPlayerRanking();
+			std::string               PadZeroScore(uint32_t score, uint32_t digits);
+			std::shared_ptr<sf::Text> FindRecordNameTxt();
+			void                      SetRecordName();
+			Cursor::CursorUpdate      WrapCursorUpdate(const EndScreenUpdate& update);
+			bool Update();
+	};
+
+}#pragma once
+#include <string>
+#include "ScreenView.hpp"
+#include "ResourceManager.hpp"
+#include "Common.hpp"
+
+namespace pyramidnight {
+	
+	class MenuScreenView : public ScreenView {
+		public:
+			enum Option {
+				BGM, SFX, EXIT
+			};
+
+			struct MenuScreenUpdate {
+				bool action;
+				bool menu;
+				bool left;
+				bool right;
+				bool up;
+				bool down;
+			};
+			
+			MenuScreenView();
+
+			bool Update(const MenuScreenUpdate& update);
+
+		private:
+			std::shared_ptr<sf::Font>           mFont;
+			std::shared_ptr<sf::Text>           mBgmTxt;
+			std::shared_ptr<sf::Text>           mSfxTxt;
+			std::shared_ptr<sf::Text>           mExitTxt;
+			std::shared_ptr<sf::Texture>        mBackgroundTex;
+			std::shared_ptr<sf::Sprite>         mBackground;
+
+			uint8_t mBgmVolume;
+			uint8_t mSfxVolume;
+			Option  mOption;
+			int8_t  mOptionIndex;
+			
+			std::vector<std::shared_ptr<sf::Text>> mTexts;
+
+			void UpdateBgmVolume(float volume);
+			void UpdateSfxVolume(float volume);
+			void SelectOption(bool up, bool down);
+			void InvertOptionColors(const std::shared_ptr<sf::Text>& option);
+	
+			bool Update();
+	};
+
+}#pragma once
+#include "ScreenView.hpp"
+#include "Bumper.hpp"
+#include "Ball.hpp"
+#include "Block.hpp"
+#include "Common.hpp"
+
+namespace pyramidnight {
+
+	class RoundScreenView : public ScreenView {
+		public:
+			struct RoundScreenUpdate {
+				uint8_t&          roundId;
+				sf::Time&         deltaTime;
+				bool              holdLeft;
+				bool              holdRight;
+				bool              coarse;
+				bool              fine;
+				bool              action;
+				uint8_t&          credits;
+				uint32_t&         score;
+			};
+
+			RoundScreenView();
+
+			bool Update(const RoundScreenUpdate& update);
+
+		private:
+			bool                         mLvlIsLoaded;
+			float                        mElapsedTimePenalty;
+			std::shared_ptr<sf::Font>    mFont;
+			std::shared_ptr<sf::Text>    mCreditsTxt;
+			std::shared_ptr<sf::Text>    mScoreTxt;
+			std::shared_ptr<sf::Texture> mBackgroundTex;
+			std::shared_ptr<sf::Sprite>  mBackground;
+			
+			std::shared_ptr<sf::Texture> mWallTex;
+			std::shared_ptr<sf::Sprite>  mWallLeft;
+			std::shared_ptr<sf::Sprite>  mWallRight;
+			std::shared_ptr<sf::Texture> mCeilTex;
+			std::shared_ptr<sf::Sprite>  mCeil;
+			
+			std::shared_ptr<sf::Texture> mBumperTex;
+			std::shared_ptr<Bumper>      mBumper;
+			std::shared_ptr<sf::Texture> mBallTex;
+			std::shared_ptr<Ball>        mBall;
+			std::shared_ptr<sf::Texture> mBlockTex;
+			
+			std::shared_ptr<sf::RectangleShape>      mDeathArea;
+			std::vector<std::shared_ptr<sf::Sprite>> mColdetVector;
+			std::vector<std::shared_ptr<Block>>      mBlockVector;
+			std::vector<std::shared_ptr<sf::Sprite>> mDestroyedSprites;
+
+			bool LoadLevel(const uint8_t& roundId);
+			void UpdateBall(uint32_t& score, const sf::Time& deltaTime);
+			void UpdateBlocks(const sf::Time& deltaTime);
+			bool UpdateGame(const RoundScreenUpdate &update);
+			void UpdateTexts(const RoundScreenUpdate &update);
+			void ScoreTimePenalty(uint32_t &score, sf::Time &deltaTime);
+			bool LoseBall(const RoundScreenUpdate &update);
+			void AddScore(uint32_t& score, int32_t points);
+			void ConsumeCredit(uint8_t& credits);
+			bool Update();
+	};
+
+}#pragma once
+#include <SFML/Graphics.hpp>
+#include <memory>
+#include "Common.hpp"
+
+namespace pyramidnight {
+	
+	class ScreenView {
+		public:
+			virtual bool Update() = 0;
+			std::vector<std::shared_ptr<sf::Drawable>>& GetDrawables();
+			
+		protected:
+			ScreenView() = default;
+
+			std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
+		};
+
+}#pragma once
+#include <string>
+#include "ScreenView.hpp"
+#include "Common.hpp"
+
+namespace pyramidnight {
+	
+	class TitleScreenView : public ScreenView {
+		public:
+			struct TitleScreenUpdate {
+				bool     action;
+				bool     coin;
+				uint8_t& credits;
+			};
+
+			TitleScreenView();
+
+			bool Update(const TitleScreenUpdate& update);
+	
+		private:
+			std::shared_ptr<sf::Font> mFont;
+			std::shared_ptr<sf::Text> mTitleTxt;
+			std::shared_ptr<sf::Text> mCreditsTxt;
+			std::shared_ptr<sf::Text> mStartTxt;
+			std::shared_ptr<sf::Texture> mBackgroundTex;
+			std::shared_ptr<sf::Sprite> mBackground;
+	
+			std::string mCreditsStr;
+			bool        mStartTextVisible;
+	
+			void UpdateCredits(uint8_t& credits);
+			void ShowStartText();
+			bool Update();
+	};
+
+}
+
+#pragma once
+#include <string>
+#include <array>
+#include "Common.hpp"
+
+namespace pyramidnight {
+
+	const std::array<const std::string, LVL_DIMENSIONS2> LEVEL0 = {
+		"000000000",
+		"000000000",
+		"000000000",
+		"011121110",
+		"011121110",
+		"000000000",
+		"000000000",
+		"000000000",
+		"000000000",
+	};
+
+	const std::array<const std::string, LVL_DIMENSIONS2> LEVEL1 = {
+		"000000000",
+		"001212100",
+		"002121200",
+		"001212100",
+		"002121200",
+		"000000000",
+		"000000000",
+		"000000000",
+		"000000000"
+	};
+
+		const std::array<const std::string, LVL_DIMENSIONS2> LEVEL2 = {
+		"000000000",
+		"000020000",
+		"000010000",
+		"000111000",
+		"001111100",
+		"003333300",
+		"000000000",
+		"000000000",
+		"000000000"
+	};
+
+	const std::array<const std::string, LVL_DIMENSIONS2> LEVEL3 = {
+	
+		"020020020",
+		"011131110",
+		"000131000",
+		"001131100",
+		"000111000",
+		"000000000",
+		"000000000",
+		"000000000",
+		"000000000",
+	};
+
+	const std::vector<std::array<const std::string, LVL_DIMENSIONS2>> ROUNDS {
+		LEVEL0,
+		LEVEL1,
+		LEVEL2,
+		LEVEL3
+	};
+
+}
+
+#pragma once
+#include <string>
+#include <cstdint>
+#include <limits>
+#include <SFML/Graphics.hpp>
+
+namespace pyramidnight {
+	//Game
+	inline constexpr uint32_t GAME_MAX_SCORE = std::numeric_limits<uint32_t>::max();
+	inline constexpr uint8_t  GAME_MAX_CREDITS = std::numeric_limits<uint8_t>::max();
+	inline constexpr uint8_t  GAME_RANK_SIZE = 10;
+	inline constexpr uint8_t  GAME_FINAL_ROUND_ID = 3;
+
+	//Ball
+	inline constexpr float        BALL_INIT_SPEED = 0.6f;
+	inline constexpr sf::Vector2f BALL_INIT_DIR = {-1, -1};
+	inline constexpr sf::Vector2f BALL_INIT_POS = {256, 832};
+	inline constexpr sf::Vector2f BALL_DOCKED_OFFSET = {64, -18};
+
+	//Bumper
+	inline constexpr float BMPR_INIT_SPEED = 0.45f;
+	inline constexpr float BMPR_FINE_SPEED_MOD = 0.4f;
+	inline constexpr float BMPR_COARSE_SPEED_MOD = 1.5f;
+	inline constexpr float BMPR_MV_LIMIT_L = 32.0f;
+	inline constexpr float BMPR_MV_LIMIT_R = 480.0f;
+	inline constexpr float BMPR_ATK_DEADZONE = 0.6f;
+	inline constexpr float BMPR_ATK_PWR = 2.22f;
+
+	//Blocks
+	inline constexpr float   BLOCK_ROT_MIN = -4.0f;
+	inline constexpr float   BLOCK_ROT_MAX = -4.0f;
+	inline constexpr float   BLOCK_FLASH_TIME = 0.15f;
+	
+	//Score
+	inline constexpr float   SCORE_BLOCK_MOD = 25.0f;
+	inline constexpr int32_t SCORE_LOSE_BALL = -100;
+	inline constexpr int32_t SCORE_TIME_PENALTY = -1;
+
+	//Cursor
+	inline constexpr float            CUR_MV_OFFSET = 30.0f;
+	inline constexpr float            CUR_FONT_SZ = 48.0f;
+	inline constexpr float            CUR_OUTLINE_SZ = 2.0f;
+	inline constexpr sf::Color        CUR_OUTLINE_COL = sf::Color::Green;
+	inline constexpr sf::Color        CUR_FILL_COL = sf::Color::Transparent;
+	inline constexpr float            CUR_BLINK_TIME_SEC = 0.3f;
+	inline constexpr std::string_view CUR_CHAR_SET = " ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+
+	//MenuScreenView
+		inline constexpr float            MENU_TXT_OFFSET_Y = -96.0f;
+		inline constexpr sf::Color        MENU_TXT_FILLCOL = sf::Color::White;
+		inline constexpr sf::Color        MENU_TXT_OUTCOL = sf::Color::Blue;
+		inline constexpr float            MENU_TXT_OUTLINE_SZ = 1.0f;
+		inline constexpr uint32_t         MENU_TXT_CHAR_SZ = 48;
+		inline constexpr std::string_view MENU_VOL_MUS_STR = "BGM VOLUME ";
+		inline constexpr std::string_view MENU_VOL_SFX_STR = "SFX VOLUME ";
+		inline constexpr std::string_view MENU_EXIT_STR = "EXIT GAME";
+		inline constexpr float            MENU_VOL_STEP_SZ = 5.0f;
+		inline constexpr int8_t           MENU_OPT_MAX = 3; 
+		//Bg
+		inline constexpr sf::Color        MENU_BG_TINT = sf::Color({255, 255, 255, 96});
+
+	//TitleScreenView
+		//Text
+		inline constexpr float            TITLE_CREDITS_BLINK_TIME_SEC = 0.5f;
+		inline constexpr sf::Color        TITLE_TXT_FILLCOL = sf::Color::Blue;
+		inline constexpr sf::Color        TITLE_TXT_OUTCOL = sf::Color::Yellow;
+		inline constexpr float            TITLE_TXT_OUTLINE_SZ = 3.0f;
+		inline constexpr uint32_t         TITLE_TXT_CHAR_SZ = 90;
+		inline constexpr uint32_t         TITLE_TXT_CREDITS_CHAR_SZ = 48;
+		inline constexpr uint32_t         TITLE_TXT_START_CHAR_SZ = 40;
+		inline constexpr std::string_view TITLE_STR = "PyraMidNight";
+		inline constexpr std::string_view TITLE_CREDITS_STR = "Insert coin! credits ";
+		inline constexpr std::string_view TITLE_START_STR = "Press SPACE to start!";
+		//Bg
+		inline constexpr sf::Color        TITLE_BG_TINT = sf::Color({255, 255, 255, 255});
+
+
+	//RoundScreenView
+		//Text
+		inline constexpr sf::Color        ROUND_TXT_FILLCOL = sf::Color::White;
+		inline constexpr sf::Color        ROUND_TXT_OUTCOL = sf::Color::Blue;
+		inline constexpr float            ROUND_TXT_OUTLINE_SZ = 1.0f;
+		inline constexpr uint32_t         ROUND_TXT_CHAR_SZ = 24;
+		inline constexpr std::string_view ROUND_CREDITS_STR = "CREDITS ";
+		inline constexpr std::string_view ROUND_SCORE_STR = "SCORE ";
+		//Bg
+		inline constexpr sf::Color        ROUND_BG_TINT = sf::Color({0, 0, 255, 128});
+		//Level
+		inline constexpr uint8_t          LVL_DIMENSIONS2 = 9;
+		inline constexpr std::string_view LVL_CHAR_SET = "0123";
+
+	//EndScreenView
+		//Text
+		inline constexpr sf::Color        END_TXT_FILLCOL = sf::Color::Blue;
+		inline constexpr sf::Color        END_TXT_OUTCOL = sf::Color::Yellow;
+		inline constexpr float            END_TXT_OUTLINE_SZ = 4.0f;
+		inline constexpr float            END_TXT_RANK_OUTLINE_SZ = 1.0f;
+		inline constexpr uint32_t         END_TXT_CHAR_SZ = 80;
+		inline constexpr uint32_t         END_TXT_CONT_CHAR_SZ = 40;
+		inline constexpr uint32_t         END_TXT_RANK_CHAR_SZ = 48;
+		inline constexpr std::string_view END_EMPTY_NAME_STR = "   ";
+		inline constexpr std::string_view END_STR = "GAME OVER!";
+		inline constexpr std::string_view END_CONT_STR = "Press SPACE to continue!";
+		//Bg
+		inline constexpr sf::Color END_BG_TINT = sf::Color({64, 0, 0, 255});
+
+	//Assets
+	inline constexpr std::string_view PATH_SAVE_DATA = "save.dat";
+	inline constexpr std::string_view PATH_FONT = "assets/fonts/ClearSans-Regular.ttf";
+
+	inline constexpr std::string_view PATH_TEX_BG = "assets/textures/Background.png";
+	inline constexpr std::string_view PATH_TEX_WALL = "assets/textures/Wall32.png";
+	inline constexpr std::string_view PATH_TEX_CEIL = "assets/textures/Ceil32.png";
+	inline constexpr std::string_view PATH_TEX_BUMP = "assets/textures/Bumper.png";
+	inline constexpr std::string_view PATH_TEX_BALL = "assets/textures/Ball.png";
+	inline constexpr std::string_view PATH_TEX_BLOCK = "assets/textures/Block32.png";
+
+	inline constexpr std::string_view PATH_AUD_BALL_BOUNCE = "assets/audio/BallBounce.ogg";
+	inline constexpr std::string_view PATH_AUD_BALL_LOSE = "assets/audio/BallLose.ogg";
+	inline constexpr std::string_view PATH_AUD_BALL_LAUNCH = "assets/audio/Launch.ogg";
+	inline constexpr std::string_view PATH_AUD_BLOCK_DAMAGE = "assets/audio/BlockDamage.ogg";
+	inline constexpr std::string_view PATH_AUD_BLOCK_DESTROY = "assets/audio/BlockDestroy.ogg";
+	inline constexpr std::string_view PATH_AUD_BUMPER_BOUNCE = "assets/audio/BumperBounce.ogg";
+	inline constexpr std::string_view PATH_AUD_PWRUP_0 = "assets/audio/PowerUp0.ogg";
+	inline constexpr std::string_view PATH_AUD_ENEMY_SPAWN = "assets/audio/EnemySpawn.ogg";
+	inline constexpr std::string_view PATH_AUD_COIN_IN = "assets/audio/Coin.ogg";
+	inline constexpr std::string_view PATH_AUD_CURSOR = "assets/audio/Cursor.ogg";
+	inline constexpr std::string_view PATH_AUD_NEXTROUND = "assets/audio/NextRound.ogg";
+	inline constexpr std::string_view PATH_AUD_GAMEOVER = "assets/audio/GameOver.ogg";
+
+	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
+
+	//AudioManager
+	inline constexpr float CLK_AUD_CLEAN_TIMER_S = 5.0f;
+	inline constexpr float VOL_AUD_MAX = 100.0f;
+	inline constexpr float VOL_AUD_MIN = 0.0f;
+	inline constexpr float VOL_AUD_BGM = 60.0f;
+	inline constexpr float VOL_AUD_SFX = 60.0f;
+	inline constexpr float VOL_AUD_BALL_BOUNCE = 0.6f;
+	inline constexpr float VOL_AUD_BALL_LOSE = 1.0f;
+	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;
+	inline constexpr float VOL_AUD_BLOCK_DESTROY = 0.9f;
+	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 0.5f;
+	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO enemies feature
+	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.4f;
+	inline constexpr float VOL_AUD_PWRUP_0 = 1.0f;
+	inline constexpr float VOL_AUD_COIN_IN = 1.0f;
+	inline constexpr float VOL_AUD_CURSOR = 1.0f;
+	inline constexpr float VOL_AUD_NEXTROUND = 1.0f;
+	inline constexpr float VOL_AUD_GAMEOVER = 1.0f;
+	inline constexpr float VOL_AUD_MUSIC_0 = 1.0f;
+
+	//RenderManager (DO NOT EDIT RESOLUTION!!!)
+	inline constexpr std::string_view RNDR_WINDOW_NAME = "PyraMidNight";
+	inline constexpr sf::Vector2u     RNDR_RESOLUTION = {640, 896};
+	inline constexpr uint32_t         RNDR_FRAME_LIMIT = 60;
+		//Effects
+		inline constexpr float        EFF_SHAKE_LOSEBALL_TIME = 0.5f;
+		inline constexpr float        EFF_SHAKE_LOSEBALL_POWER = 2.5f;
+}// Game state machine
+#pragma once
+#include <cstdint>
+#include "MenuScreenView.hpp"
+#include "TitleScreenView.hpp"
+#include "RoundScreenView.hpp"
+#include "EndScreenView.hpp"
+#include "ResourceManager.hpp"
+#include "RenderManager.hpp"
+#include "InputManager.hpp"
+#include "Common.hpp"
+
+namespace pyramidnight {
+
+	class Game {
+		public:
+			enum class State {
+				MENU, TITLE_SCREEN, ROUND_SCREEN, END_SCREEN
+			};
+		
+			Game();
+
+			void Run();
+
+		private:
+			State               mState;
+			State               mPrevState;
+			uint8_t             mCredits;
+			uint8_t             mRound;
+			uint8_t             mFinalRound;
+			uint32_t            mScore;
+			InputManager::Input mInput;
+			sf::Time            mDeltaTime;
+
+			std::unique_ptr<MenuScreenView>  mMenuScreen;
+			std::unique_ptr<TitleScreenView> mTitleScreen;
+			std::unique_ptr<RoundScreenView> mRoundScreen;
+			std::unique_ptr<EndScreenView>   mEndScreenView;
+			
+			void SetNextRound();
+			void GameOver();
+			void RecordScore();
+			void ResetScore();
+			void ResetCredits();
+			
+			MenuScreenView::MenuScreenUpdate   WrapMenuScreenUpdate();
+			TitleScreenView::TitleScreenUpdate WrapTitleScreenUpdate();
+			RoundScreenView::RoundScreenUpdate WrapRoundScreenUpdate();
+			EndScreenView::EndScreenUpdate     WrapEndScreenUpdate();
+	};
+}
+
+#pragma once
+#include "RenderEffect.hpp"
+
+namespace pyramidnight {
+	class Blink : public RenderEffect {
+		public:
+			Blink(float duration, float lapse, const std::shared_ptr<sf::Transformable>& drawable);
+			void Update();
+
+			float Lapse;
+		private:
+			bool  mVisible;
+			float mElapsedTime;
+			std::shared_ptr<sf::Transformable> mTransformable;
+	};
+}#pragma once
+#include <SFML/Graphics.hpp>
+
+namespace pyramidnight {
+
+	class RenderEffect {
+		public:
+			virtual void Update() = 0;
+		
+			bool Disposable;
+			
+		protected:
+			float mDuration;
+			bool  mLoop;
+			
+			RenderEffect(float durationSeconds);
+	};
+}#pragma once
+#include "RenderEffect.hpp"
+
+namespace pyramidnight {
+	class ScreenShake : public RenderEffect {
+		public:
+			ScreenShake(float duration, float power);
+			void Update();
+			
+			float Power;
+		private:
+			sf::Vector2f mViewOrigin;
+			bool         mIsShaking;
+	};
+}

@@ -1,9 +1,6 @@
 #include <algorithm>
 #include <cassert>
-#include <string>
-#include <vector>
 #include <iostream>
-
 #include "ResourceManager.hpp"
 #include "Levels.hpp"
 #include "FailSafeData.hpp"

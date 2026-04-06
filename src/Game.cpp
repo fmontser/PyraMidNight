@@ -4,11 +4,9 @@
 #include "UserDataManager.hpp"
 #include "AudioManager.hpp"
 
-#include <iostream>
-
 namespace pyramidnight {
 	
-	Game::Game() : mInputManager(RenderManager::GetWindow()) {
+	Game::Game() {
 		AudioManager::SetBgmVolume(UserDataManager::GetUserData().bgmVol);
 		AudioManager::SetSfxVolume(UserDataManager::GetUserData().sfxVol);
 		mState = State::TITLE_SCREEN;
@@ -25,7 +23,7 @@ namespace pyramidnight {
 	void Game::Run() {
 		while (RenderManager::GetWindow().isOpen()) {
 			AudioManager::Update();
-			mInput = mInputManager.FetchInput();
+			mInput = InputManager::FetchInput();
 			mDeltaTime = RenderManager::GetDeltaTime();
 
 			if (mInput.menu) {

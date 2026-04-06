@@ -21,15 +21,23 @@ namespace pyramidnight {
 				bool close;
 			};
 	
-			InputManager(sf::RenderWindow& window);
-	
-			const Input& FetchInput();
-	
+			static void Init();
+			static Input& FetchInput();
+			
 		private:
+			Input             mFrameInput;
+			
+			InputManager();
+			InputManager(const InputManager& src) =  delete;
+			InputManager& operator=(const InputManager& src) = delete;
+
+			static InputManager& instance() {
+				static InputManager inst;
+				return inst;
+			}
+
 			void ResetReleased();
 			
-			sf::RenderWindow& mWindow;
-			Input             mFrameInput;
 	};
 
 }

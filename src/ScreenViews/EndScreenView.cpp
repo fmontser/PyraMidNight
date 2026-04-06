@@ -1,9 +1,9 @@
 #include <algorithm>
 #include <sstream>
 #include "UserDataManager.hpp"
+#include "RenderManager.hpp"
 #include "ResourceManager.hpp"
 #include "EndScreenView.hpp"
-#include "Game.hpp"
 #include "Cursor.hpp"
 #include "Blink.hpp"
 
