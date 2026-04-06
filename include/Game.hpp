@@ -31,7 +31,6 @@ namespace pyramidnight {
 			uint32_t mScore;
 			
 			InputManager::Input mInput;
-			sf::RenderWindow&   mWindow;
 			InputManager        mInputManager;
 			sf::Time            mDeltaTime;
 

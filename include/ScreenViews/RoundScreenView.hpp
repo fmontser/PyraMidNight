@@ -11,7 +11,6 @@ namespace pyramidnight {
 		public:
 			struct RoundScreenUpdate {
 				uint8_t&          roundId;
-				sf::RenderWindow& window; //TODO remove?
 				sf::Time&         deltaTime;
 				bool              holdLeft;
 				bool              holdRight;

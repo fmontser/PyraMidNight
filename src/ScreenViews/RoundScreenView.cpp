@@ -9,6 +9,8 @@
 #include "ScreenShake.hpp"
 #include "Levels.hpp"
 
+#include <iostream>
+
 namespace pyramidnight {
 
 	RoundScreenView::RoundScreenView() : ScreenView() {
@@ -188,11 +190,10 @@ namespace pyramidnight {
 			.append(std::to_string(update.score)));
 	}
 
-	//TODO class clock should not be restarted!!!!
 	void RoundScreenView::ScoreTimePenalty(uint32_t &score) {
 		static float timeElapsed = 0;
-		timeElapsed += mClock.restart().asSeconds();
-
+		
+		timeElapsed += RenderManager::GetDeltaTime().asSeconds();
 		if (timeElapsed >= 1.0f) {
 			AddScore(score, SCORE_TIME_PENALTY);
 			timeElapsed -= 1.0f;

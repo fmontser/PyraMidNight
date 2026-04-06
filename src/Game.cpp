@@ -8,17 +8,14 @@
 
 namespace pyramidnight {
 	
-	//TODO eliminar mWindow usar REnderManager
-	Game::Game() : mWindow(RenderManager::GetWindow()), mInputManager(mWindow) {
+	Game::Game() : mInputManager(RenderManager::GetWindow()) {
 		AudioManager::SetBgmVolume(UserDataManager::GetUserData().bgmVol);
 		AudioManager::SetSfxVolume(UserDataManager::GetUserData().sfxVol);
-
 		mState = State::TITLE_SCREEN;
 		mCredits = 0;
+		mScore = 0;
 		mRound = 0;
 		mFinalRound = GAME_FINAL_ROUND_ID;
-		mScore = 0;
-	
 		mTitleScreen = nullptr;
 		mRoundScreen = nullptr;
 		mEndScreenView = nullptr;
@@ -26,7 +23,7 @@ namespace pyramidnight {
 	
 	// main loop
 	void Game::Run() {
-		while (mWindow.isOpen()) {
+		while (RenderManager::GetWindow().isOpen()) {
 			AudioManager::Update();
 			mInput = mInputManager.FetchInput();
 			mDeltaTime = RenderManager::GetDeltaTime();
@@ -152,7 +149,6 @@ namespace pyramidnight {
 	RoundScreenView::RoundScreenUpdate Game::WrapRoundScreenUpdate() {
 		return {
 				mRound,
-				mWindow,
 				mDeltaTime,
 				mInput.holdLeft,
 				mInput.holdRight,
@@ -161,7 +157,7 @@ namespace pyramidnight {
 				mInput.action,
 				mCredits,
 				mScore
-				};
+		};
 	}
 
 	EndScreenView::EndScreenUpdate Game::WrapEndScreenUpdate() {

@@ -15,8 +15,10 @@ namespace pyramidnight {
 	void RenderManager::Init() { instance(); }
 
 	void RenderManager::Update(std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
+		instance().mDeltaTime = instance().mClock.restart();
 		instance().Draw(drawables);
 		instance().DrawEffects();
+
 	}
 
 	void RenderManager::Draw(std::vector<std::shared_ptr<sf::Drawable>> &drawables) {
@@ -45,13 +47,7 @@ namespace pyramidnight {
 		instance().mRenderEffects.push_back(std::move(effect));
 	}
 
-	sf::Time& RenderManager::GetDeltaTime() { 
-		auto& deltaTime = instance().mDeltaTime;
-		auto& clock = instance().mClock;
-		
-		deltaTime = clock.restart();
-		return deltaTime;
-	}
+	sf::Time& RenderManager::GetDeltaTime() { return instance().mDeltaTime; }
 	
 	sf::RenderWindow& RenderManager::GetWindow() { return instance().mWindow; }
 }	
