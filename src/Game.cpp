@@ -39,13 +39,13 @@ namespace pyramidnight {
 			switch (mState) {
 				case State::MENU:
 					if (mMenuScreen == nullptr) {
-						Pause();
+						RenderManager::PauseClock();
 						mMenuScreen = std::make_unique<MenuScreenView>();
 					}
 					if (!mMenuScreen->Update(WrapMenuScreenUpdate())) {
 						mState = mPrevState;
 						mMenuScreen = nullptr;
-						Resume();
+						RenderManager::ResumeClock();
 						break;
 					}
 					RenderManager::Update(mMenuScreen->GetDrawables());
@@ -108,24 +108,6 @@ namespace pyramidnight {
 	void Game::ResetScore() { mScore = 0; }
 
 	void Game::ResetCredits() { mCredits = 0; }
-
-	void Game::Pause() {
-		if (mTitleScreen != nullptr)
-			mTitleScreen->Pause();
-		if (mRoundScreen != nullptr)
-			mRoundScreen->Pause();
-		if (mEndScreenView != nullptr)
-			mEndScreenView->Pause();
-	}
-
-	void Game::Resume() {
-		if (mTitleScreen != nullptr)
-			mTitleScreen->Resume();
-		if (mRoundScreen != nullptr)
-			mRoundScreen->Resume();
-		if (mEndScreenView != nullptr)
-			mEndScreenView->Resume();
-	}
 
 	MenuScreenView::MenuScreenUpdate Game::WrapMenuScreenUpdate() {
 		return {

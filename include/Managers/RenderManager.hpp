@@ -10,11 +10,13 @@ namespace pyramidnight {
 		public:
 			static void Init();
 			static void Update(std::vector<std::shared_ptr<sf::Drawable>> &drawables);
+			static void PauseClock();
+			static void ResumeClock();
 			static void DisplayEffect(std::unique_ptr<RenderEffect> effect);
 			static sf::Time& GetDeltaTime();
 			static sf::RenderWindow &GetWindow();
 			
-			private:
+		private:
 			RenderManager();
 			RenderManager(const RenderManager& src) = delete;
 			RenderManager& operator=(const RenderManager& src) = delete;

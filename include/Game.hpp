@@ -44,9 +44,6 @@ namespace pyramidnight {
 			void RecordScore();
 			void ResetScore();
 			void ResetCredits();
-			void SortRanking();
-			void Pause();
-			void Resume();
 			
 			MenuScreenView::MenuScreenUpdate   WrapMenuScreenUpdate();
 			TitleScreenView::TitleScreenUpdate WrapTitleScreenUpdate();

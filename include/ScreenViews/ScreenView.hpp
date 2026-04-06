@@ -9,14 +9,10 @@ namespace pyramidnight {
 		public:
 			virtual bool Update() = 0;
 			std::vector<std::shared_ptr<sf::Drawable>>& GetDrawables();
-
-			void Pause();
-			void Resume();
 			
 		protected:
 			ScreenView() = default;
-			
-			sf::Clock mClock;
+
 			std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
 		};
 

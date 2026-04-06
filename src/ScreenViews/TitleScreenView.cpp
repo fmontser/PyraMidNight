@@ -1,4 +1,5 @@
 #include "ResourceManager.hpp"
+#include "RenderManager.hpp"
 #include "TitleScreenView.hpp"
 #include "Game.hpp"
 #include "AudioManager.hpp"
@@ -71,10 +72,11 @@ namespace pyramidnight {
 		mCreditsTxt->setString(mCreditsStr);
 	}
 
+	//TODO move blink text as effect?
 	void TitleScreenView::BlinkStartText() {
 		static float timeElapsed = 0;
 		static sf::Vector2f scale = {0.0f, 0.0f};
-		timeElapsed += mClock.restart().asSeconds();
+		timeElapsed += RenderManager::GetDeltaTime().asSeconds();
 
 		if (timeElapsed >= TITLE_CREDITS_BLINK_TIME_SEC) {
 			scale.x = scale.x == 0.0f ? 1.0f : 0.0f;
