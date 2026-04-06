@@ -2,6 +2,7 @@
 #include <algorithm>
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
+#include "RenderManager.hpp"
 
 namespace pyramidnight {
 
@@ -25,12 +26,13 @@ namespace pyramidnight {
 	}
 
 	void AudioManager::Update() {
-		static sf::Clock cleanTimer;
-		
+		static float timeElapsed = 0.0f;
+
 		// clean stopped
-		if (cleanTimer.getElapsedTime().asSeconds() > CLK_AUD_CLEAN_TIMER_S) {
+		timeElapsed += RenderManager::GetDeltaTime().asSeconds();
+		if (timeElapsed > CLK_AUD_CLEAN_TIMER_S) {
 			instance().Clean();
-			cleanTimer.restart();
+			timeElapsed = 0.0f;
 		}
 
 		// fade bgm
