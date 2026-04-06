@@ -51,7 +51,7 @@ namespace pyramidnight {
 						Resume();
 						break;
 					}
-					RenderManager::RenderFrame(mMenuScreen->GetDrawables());
+					RenderManager::Update(mMenuScreen->GetDrawables());
 					break;
 				case State::TITLE_SCREEN:
 					if (mTitleScreen == nullptr)
@@ -61,7 +61,7 @@ namespace pyramidnight {
 						mTitleScreen = nullptr;
 						break;
 					}
-					RenderManager::RenderFrame(mTitleScreen->GetDrawables());
+					RenderManager::Update(mTitleScreen->GetDrawables());
 					break;
 				case State::ROUND_SCREEN:
 					if (mRoundScreen == nullptr)
@@ -71,7 +71,7 @@ namespace pyramidnight {
 						SetNextRound();
 						break;
 					}
-					RenderManager::RenderFrame(mRoundScreen->GetDrawables());
+					RenderManager::Update(mRoundScreen->GetDrawables());
 					break;
 				case State::END_SCREEN:
 					if (mEndScreenView == nullptr)
@@ -84,7 +84,7 @@ namespace pyramidnight {
 						AudioManager::FadeOutBgm();
 						break;
 					}
-					RenderManager::RenderFrame(mEndScreenView->GetDrawables());
+					RenderManager::Update(mEndScreenView->GetDrawables());
 					break;
 				default:
 					break;

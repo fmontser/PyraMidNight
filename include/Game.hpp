@@ -33,7 +33,7 @@ namespace pyramidnight {
 			InputManager::Input mInput;
 			sf::RenderWindow&   mWindow;
 			InputManager        mInputManager;
-			sf::Time            mDeltaTime; //TODO elimnar, usar renderManager
+			sf::Time            mDeltaTime;
 
 			std::unique_ptr<MenuScreenView>  mMenuScreen;
 			std::unique_ptr<TitleScreenView> mTitleScreen;

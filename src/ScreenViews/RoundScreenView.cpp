@@ -1,17 +1,18 @@
 #include <cmath>
 #include <algorithm>
 #include <string>
+#include <memory>
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
+#include "RenderManager.hpp"
 #include "RoundScreenView.hpp"
+#include "ScreenShake.hpp"
 #include "Levels.hpp"
 
 namespace pyramidnight {
 
 	RoundScreenView::RoundScreenView() : ScreenView() {
 		mLvlIsLoaded = false;
-		mShaking = false;
-		mShaketime = 0.0f;
 		mFont = ResourceManager::GetFont(PATH_FONT);
 
 		mCreditsTxt = std::make_shared<sf::Text>(*mFont);
@@ -86,9 +87,6 @@ namespace pyramidnight {
 			mBumper->Move(-1, update.deltaTime, update.fine, update.coarse);
 		else if (update.holdRight)
 			mBumper->Move(1, update.deltaTime, update.fine, update.coarse);
-
-		//TODO move screenshake to RenderManager
-		ScreenShake(update.window, update.deltaTime, mShaketime);
 		if (!UpdateGame(update))
 			return false;
 		return true;
@@ -209,8 +207,8 @@ namespace pyramidnight {
 			return false;
 		}
 		mBall->ResetPos(mBumper->getPosition());
+		RenderManager::DisplayEffect(std::make_unique<ScreenShake>(EFF_SHAKE_LOSEBALL_TIME, EFF_SHAKE_LOSEBALL_POWER));
 		AudioManager::Play({PATH_AUD_BALL_LOSE, VOL_AUD_BALL_LOSE, PolySound::Type::SFX, false});
-		mShaketime = 1.0f;
 		return true;
 	};
 
@@ -230,29 +228,6 @@ namespace pyramidnight {
 	void RoundScreenView::ConsumeCredit(uint8_t& credits) {
 		if (credits > 0)
 			credits--;
-	}
-
-	//TODO move out the class
-	void RoundScreenView::ScreenShake(sf::RenderWindow& window,const sf::Time& deltaTime, float& shakeTime)
-	{
-		auto view = window.getView();
-		float force = 2.1f;
-
-		if (!mShaking && shakeTime > 0.0f) {
-			mShakeOldCenter = view.getCenter();
-			mShaking = true;
-		}
-		if (shakeTime > 0.0f) {
-			shakeTime -= deltaTime.asSeconds();
-			float offsetX = ((float)rand() / RAND_MAX * 2.f - 1.f) * force;
-			float offsetY = ((float)rand() / RAND_MAX * 2.f - 1.f) * force;
-			view.setCenter({mShakeOldCenter.x + offsetX, mShakeOldCenter.y + offsetY});
-		}
-		else if (mShaking) {
-			view.setCenter(mShakeOldCenter);
-			mShaking = false;
-		}
-		window.setView(view);
 	}
 
 	bool RoundScreenView::Update() { return false; }
