@@ -9,21 +9,25 @@ namespace pyramidnight {
 			mWindow.setFramerateLimit(RNDR_FRAME_LIMIT);
 	}
 	
-	void RenderManager::RenderFrame(
-		std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
-		mWindow.clear();
-	
+	void RenderManager::Init() { instance(); }
+
+	void RenderManager::RenderFrame(std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
+		auto& window = instance().mWindow;
+
+		window.clear();
 		for (const auto& drw : drawables)
-			mWindow.draw(*drw);
-	
-		mWindow.display();
+			window.draw(*drw);
+		window.display();
 	}
 	
 	sf::Time& RenderManager::GetDeltaTime() { 
-		mDeltaTime = mClock.restart();
-		return mDeltaTime;
+		auto& deltaTime = instance().mDeltaTime;
+		auto& clock = instance().mClock;
+		
+		deltaTime = clock.restart();
+		return deltaTime;
 	}
 	
-	sf::RenderWindow& RenderManager::GetWindow() { return mWindow; }
+	sf::RenderWindow& RenderManager::GetWindow() { return instance().mWindow; }
 
 }	
