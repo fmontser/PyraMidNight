@@ -2,7 +2,6 @@
 #include "RenderManager.hpp"
 #include "Blink.hpp"
 #include "TitleScreenView.hpp"
-#include "Game.hpp"
 #include "AudioManager.hpp"
 
 namespace pyramidnight {

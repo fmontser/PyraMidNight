@@ -1,4 +1,3 @@
-#include <string>
 #include <algorithm>
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"

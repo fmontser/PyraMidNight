@@ -4,8 +4,6 @@
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 #include "MenuScreenView.hpp"
-#include "Game.hpp"
-#include "Cursor.hpp"
 
 namespace pyramidnight {
 	

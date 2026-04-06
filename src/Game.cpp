@@ -4,8 +4,6 @@
 #include "UserDataManager.hpp"
 #include "AudioManager.hpp"
 
-#include <iostream>
-
 namespace pyramidnight {
 	
 	Game::Game() {

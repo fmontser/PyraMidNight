@@ -1,4 +1,3 @@
-#include <cmath>
 #include <algorithm>
 #include <string>
 #include <memory>
@@ -8,8 +7,6 @@
 #include "RoundScreenView.hpp"
 #include "ScreenShake.hpp"
 #include "Levels.hpp"
-
-#include <iostream>
 
 namespace pyramidnight {
 
