@@ -12,7 +12,7 @@ namespace pyramidnight {
 		mIsRankingDraw = false;
 		mIsNameSet =  false;
 		mFont = ResourceManager::GetFont(PATH_FONT);
-		mCursor = std::make_shared<Cursor>(*mFont, mClock);
+		mCursor = std::make_shared<Cursor>(*mFont);
 	
 		mTitleTxt = std::make_shared<sf::Text>(*mFont);
 		mTitleTxt->setString(std::string(END_STR));

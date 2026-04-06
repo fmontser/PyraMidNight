@@ -7,13 +7,14 @@
 #include "Game.hpp"
 
 int main(int argc, char* argv[]) {
+	//TODO add args for level testing
 	(void)argc;
 	(void)argv;
 
 	pyramidnight::UserDataManager::Init();
 	pyramidnight::ResourceManager::Init();
 	pyramidnight::RenderManager::Init();
-	//pyramidnight::InputManager::Init(); //TODO disable comment
+	//pyramidnight::InputManager::Init(); //TODO disable comment on input manager refactor?
 	pyramidnight::AudioManager::Init();
 	pyramidnight::Game game;
 	game.Run();

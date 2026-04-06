@@ -1,10 +1,11 @@
 #include <algorithm>
 #include "Cursor.hpp"
 #include "AudioManager.hpp"
+#include "RenderManager.hpp"
 
 namespace pyramidnight {
 	
-	Cursor::Cursor(sf::Font& font, sf::Clock& clock) : mFont(font), mClock(clock) {
+	Cursor::Cursor(sf::Font& font) : mFont(font) {
 		mNameIndex = 0;
 		mIsEnabled = false;
 		auto cursorSize =  sf::Vector2f({});
@@ -58,7 +59,7 @@ namespace pyramidnight {
 	void Cursor::Blink() {
 		static float timeElapsed = 0;
 		static sf::Color color = sf::Color::Transparent;
-		timeElapsed += mClock.restart().asSeconds();
+		timeElapsed += RenderManager::GetDeltaTime().asSeconds();
 
 		if (timeElapsed >= CUR_BLINK_TIME_SEC) {
 			color = color == sf::Color::Transparent ? CUR_OUTLINE_COL : sf::Color::Transparent;

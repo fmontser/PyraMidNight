@@ -4,7 +4,7 @@
 namespace pyramidnight {
 	
 	ScreenShake::ScreenShake(float duration, float power) : RenderEffect(duration) {
-		Power = power; //TODO check negative values.
+		Power = power;
 	}
 
 	void ScreenShake::Update() {
