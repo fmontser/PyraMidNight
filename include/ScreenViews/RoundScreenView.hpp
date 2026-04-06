@@ -56,7 +56,7 @@ namespace pyramidnight {
 			void UpdateBlocks(const sf::Time& deltaTime);
 			bool UpdateGame(const RoundScreenUpdate &update);
 			void UpdateTexts(const RoundScreenUpdate &update);
-			void ScoreTimePenalty(uint32_t& score);
+			void ScoreTimePenalty(uint32_t &score, sf::Time &deltaTime);
 			bool LoseBall(const RoundScreenUpdate &update);
 			void AddScore(uint32_t& score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);

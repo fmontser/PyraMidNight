@@ -170,7 +170,7 @@ namespace pyramidnight {
 		UpdateBall(update.score, update.deltaTime);
 		UpdateBlocks(update.deltaTime);
 		UpdateTexts(update);
-		ScoreTimePenalty(update.score);
+		ScoreTimePenalty(update.score, update.deltaTime);
 
 		//Lose
 		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
@@ -191,8 +191,8 @@ namespace pyramidnight {
 			.append(std::to_string(update.score)));
 	}
 
-	void RoundScreenView::ScoreTimePenalty(uint32_t &score) {
-		mElapsedTimePenalty += RenderManager::GetDeltaTime().asSeconds();
+	void RoundScreenView::ScoreTimePenalty(uint32_t &score, sf::Time& deltaTime) {
+		mElapsedTimePenalty += deltaTime.asSeconds();
 		if (mElapsedTimePenalty >= 1.0f) {
 			AddScore(score, SCORE_TIME_PENALTY);
 			mElapsedTimePenalty -= 1.0f;
