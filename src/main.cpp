@@ -14,7 +14,7 @@ int main(int argc, char* argv[]) {
 	pyramidnight::UserDataManager::Init();
 	pyramidnight::ResourceManager::Init();
 	pyramidnight::RenderManager::Init();
-	//pyramidnight::InputManager::Init(); //TODO disable comment on input manager refactor?
+	pyramidnight::InputManager::Init();
 	pyramidnight::AudioManager::Init();
 	pyramidnight::Game game;
 	game.Run();

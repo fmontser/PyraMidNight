@@ -23,15 +23,13 @@ namespace pyramidnight {
 			void Run();
 
 		private:
-			State    mState;
-			State    mPrevState;
-			uint8_t  mCredits;
-			uint8_t  mRound;
-			uint8_t  mFinalRound;
-			uint32_t mScore;
-			
+			State               mState;
+			State               mPrevState;
+			uint8_t             mCredits;
+			uint8_t             mRound;
+			uint8_t             mFinalRound;
+			uint32_t            mScore;
 			InputManager::Input mInput;
-			InputManager        mInputManager;
 			sf::Time            mDeltaTime;
 
 			std::unique_ptr<MenuScreenView>  mMenuScreen;

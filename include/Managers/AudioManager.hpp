@@ -20,8 +20,8 @@ namespace pyramidnight {
 			
 		private:
 			AudioManager();
-			AudioManager(const AudioManager&) = delete;
-			AudioManager& operator=(const AudioManager&) = delete;
+			AudioManager(const AudioManager& src) = delete;
+			AudioManager& operator=(const AudioManager& src) = delete;
 			
 			float                                   mBgmVolume;
 			float                                   mSfxVolume;
