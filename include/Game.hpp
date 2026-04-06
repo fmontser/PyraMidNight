@@ -31,10 +31,9 @@ namespace pyramidnight {
 			uint32_t mScore;
 			
 			InputManager::Input mInput;
-			RenderManager       mRenderManager;
 			sf::RenderWindow&   mWindow;
 			InputManager        mInputManager;
-			sf::Time            mDeltaTime;
+			sf::Time            mDeltaTime; //TODO elimnar, usar renderManager
 
 			std::unique_ptr<MenuScreenView>  mMenuScreen;
 			std::unique_ptr<TitleScreenView> mTitleScreen;

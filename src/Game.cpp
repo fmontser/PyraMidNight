@@ -8,11 +8,8 @@
 
 namespace pyramidnight {
 	
-	Game::Game() : mRenderManager(), mWindow(mRenderManager.GetWindow()), mInputManager(mRenderManager.GetWindow()) {
-		ResourceManager::Init();
-
-		
-		AudioManager::Init();
+	//TODO eliminar mWindow usar REnderManager
+	Game::Game() : mWindow(RenderManager::GetWindow()), mInputManager(mWindow) {
 		AudioManager::SetBgmVolume(UserDataManager::GetUserData().bgmVol);
 		AudioManager::SetSfxVolume(UserDataManager::GetUserData().sfxVol);
 
@@ -29,10 +26,10 @@ namespace pyramidnight {
 	
 	// main loop
 	void Game::Run() {
-		while (mRenderManager.GetWindow().isOpen()) {
+		while (mWindow.isOpen()) {
 			AudioManager::Update();
 			mInput = mInputManager.FetchInput();
-			mDeltaTime = mRenderManager.GetDeltaTime();
+			mDeltaTime = RenderManager::GetDeltaTime();
 
 			if (mInput.menu) {
 				if (mState != State::MENU) {
@@ -54,7 +51,7 @@ namespace pyramidnight {
 						Resume();
 						break;
 					}
-					mRenderManager.RenderFrame(mMenuScreen->GetDrawables());
+					RenderManager::RenderFrame(mMenuScreen->GetDrawables());
 					break;
 				case State::TITLE_SCREEN:
 					if (mTitleScreen == nullptr)
@@ -64,7 +61,7 @@ namespace pyramidnight {
 						mTitleScreen = nullptr;
 						break;
 					}
-					mRenderManager.RenderFrame(mTitleScreen->GetDrawables());
+					RenderManager::RenderFrame(mTitleScreen->GetDrawables());
 					break;
 				case State::ROUND_SCREEN:
 					if (mRoundScreen == nullptr)
@@ -74,7 +71,7 @@ namespace pyramidnight {
 						SetNextRound();
 						break;
 					}
-					mRenderManager.RenderFrame(mRoundScreen->GetDrawables());
+					RenderManager::RenderFrame(mRoundScreen->GetDrawables());
 					break;
 				case State::END_SCREEN:
 					if (mEndScreenView == nullptr)
@@ -87,7 +84,7 @@ namespace pyramidnight {
 						AudioManager::FadeOutBgm();
 						break;
 					}
-					mRenderManager.RenderFrame(mEndScreenView->GetDrawables());
+					RenderManager::RenderFrame(mEndScreenView->GetDrawables());
 					break;
 				default:
 					break;
