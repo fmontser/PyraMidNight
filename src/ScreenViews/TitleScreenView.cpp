@@ -1,5 +1,6 @@
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
+#include "Blink.hpp"
 #include "TitleScreenView.hpp"
 #include "Game.hpp"
 #include "AudioManager.hpp"
@@ -7,6 +8,7 @@
 namespace pyramidnight {
 	
 	TitleScreenView::TitleScreenView() : ScreenView() {
+		mStartTextVisible = false;
 		mFont = ResourceManager::GetFont(PATH_FONT);
 	
 		mTitleTxt = std::make_shared<sf::Text>(*mFont);
@@ -47,7 +49,6 @@ namespace pyramidnight {
 
 	bool TitleScreenView::Update(const TitleScreenUpdate& update)
 	{
-		BlinkStartText();
 		if (update.coin) {
 			UpdateCredits(update.credits);
 			if (update.credits > 0)
@@ -68,22 +69,11 @@ namespace pyramidnight {
 	}
 	
 	void TitleScreenView::ShowStartText() {
-		mStartTxt->setScale({1,1});
-		mCreditsTxt->setString(mCreditsStr);
-	}
-
-	//TODO move blink text as effect?
-	void TitleScreenView::BlinkStartText() {
-		static float timeElapsed = 0;
-		static sf::Vector2f scale = {0.0f, 0.0f};
-		timeElapsed += RenderManager::GetDeltaTime().asSeconds();
-
-		if (timeElapsed >= TITLE_CREDITS_BLINK_TIME_SEC) {
-			scale.x = scale.x == 0.0f ? 1.0f : 0.0f;
-			scale.y = scale.y == 0.0f ? 1.0f : 0.0f;
-			mCreditsTxt->setScale(scale);
-			timeElapsed -= TITLE_CREDITS_BLINK_TIME_SEC;
+		if (!mStartTextVisible) {
+			RenderManager::DisplayEffect(std::make_unique<Blink>(-1.0f, 0.3f, mStartTxt));
+			mStartTextVisible = true;
 		}
+		mCreditsTxt->setString(mCreditsStr);
 	}
 
 	bool TitleScreenView::Update() { return false;}

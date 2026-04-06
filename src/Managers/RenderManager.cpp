@@ -1,8 +1,6 @@
 #include <algorithm>
 #include "RenderManager.hpp"
 
-#include <iostream>
-
 namespace pyramidnight {
 	
 	RenderManager::RenderManager() :
@@ -26,8 +24,9 @@ namespace pyramidnight {
 
 	void RenderManager::Draw(std::vector<std::shared_ptr<sf::Drawable>> &drawables) {
 		mWindow.clear();
-		for (const auto &drw : drawables)
+		for (const auto &drw : drawables) {
 			mWindow.draw(*drw);
+		}
 		mWindow.display();
 	}
 
@@ -39,7 +38,7 @@ namespace pyramidnight {
 
 			mRenderEffects.erase(std::remove_if(mRenderEffects.begin(), mRenderEffects.end(),
 				[](const std::unique_ptr<RenderEffect>& eff) {
-					return eff->Duration <= 0.0f;
+					return eff->Disposable;
 				}),
 			mRenderEffects.end()
 			);

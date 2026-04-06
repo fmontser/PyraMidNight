@@ -35,7 +35,9 @@ namespace pyramidnight {
 
 			uint8_t mBgmVolume;
 			uint8_t mSfxVolume;
-			Option  option;
+			Option  mOption;
+			int8_t  mOptionIndex;
+			
 			std::vector<std::shared_ptr<sf::Text>> mTexts;
 
 			void UpdateBgmVolume(float volume);

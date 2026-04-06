@@ -8,5 +8,8 @@ namespace pyramidnight {
 			void Update();
 			
 			float Power;
+		private:
+			sf::Vector2f mViewOrigin;
+			bool         mIsShaking;
 	};
 }

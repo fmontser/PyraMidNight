@@ -15,6 +15,7 @@ namespace pyramidnight {
 
 	RoundScreenView::RoundScreenView() : ScreenView() {
 		mLvlIsLoaded = false;
+		mElapsedTimePenalty = 0.0f;
 		mFont = ResourceManager::GetFont(PATH_FONT);
 
 		mCreditsTxt = std::make_shared<sf::Text>(*mFont);
@@ -191,12 +192,10 @@ namespace pyramidnight {
 	}
 
 	void RoundScreenView::ScoreTimePenalty(uint32_t &score) {
-		static float timeElapsed = 0;
-		
-		timeElapsed += RenderManager::GetDeltaTime().asSeconds();
-		if (timeElapsed >= 1.0f) {
+		mElapsedTimePenalty += RenderManager::GetDeltaTime().asSeconds();
+		if (mElapsedTimePenalty >= 1.0f) {
 			AddScore(score, SCORE_TIME_PENALTY);
-			timeElapsed -= 1.0f;
+			mElapsedTimePenalty -= 1.0f;
 		}
 	}
 

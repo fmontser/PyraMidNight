@@ -37,7 +37,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-
 # BINARIES
 set(APP_SOURCES
 	src/main.cpp
@@ -59,6 +58,7 @@ set(APP_SOURCES
 	src/GameObjects/PolySound.cpp
 	src/RenderEffects/RenderEffect.cpp
 	src/RenderEffects/ScreenShake.cpp
+	src/RenderEffects/Blink.cpp
 )
 
 set(APP_LIBS

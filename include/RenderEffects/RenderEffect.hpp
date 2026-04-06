@@ -7,9 +7,12 @@ namespace pyramidnight {
 		public:
 			virtual void Update() = 0;
 		
-			float Duration;
-		
+			bool Disposable;
+			
 		protected:
+			float mDuration;
+			bool  mLoop;
+			
 			RenderEffect(float durationSeconds);
 	};
 }

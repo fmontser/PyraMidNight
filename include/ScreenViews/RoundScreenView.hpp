@@ -27,6 +27,7 @@ namespace pyramidnight {
 
 		private:
 			bool                         mLvlIsLoaded;
+			float                        mElapsedTimePenalty;
 			std::shared_ptr<sf::Font>    mFont;
 			std::shared_ptr<sf::Text>    mCreditsTxt;
 			std::shared_ptr<sf::Text>    mScoreTxt;

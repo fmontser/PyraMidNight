@@ -22,12 +22,12 @@ namespace pyramidnight {
 			private:
 			sf::Font&  mFont;
 			size_t     mNameIndex;
+			int        mCharIndex;
 			bool       mIsEnabled;
 			
 			void SetPosition(const sf::Text& nameText);
 			void ChangeChar(const CursorUpdate& update);
 			char SelectChar(const CursorUpdate& update);
-			void Blink();
 	};
 
 }
