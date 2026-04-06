@@ -1,18 +1,21 @@
 #include <SFML/Main.hpp>
-#include "Game.hpp"
+#include "ResourceManager.hpp"
 #include "UserDataManager.hpp"
-
-//TODO move init here
-/* #include "ResourceManager.hpp"
+#include "RenderManager.hpp"
+#include "AudioManager.hpp"
 #include "InputManager.hpp"
-#include "RenderManager.hpp" */
+#include "Game.hpp"
 
 int main(int argc, char* argv[]) {
+	//TODO add args for level testing
 	(void)argc;
 	(void)argv;
 
 	pyramidnight::UserDataManager::Init();
-
+	pyramidnight::ResourceManager::Init();
+	pyramidnight::RenderManager::Init();
+	//pyramidnight::InputManager::Init(); //TODO disable comment on input manager refactor?
+	pyramidnight::AudioManager::Init();
 	pyramidnight::Game game;
 	game.Run();
 	return (0);

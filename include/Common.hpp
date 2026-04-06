@@ -154,4 +154,7 @@ namespace pyramidnight {
 	inline constexpr std::string_view RNDR_WINDOW_NAME = "PyraMidNight";
 	inline constexpr sf::Vector2u     RNDR_RESOLUTION = {640, 896};
 	inline constexpr uint32_t         RNDR_FRAME_LIMIT = 60;
+		//Effects
+		inline constexpr float        EFF_SHAKE_LOSEBALL_TIME = 0.5f;
+		inline constexpr float        EFF_SHAKE_LOSEBALL_POWER = 2.5f;
 }

@@ -2,10 +2,12 @@
 #include "Cursor.hpp"
 #include "AudioManager.hpp"
 
+
 namespace pyramidnight {
 	
-	Cursor::Cursor(sf::Font& font, sf::Clock& clock) : mFont(font), mClock(clock) {
+	Cursor::Cursor(sf::Font& font) : mFont(font) {
 		mNameIndex = 0;
+		mCharIndex = 0;
 		mIsEnabled = false;
 		auto cursorSize =  sf::Vector2f({});
 		cursorSize.x =	mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.x;
@@ -21,8 +23,10 @@ namespace pyramidnight {
 	bool Cursor::Update(const CursorUpdate& update) {
 		if (update.nameText.get() == nullptr)
 			return true;
-		else if (!mIsEnabled)
+		else if (!mIsEnabled){
+			setOutlineColor(CUR_OUTLINE_COL);
 			SetPosition(*update.nameText);
+		}
 		if (update.left) {
 			if (mNameIndex > 0) {
 				move({-CUR_MV_OFFSET,0});
@@ -43,7 +47,6 @@ namespace pyramidnight {
 			setOutlineColor(sf::Color::Transparent);
 			return false;
 		}
-		Blink();
 		return true;
 	}
 
@@ -53,20 +56,6 @@ namespace pyramidnight {
 		mIsEnabled = true;
 	}
 	
-
-	//TODO move blink to render manager??
-	void Cursor::Blink() {
-		static float timeElapsed = 0;
-		static sf::Color color = sf::Color::Transparent;
-		timeElapsed += mClock.restart().asSeconds();
-
-		if (timeElapsed >= CUR_BLINK_TIME_SEC) {
-			color = color == sf::Color::Transparent ? CUR_OUTLINE_COL : sf::Color::Transparent;
-			setOutlineColor(color);
-			timeElapsed -= CUR_BLINK_TIME_SEC;
-		}
-	}
-
 	void Cursor::ChangeChar(const CursorUpdate& update) {
 		char selected = SelectChar(update);
 		std::string str = (*update.nameText).getString();
@@ -76,19 +65,18 @@ namespace pyramidnight {
 	}
 	
 	char Cursor::SelectChar(const CursorUpdate& update) {
-		static int index = 0;
 		char selected = 'A';
 		const int max = CUR_CHAR_SET.size();
 
 		if (update.up) {
-			index =  (index + 1) % max;
-			selected = CUR_CHAR_SET[index];
+			mCharIndex =  (mCharIndex + 1) % max;
+			selected = CUR_CHAR_SET[mCharIndex];
 		}
 		else if (update.down) {
-			index = (index - 1 + max) % max;
-			selected = CUR_CHAR_SET[index];
+			mCharIndex = (mCharIndex - 1 + max) % max;
+			selected = CUR_CHAR_SET[mCharIndex];
 		} else
-			index = 0;
+			mCharIndex = 0;
 		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
 		return selected;
 	}

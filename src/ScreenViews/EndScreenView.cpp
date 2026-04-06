@@ -5,6 +5,7 @@
 #include "EndScreenView.hpp"
 #include "Game.hpp"
 #include "Cursor.hpp"
+#include "Blink.hpp"
 
 namespace pyramidnight {
 	
@@ -12,7 +13,7 @@ namespace pyramidnight {
 		mIsRankingDraw = false;
 		mIsNameSet =  false;
 		mFont = ResourceManager::GetFont(PATH_FONT);
-		mCursor = std::make_shared<Cursor>(*mFont, mClock);
+		mCursor = std::make_shared<Cursor>(*mFont);
 	
 		mTitleTxt = std::make_shared<sf::Text>(*mFont);
 		mTitleTxt->setString(std::string(END_STR));
@@ -56,6 +57,7 @@ namespace pyramidnight {
 		mContTxt->setOutlineColor(END_TXT_OUTCOL);
 		mContTxt->setOutlineThickness(END_TXT_OUTLINE_SZ);
 		mContTxt->setPosition({100.f, 650.f});
+		mContTxt->setScale({0,0});
 	
 		mBackgroundTex = ResourceManager::GetTexture(PATH_TEX_BG);
 		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
@@ -69,34 +71,36 @@ namespace pyramidnight {
 			mDrawables.push_back(entry.name);
 			mDrawables.push_back(entry.score);
 		}
-	
 		mDrawables.push_back(mCursor);
+		RenderManager::DisplayEffect(std::make_unique<Blink>(-1.0f, 0.2f, mCursor));
 	}
-
+	
 	bool EndScreenView::Update(const EndScreenUpdate& update) {
 		if (!mIsRankingDraw) {
 			auto& ranking = UserDataManager::GetUserData().ranking;
 			ranking.push_back({std::string(END_EMPTY_NAME_STR), update.score, true});
 			UserDataManager::SortRanking();
 			if (ranking.size() > GAME_RANK_SIZE)
-				ranking.pop_back();
+			ranking.pop_back();
 			mIsRankingDraw = DrawPlayerRanking();
 			mRecordNameTxt = FindRecordNameTxt();
 			if (mRecordNameTxt != nullptr)
 				mContTxt->setScale({0,0});
-			else
+			else {
+				RenderManager::DisplayEffect(std::make_unique<Blink>(-1.0f, 0.3f, mContTxt));
 				mIsNameSet = true;
+			}
 		}
 		if (!mIsNameSet) {
 			if (!mCursor->Update(WrapCursorUpdate(update))) {
+				RenderManager::DisplayEffect(std::make_unique<Blink>(-1.0f, 0.3f, mContTxt));
 				SetRecordName();
-				mContTxt->setScale({1,1});
 				mIsNameSet = true;
 				return true;
 			}
 		}
-		if (mIsNameSet && update.action)
-		return false;
+		else if (update.action)
+			return false;
 		return true;
 	}
 	

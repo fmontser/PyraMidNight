@@ -11,7 +11,6 @@ namespace pyramidnight {
 		public:
 			struct RoundScreenUpdate {
 				uint8_t&          roundId;
-				sf::RenderWindow& window; //TODO remove?
 				sf::Time&         deltaTime;
 				bool              holdLeft;
 				bool              holdRight;
@@ -27,11 +26,8 @@ namespace pyramidnight {
 			bool Update(const RoundScreenUpdate& update);
 
 		private:
-			bool         mLvlIsLoaded;
-			bool         mShaking;
-			float        mShaketime;
-			sf::Vector2f mShakeOldCenter;
-
+			bool                         mLvlIsLoaded;
+			float                        mElapsedTimePenalty;
 			std::shared_ptr<sf::Font>    mFont;
 			std::shared_ptr<sf::Text>    mCreditsTxt;
 			std::shared_ptr<sf::Text>    mScoreTxt;
@@ -64,7 +60,6 @@ namespace pyramidnight {
 			bool LoseBall(const RoundScreenUpdate &update);
 			void AddScore(uint32_t& score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
-			void ScreenShake(sf::RenderWindow &window,const sf::Time &deltaTime, float &mShakeTime);
 			bool Update();
 	};
 

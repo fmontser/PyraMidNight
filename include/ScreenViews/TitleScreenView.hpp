@@ -26,10 +26,10 @@ namespace pyramidnight {
 			std::shared_ptr<sf::Sprite> mBackground;
 	
 			std::string mCreditsStr;
+			bool        mStartTextVisible;
 	
 			void UpdateCredits(uint8_t& credits);
 			void ShowStartText();
-			void BlinkStartText();
 			bool Update();
 	};
 

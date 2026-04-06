@@ -12,7 +12,8 @@ namespace pyramidnight {
 	MenuScreenView::MenuScreenView() : ScreenView() {
 		mBgmVolume = AudioManager::GetBgmVolume();
 		mSfxVolume = AudioManager::GetSfxVolume();
-		option = Option::BGM;
+		mOption = Option::BGM;
+		mOptionIndex = 0;
 
 		mFont = ResourceManager::GetFont(PATH_FONT);
 	
@@ -59,15 +60,15 @@ namespace pyramidnight {
 
 	bool MenuScreenView::Update(const MenuScreenUpdate& update) {
 		SelectOption(update.up, update.down);
-		if (option == Option::BGM && (update.left || update.right)) {
+		if (mOption == Option::BGM && (update.left || update.right)) {
 			if (update.left) UpdateBgmVolume(-MENU_VOL_STEP_SZ);
 			else if (update.right) UpdateBgmVolume(MENU_VOL_STEP_SZ);
 		}
-		else if (option == Option::SFX && (update.left || update.right)) {
+		else if (mOption == Option::SFX && (update.left || update.right)) {
 			if (update.left) UpdateSfxVolume(-MENU_VOL_STEP_SZ);
 			else if (update.right) UpdateSfxVolume(MENU_VOL_STEP_SZ);
 		}
-		else if (option == Option::EXIT && update.action)
+		else if (mOption == Option::EXIT && update.action)
 			exit(0);
 		else if (update.menu)
 			return false;
@@ -94,16 +95,15 @@ namespace pyramidnight {
 	}
 
 	void MenuScreenView::SelectOption(bool up, bool down) {
-		static int8_t index = 0;
 		if (up & !down)
-			index = (index - 1 + MENU_OPT_MAX) % MENU_OPT_MAX;
+			mOptionIndex = (mOptionIndex - 1 + MENU_OPT_MAX) % MENU_OPT_MAX;
 		else if (!up && down)
-			index =  (index + 1) % MENU_OPT_MAX;
+			mOptionIndex =  (mOptionIndex + 1) % MENU_OPT_MAX;
 		else
 			return;
 		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
-		option = static_cast<Option>(index);
-		switch (option) {
+		mOption = static_cast<Option>(mOptionIndex);
+		switch (mOption) {
 			case BGM: InvertOptionColors(mBgmTxt); break;
 			case SFX: InvertOptionColors(mSfxTxt); break;
 			case EXIT: InvertOptionColors(mExitTxt); break;

@@ -31,8 +31,6 @@ namespace pyramidnight {
 			uint32_t mScore;
 			
 			InputManager::Input mInput;
-			RenderManager       mRenderManager;
-			sf::RenderWindow&   mWindow;
 			InputManager        mInputManager;
 			sf::Time            mDeltaTime;
 
@@ -46,9 +44,6 @@ namespace pyramidnight {
 			void RecordScore();
 			void ResetScore();
 			void ResetCredits();
-			void SortRanking();
-			void Pause();
-			void Resume();
 			
 			MenuScreenView::MenuScreenUpdate   WrapMenuScreenUpdate();
 			TitleScreenView::TitleScreenUpdate WrapTitleScreenUpdate();

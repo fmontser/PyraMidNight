@@ -1,4 +1,5 @@
 #include <cmath>
+#include "RenderManager.hpp"
 #include "ResourceManager.hpp"
 #include "AudioManager.hpp"
 #include "PolySound.hpp"
@@ -16,8 +17,8 @@ namespace pyramidnight {
 	}
 
 	void PolySound::FadeOut(float gain) {
-		static sf::Clock clk;
-		setVolume(getVolume() * std::pow(gain, clk.restart().asSeconds()));
+		auto deltaTime = RenderManager::GetDeltaTime().asSeconds();
+		setVolume(getVolume() * std::pow(gain, deltaTime));
 		if (getVolume() <= 0.1f)
 			stop();
 	}

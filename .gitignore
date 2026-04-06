@@ -41,6 +41,7 @@
 *.dwo
 
 # Misc
+.vscode/
 misc/
 .directory
 save.dat
