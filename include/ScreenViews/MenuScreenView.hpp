@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "ScreenView.hpp"
-#include "ResourceManager.hpp"
 #include "Common.hpp"
 
 namespace pyramidnight {

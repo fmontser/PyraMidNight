@@ -1,7 +1,5 @@
 #pragma once
 #include <string>
-#include "UserDataManager.hpp"
-#include "ResourceManager.hpp"
 #include "ScreenView.hpp"
 #include "Cursor.hpp"
 #include "Common.hpp"

@@ -1,10 +1,9 @@
 #include <algorithm>
 #include <sstream>
+#include "EndScreenView.hpp"
 #include "UserDataManager.hpp"
 #include "RenderManager.hpp"
 #include "ResourceManager.hpp"
-#include "EndScreenView.hpp"
-#include "Cursor.hpp"
 #include "Blink.hpp"
 
 namespace pyramidnight {

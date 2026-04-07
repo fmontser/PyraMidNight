@@ -1,9 +1,9 @@
 #include <string>
 #include <algorithm>
+#include "MenuScreenView.hpp"
 #include "UserDataManager.hpp"
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
-#include "MenuScreenView.hpp"
 
 namespace pyramidnight {
 	

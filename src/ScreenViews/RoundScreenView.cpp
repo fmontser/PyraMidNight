@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <string>
 #include <memory>
+#include "RoundScreenView.hpp"
+#include "Levels.hpp"
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
-#include "RoundScreenView.hpp"
 #include "ScreenShake.hpp"
-#include "Levels.hpp"
 
 namespace pyramidnight {
 

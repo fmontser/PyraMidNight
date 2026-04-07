@@ -1,8 +1,8 @@
+#include "TitleScreenView.hpp"
+#include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
 #include "Blink.hpp"
-#include "TitleScreenView.hpp"
-#include "AudioManager.hpp"
 
 namespace pyramidnight {
 	
