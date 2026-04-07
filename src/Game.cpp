@@ -21,7 +21,10 @@ namespace pyramidnight {
 	}
 	
 		// main loop
-		void Game::Run() {
+		void Game::Run(int testLevel) {
+
+			(void)testLevel;
+			
 			auto& window = RenderManager::GetWindow();
 			while (window.isOpen()) {
 				mInput = InputManager::FetchInput(window);

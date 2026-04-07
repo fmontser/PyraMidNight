@@ -55,7 +55,7 @@ namespace pyramidnight {
 		"000000000"
 	};
 
-	// add LEVEL here if declared above
+	// add LEVEL here if declared above, then change GAME_FINAL_ROUND_ID on Commmon.hpp
 	const std::vector<std::array<const std::string, LVL_DIMENSIONS2>> ROUNDS {
 		LEVEL0,
 		LEVEL1,

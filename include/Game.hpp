@@ -18,7 +18,7 @@ namespace pyramidnight {
 		
 			Game();
 
-			void Run();
+			void Run(int testLevel);
 
 		private:
 			State               mState;
