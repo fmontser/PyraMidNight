@@ -58,7 +58,8 @@ namespace pyramidnight {
 	}
 
 	void Ball::ApplyBumperMod(const sf::Sprite& bumper) {
-		
+
+		// new ball direction depending on impact position
 		float bumperWidth = bumper.getGlobalBounds().size.x;
 		float bumperX = bumper.getPosition().x + bumperWidth / 2.0f;
 		float modFactor = (getPosition().x - bumperX) / (bumperWidth / 2.0f);
@@ -66,7 +67,7 @@ namespace pyramidnight {
 
 		if (std::abs(modFactor) < BMPR_ATK_DEADZONE)
 			modFactor = (modFactor < 0) ? -BMPR_ATK_DEADZONE : BMPR_ATK_DEADZONE;
-		mDirection.x = modFactor;
+		mDirection.x = modFactor * BMPR_ATK_PWR;
 
 		// keep upwards
 		mDirection.y = -std::sqrt(std::max(0.0f, std::powf(normSpeed, 2) - std::powf(mDirection.x, 2)));
@@ -85,6 +86,7 @@ namespace pyramidnight {
 	}
 
 	const Ball::State &Ball::GetState() const { return mState; }
+
 	float Ball::GetRadius() const { return mRadius; }
 
 	void Ball::Move(const sf::Time& deltaTime) {
@@ -97,6 +99,7 @@ namespace pyramidnight {
 	}
 
 	void Ball::ResolveOverlap(float distance) {
+		// bounce back from clipping
 		float overlap = std::abs(distance - mRadius);
 		auto invertedDirection = -mDirection;
 		auto pos = this->getPosition();

@@ -36,6 +36,7 @@ namespace pyramidnight {
 				return inst;
 			}
 
+			// reset non-holding inputs
 			void ResetReleased();
 			
 	};
