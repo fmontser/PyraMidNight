@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "UserDataManager.hpp"
 #include "AudioManager.hpp"
+#include "RenderManager.hpp"
 
 namespace pyramidnight {
 	

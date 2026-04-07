@@ -5,8 +5,6 @@
 #include "TitleScreenView.hpp"
 #include "RoundScreenView.hpp"
 #include "EndScreenView.hpp"
-#include "ResourceManager.hpp"
-#include "RenderManager.hpp"
 #include "InputManager.hpp"
 #include "Common.hpp"
 
