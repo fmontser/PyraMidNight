@@ -22,7 +22,7 @@ namespace pyramidnight {
 			};
 	
 			static void Init();
-			static Input& FetchInput();
+			static Input& FetchInput(sf::RenderWindow& window);
 			
 		private:
 			Input             mFrameInput;
