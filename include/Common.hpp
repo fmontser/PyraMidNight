@@ -18,13 +18,13 @@ namespace pyramidnight {
 	inline constexpr sf::Vector2f BALL_DOCKED_OFFSET = {64, -18};
 
 	//Bumper
-	inline constexpr float BMPR_INIT_SPEED = 0.45f;
+	inline constexpr float BMPR_INIT_SPEED = 0.40f;
 	inline constexpr float BMPR_FINE_SPEED_MOD = 0.4f;
 	inline constexpr float BMPR_COARSE_SPEED_MOD = 1.5f;
 	inline constexpr float BMPR_MV_LIMIT_L = 32.0f;
 	inline constexpr float BMPR_MV_LIMIT_R = 480.0f;
-	inline constexpr float BMPR_ATK_DEADZONE = 0.6f;
-	inline constexpr float BMPR_ATK_PWR = 2.22f;
+	inline constexpr float BMPR_ATK_DEADZONE = 0.66f;
+	inline constexpr float BMPR_ATK_PWR = 1.085f;
 
 	//Blocks
 	inline constexpr float     BLOCK_ROT_MIN = 2.0f;

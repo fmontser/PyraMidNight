@@ -22,6 +22,7 @@ namespace pyramidnight {
 		mTitleTxt->setOutlineThickness(END_TXT_OUTLINE_SZ);
 		mTitleTxt->setPosition({100.f, 100.f});
 
+		// creates the ranking text grid
 		auto rankingEntryPos = sf::Vector2f({100.0f, 160.0f});
 		for (size_t i = 0; i < 10; i++) {
 			auto nameEntry = std::make_shared<sf::Text>(*mFont);
@@ -117,6 +118,7 @@ namespace pyramidnight {
 		return true;
 	}
 	
+	// keeps the score grid padded with zeros, old arcade stlye
 	std::string EndScreenView::PadZeroScore(uint32_t score, uint32_t digits) {
 		std::ostringstream ss;
 	
@@ -124,6 +126,7 @@ namespace pyramidnight {
 		return ss.str();
 	}
 	
+	// gets the text object of the player's record (needed by cursor)
 	std::shared_ptr<sf::Text> EndScreenView::FindRecordNameTxt() {
 		for (auto& text : mRankingTxt) {
 			if (text.actual)
@@ -132,6 +135,7 @@ namespace pyramidnight {
 		return nullptr;
 	}
 
+	// saves the data once set by cursor
 	void EndScreenView::SetRecordName() {
 		auto& ranking = UserDataManager::GetUserData().ranking;
 		auto entry = std::find_if(ranking.begin(), ranking.end(),

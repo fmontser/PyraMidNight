@@ -17,11 +17,13 @@ namespace pyramidnight {
 			if (event->getIf<sf::Event::Closed>())
 				window.close();
 
+			// holding key inputs
 			frameInput.holdLeft  = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A);
 			frameInput.holdRight = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D);
 			frameInput.coarse  = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RShift);
 			frameInput.fine = sf::Keyboard::isKeyPressed(sf::Keyboard::Key::RControl);
 	
+			// release key inputs
 			if (const auto* key = event->getIf<sf::Event::KeyReleased>()) {
 				switch (key->code) {
 					case sf::Keyboard::Key::A: frameInput.left = true; break;

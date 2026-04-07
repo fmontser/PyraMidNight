@@ -24,6 +24,7 @@ namespace pyramidnight {
 		if (it != vect.end())
 			return it->texture;
 		else {
+			// failsafe, returns checkered sprite
 			std::cerr << "Error: Missing texture, failsafe loaded\n";
 			return instance().mFailSafeTexture;
 		}
@@ -37,6 +38,7 @@ namespace pyramidnight {
 		if (it != vect.end())
 			return it->font;
 		else {
+			// failsafe, returns the default font (its the same at the moment)
 			std::cerr << "Error: Missing font, failsafe loaded\n";
 			return instance().mFailSafeFont;
 		}
@@ -50,6 +52,7 @@ namespace pyramidnight {
 		if (it != vect.end())
 			return it->audio;
 		else {
+			// failsafe, returns an audible tone
 			std::cerr << "Error: Missing sound, failsafe loaded\n";
 			return instance().mFailSafeSound;
 		}
@@ -114,7 +117,6 @@ namespace pyramidnight {
 				}
 		} catch(const sf::Exception& e) {
 			std::cerr << "Error: Missing or wrong font file: " << e.what() << '\n';
-			exit(1);
 		}
 	}
 	void ResourceManager::LoadAudio() {
@@ -145,7 +147,6 @@ namespace pyramidnight {
 				}
 		} catch(const sf::Exception& e) {
 			std::cerr << "Error: Missing or wrong audio file: " << e.what() << '\n';
-			exit(1);
 		}
 	}
 

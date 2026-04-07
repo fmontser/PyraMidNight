@@ -41,6 +41,7 @@ namespace pyramidnight {
 			void ResetScore();
 			void ResetCredits();
 			
+			// wrapers to update ScreeViews
 			MenuScreenView::MenuScreenUpdate   WrapMenuScreenUpdate();
 			TitleScreenView::TitleScreenUpdate WrapTitleScreenUpdate();
 			RoundScreenView::RoundScreenUpdate WrapRoundScreenUpdate();

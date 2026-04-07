@@ -38,6 +38,7 @@ namespace pyramidnight {
 			
 			SaveData mSaveData;
 			
+			// creates some fake data for the initial ranking
 			void InitSaveData();
 			void SaveUserData();
 			void LoadUserData();

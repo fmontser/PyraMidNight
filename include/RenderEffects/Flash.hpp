@@ -4,6 +4,7 @@
 namespace pyramidnight {
 	class Flash : public RenderEffect {
 		public:
+			// colored flash effect (cannot be white)
 			Flash(float duration, float lapse, sf::Color flash, sf::Color original,
 				const std::weak_ptr<sf::Sprite>& sprite);
 			void Update(const Context& context);

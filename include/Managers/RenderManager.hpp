@@ -12,6 +12,7 @@ namespace pyramidnight {
 			static void Update(std::vector<std::shared_ptr<sf::Drawable>> &drawables);
 			static void PauseClock();
 			static void ResumeClock();
+			// add an effect to the pipeline
 			static void DisplayEffect(std::unique_ptr<RenderEffect> effect);
 			static sf::Time& GetDeltaTime();
 			static sf::RenderWindow &GetWindow();
@@ -26,8 +27,9 @@ namespace pyramidnight {
 			sf::Time                  mDeltaTime;
 			std::vector<std::unique_ptr<RenderEffect>> mRenderEffects;
 			
-			
+			// sprites pipeline
 			void Draw(std::vector<std::shared_ptr<sf::Drawable>> &drawables);
+			// effects pipeline
 			void DrawEffects();
 
 			static RenderManager& instance() {

@@ -5,6 +5,7 @@
 
 namespace pyramidnight {
 
+	// 9x9 max, valid characters on LVL_CHAR_SET (Common.hpp), the add to ROUNDS, see below
 	const std::array<const std::string, LVL_DIMENSIONS2> LEVEL0 = {
 		"000000000",
 		"000000000",
@@ -14,7 +15,7 @@ namespace pyramidnight {
 		"000000000",
 		"000000000",
 		"000000000",
-		"000000000",
+		"000000000"
 	};
 
 	const std::array<const std::string, LVL_DIMENSIONS2> LEVEL1 = {
@@ -51,9 +52,10 @@ namespace pyramidnight {
 		"000000000",
 		"000000000",
 		"000000000",
-		"000000000",
+		"000000000"
 	};
 
+	// add LEVEL here if declared above
 	const std::vector<std::array<const std::string, LVL_DIMENSIONS2>> ROUNDS {
 		LEVEL0,
 		LEVEL1,

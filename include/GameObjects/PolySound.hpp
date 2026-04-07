@@ -4,7 +4,8 @@
 #include <memory>
 
 namespace pyramidnight {
-
+	
+	// enables polyphonic sound and effects
 	class PolySound : public sf::Sound {
 		public:
 			bool IsFadingOut;

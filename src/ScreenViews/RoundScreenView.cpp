@@ -117,6 +117,7 @@ namespace pyramidnight {
 		return true;
 	}
 
+	//TODO remove smelly code, make objects ICollidable
 	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime)
 	{
 		if (mBall->GetState() == Ball::State::PLAYING) {
