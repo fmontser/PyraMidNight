@@ -49,7 +49,7 @@ namespace pyramidnight {
 			std::shared_ptr<sf::Text> FindRecordNameTxt();
 			void                      SetRecordName();
 			Cursor::CursorUpdate      WrapCursorUpdate(const EndScreenUpdate& update);
-			bool Update();
+			void                      Log(const std::string &msg) override;
 	};
 
 }

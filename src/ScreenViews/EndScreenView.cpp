@@ -154,6 +154,9 @@ namespace pyramidnight {
 		};
 	}
 
-	bool EndScreenView::Update() { return false; }
+	void EndScreenView::Log(const std::string &msg) {
+		(void)msg;
+		//TODO log system
+	}
 }
 

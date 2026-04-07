@@ -230,5 +230,9 @@ namespace pyramidnight {
 			credits--;
 	}
 
-	bool RoundScreenView::Update() { return false; }
+	void RoundScreenView::Log(const std::string &msg) {
+		(void)msg;
+		//TODO log system
+	}
+
 }

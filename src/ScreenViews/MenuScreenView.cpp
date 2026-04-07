@@ -124,6 +124,9 @@ namespace pyramidnight {
 		}
 	}
 
-	bool MenuScreenView::Update() { return false; }
+	void MenuScreenView::Log(const std::string &msg) {
+		(void)msg;
+		//TODO log system
+	}
 }
 

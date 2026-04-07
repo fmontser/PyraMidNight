@@ -1,5 +1,4 @@
 #include "Blink.hpp"
-#include "RenderManager.hpp"
 
 namespace pyramidnight {
 
@@ -10,11 +9,9 @@ namespace pyramidnight {
 			mElapsedTime = 0.0f;
 	}
 
-	void Blink::Update() {
-		auto deltaTime = RenderManager::GetDeltaTime().asSeconds();
-		
-		mElapsedTime += deltaTime;
-		mDuration -= deltaTime;
+	void Blink::Update(const Context& context) {
+		mElapsedTime += context.deltaTime.asSeconds();
+		mDuration -= context.deltaTime.asSeconds();
 		if (mElapsedTime >= Lapse) {
 			mVisible = !mVisible;
 			auto obj = mTransformable.lock();
@@ -24,5 +21,10 @@ namespace pyramidnight {
 		if ((!mLoop && mDuration <= 0.0f) || mTransformable.use_count() == 0) {
 			Disposable = true;
 		}
+	}
+	
+	void Blink::Log(const std::string &msg) {
+		(void)msg;
+		//TODO log system
 	}
 }

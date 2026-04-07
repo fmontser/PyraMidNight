@@ -30,7 +30,7 @@ namespace pyramidnight {
 	
 			void UpdateCredits(uint8_t& credits);
 			void ShowStartText();
-			bool Update();
+			void Log(const std::string& msg) override;
 	};
 
 }
