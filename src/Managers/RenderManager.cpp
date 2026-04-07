@@ -33,7 +33,7 @@ namespace pyramidnight {
 	void RenderManager::DrawEffects() {
 		if (!mRenderEffects.empty()) {
 			for (auto& eff : mRenderEffects) {
-				eff->Update();
+				eff->Update({mDeltaTime, mWindow});
 			};
 
 			mRenderEffects.erase(std::remove_if(mRenderEffects.begin(), mRenderEffects.end(),

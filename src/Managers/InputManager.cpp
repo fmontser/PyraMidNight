@@ -9,8 +9,7 @@ namespace pyramidnight {
 
 	void InputManager::Init() { instance(); }
 
-	InputManager::Input &InputManager::FetchInput() {
-		auto& window = RenderManager::GetWindow();
+	InputManager::Input &InputManager::FetchInput(sf::RenderWindow& window) {
 		auto& frameInput = instance().mFrameInput;
 
 		instance().ResetReleased();

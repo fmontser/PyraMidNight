@@ -1,7 +1,5 @@
 #pragma once
 #include <string>
-#include "UserDataManager.hpp"
-#include "ResourceManager.hpp"
 #include "ScreenView.hpp"
 #include "Cursor.hpp"
 #include "Common.hpp"
@@ -49,7 +47,7 @@ namespace pyramidnight {
 			std::shared_ptr<sf::Text> FindRecordNameTxt();
 			void                      SetRecordName();
 			Cursor::CursorUpdate      WrapCursorUpdate(const EndScreenUpdate& update);
-			bool Update();
+			void                      Log(const std::string &msg) override;
 	};
 
 }

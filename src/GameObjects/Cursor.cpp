@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "Cursor.hpp"
 #include "AudioManager.hpp"
-
+#include "ResourceManager.hpp"
 
 namespace pyramidnight {
 	
@@ -61,7 +61,8 @@ namespace pyramidnight {
 		std::string str = (*update.nameText).getString();
 		str[mNameIndex] = selected;
 		(*update.nameText).setString(str);
-		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+		auto sb = ResourceManager::GetAudio(PATH_AUD_CURSOR);
+		AudioManager::Play({sb, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
 	}
 	
 	char Cursor::SelectChar(const CursorUpdate& update) {
@@ -77,7 +78,8 @@ namespace pyramidnight {
 			selected = CUR_CHAR_SET[mCharIndex];
 		} else
 			mCharIndex = 0;
-		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+		auto sb = ResourceManager::GetAudio(PATH_AUD_CURSOR);
+		AudioManager::Play({sb, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
 		return selected;
 	}
 }

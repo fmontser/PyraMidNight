@@ -1,40 +1,30 @@
 #include <cmath>
-#include "RenderManager.hpp"
-#include "ResourceManager.hpp"
-#include "AudioManager.hpp"
 #include "PolySound.hpp"
 
 namespace pyramidnight {
 
-	PolySound::PolySound(Args args)
-		: sf::Sound(*ResourceManager::GetAudio(args.path))
+	PolySound::PolySound(Args args, float& trackVolume) :
+		sf::Sound(*args.buffer),
+		mArgs(args),
+		mTrackVolume(trackVolume)
 	{
 		IsFadingOut = false;
-		mType = args.type;
-		mGain = args.gain;
-		setVolume(GetTypeVolume() * mGain);
-		setLooping(args.loop);
+		mType = mArgs.type;
+		mGain = mArgs.gain;
+		setVolume(mTrackVolume * mGain);
+		setLooping(mArgs.loop);
 	}
 
-	void PolySound::FadeOut(float gain) {
-		auto deltaTime = RenderManager::GetDeltaTime().asSeconds();
-		setVolume(getVolume() * std::pow(gain, deltaTime));
-		if (getVolume() <= 0.1f)
+	void PolySound::FadeOut(float gain, const sf::Time& deltaTime) {
+		auto soundBufferVolume = getVolume();
+		setVolume(soundBufferVolume * std::pow(gain, deltaTime.asSeconds()));
+		if (soundBufferVolume <= 0.1f)
 			stop();
 	}
 
 	void PolySound::SetInstanceVolume(float instanceGain = 1.0f) {
-		setVolume(GetTypeVolume() * mGain * instanceGain);
+		setVolume(mTrackVolume * mGain * instanceGain);
 	}
 
-	float PolySound::GetTypeVolume() const
-	{
-		float typeVolume = 100.0f;
-		switch (mType) {
-			case Type::SFX: typeVolume = AudioManager::GetSfxVolume(); break;
-			case Type::BGM: typeVolume = AudioManager::GetBgmVolume(); break;
-			default: break;
-		}
-		return typeVolume;
-	}
+	PolySound::Type PolySound::GetType() const { return mType;	}
 }

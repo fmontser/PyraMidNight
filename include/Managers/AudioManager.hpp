@@ -6,14 +6,14 @@
 
 namespace pyramidnight {
 	
-	class AudioManager {
+	class AudioManager  {
 		public:
 			static void Init();
 			static void Play(PolySound::Args args);
 			static void FadeOutBgm();
 			static void SetBgmVolume(float volume);
 			static void SetSfxVolume(float volume);
-			static void Update();
+			static void Update(const sf::Time& deltaTime);
 
 			static uint8_t GetBgmVolume();
 			static uint8_t GetSfxVolume();

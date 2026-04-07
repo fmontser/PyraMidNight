@@ -1,5 +1,7 @@
 #include "RenderEffect.hpp"
+
 namespace pyramidnight {
+	
 	RenderEffect::RenderEffect(float durationSeconds) {
 		Disposable = false;
 		mDuration = durationSeconds;

@@ -1,8 +1,10 @@
 #pragma once
 #include <SFML/Audio.hpp>
 #include <string>
+#include <memory>
 
 namespace pyramidnight {
+
 	class PolySound : public sf::Sound {
 		public:
 			bool IsFadingOut;
@@ -12,23 +14,25 @@ namespace pyramidnight {
 			};
 
 			struct Args {
-				const std::string_view& path;
-				float                   gain;
-				Type                    type;
-				bool                    loop;
+				std::shared_ptr<sf::SoundBuffer> buffer;
+				float gain;
+				Type  type;
+				bool  loop;
 			};
 			
-			PolySound(Args args);
+			PolySound(Args args, float& trackVolume);
 			
-			void FadeOut(float gain);
+			void FadeOut(float gain, const sf::Time& deltaTime);
 			void SetInstanceVolume(float instanceGain);
 			Type GetType() const;
 
 		private:
-			Type  mType;
-			float mGain;
+			Args   mArgs;
+			Type   mType;
+			float  mGain;
+			float& mTrackVolume;
 
-			float GetTypeVolume() const;
+
 
 	};
 }

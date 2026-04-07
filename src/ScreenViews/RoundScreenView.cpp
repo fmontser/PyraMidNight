@@ -1,12 +1,12 @@
 #include <algorithm>
 #include <string>
 #include <memory>
+#include "RoundScreenView.hpp"
+#include "Levels.hpp"
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
-#include "RoundScreenView.hpp"
 #include "ScreenShake.hpp"
-#include "Levels.hpp"
 
 namespace pyramidnight {
 
@@ -175,7 +175,8 @@ namespace pyramidnight {
 		}
 		//Win
 		if (mBlockVector.empty()) {
-			AudioManager::Play({PATH_AUD_NEXTROUND, VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
+			auto sb = ResourceManager::GetAudio(PATH_AUD_NEXTROUND);
+			AudioManager::Play({sb,VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
 			return false;
 		}
 		return true;
@@ -200,12 +201,14 @@ namespace pyramidnight {
 		ConsumeCredit(update.credits);
 		AddScore(update.score, SCORE_LOSE_BALL);
 		if (update.credits == 0) {
-			AudioManager::Play({PATH_AUD_GAMEOVER, VOL_AUD_GAMEOVER, PolySound::Type::SFX, false});
+			auto sb = ResourceManager::GetAudio(PATH_AUD_GAMEOVER);
+			AudioManager::Play({sb,VOL_AUD_GAMEOVER, PolySound::Type::SFX, false});
 			return false;
 		}
 		mBall->ResetPos(mBumper->getPosition());
 		RenderManager::DisplayEffect(std::make_unique<ScreenShake>(EFF_SHAKE_LOSEBALL_TIME, EFF_SHAKE_LOSEBALL_POWER));
-		AudioManager::Play({PATH_AUD_BALL_LOSE, VOL_AUD_BALL_LOSE, PolySound::Type::SFX, false});
+		auto sb = ResourceManager::GetAudio(PATH_AUD_BALL_LOSE);
+		AudioManager::Play({sb, VOL_AUD_BALL_LOSE, PolySound::Type::SFX, false});
 		return true;
 	};
 
@@ -227,5 +230,9 @@ namespace pyramidnight {
 			credits--;
 	}
 
-	bool RoundScreenView::Update() { return false; }
+	void RoundScreenView::Log(const std::string &msg) {
+		(void)msg;
+		//TODO log system
+	}
+
 }

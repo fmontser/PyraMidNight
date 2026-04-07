@@ -60,7 +60,8 @@ namespace pyramidnight {
 			bool LoseBall(const RoundScreenUpdate &update);
 			void AddScore(uint32_t& score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
-			bool Update();
+			void Log(const std::string &msg) override;
+
 	};
 
 }

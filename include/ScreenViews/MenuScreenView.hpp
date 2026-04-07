@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "ScreenView.hpp"
-#include "ResourceManager.hpp"
 #include "Common.hpp"
 
 namespace pyramidnight {
@@ -44,8 +43,8 @@ namespace pyramidnight {
 			void UpdateSfxVolume(float volume);
 			void SelectOption(bool up, bool down);
 			void InvertOptionColors(const std::shared_ptr<sf::Text>& option);
-	
-			bool Update();
+			void Log(const std::string &msg) override;
+
 	};
 
 }
