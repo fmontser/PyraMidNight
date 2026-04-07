@@ -1,9 +1,11 @@
 #include "Blink.hpp"
 #include "RenderManager.hpp"
 
+#include <iostream>
+
 namespace pyramidnight {
 
-	Blink::Blink(float duration, float lapse, const std::shared_ptr<sf::Transformable>& transformable) :
+	Blink::Blink(float duration, float lapse, const std::weak_ptr<sf::Transformable>& transformable) :
 		RenderEffect(duration) ,mTransformable(transformable) {
 			Lapse = lapse;
 			mVisible = false;
@@ -17,10 +19,13 @@ namespace pyramidnight {
 		mDuration -= deltaTime;
 		if (mElapsedTime >= Lapse) {
 			mVisible = !mVisible;
-			mVisible ? mTransformable->setScale({1, 1}) : mTransformable->setScale({0, 0});
+			auto obj = mTransformable.lock();
+			mVisible ? obj->setScale({1, 1}) : obj->setScale({0, 0});
 			mElapsedTime = 0.0f;
 		}
-		if ((!mLoop && mDuration <= 0.0f) || mTransformable.use_count() == 1)
+		if ((!mLoop && mDuration <= 0.0f) || mTransformable.use_count() == 0) {
+			std::cout << "Disposed!\n";
 			Disposable = true;
+		}
 	}
 }
