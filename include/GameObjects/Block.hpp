@@ -8,7 +8,7 @@ namespace pyramidnight {
 		public:
 			Block(const sf::Texture& texture, int8_t hitPoints);
 		
-			void Update(const sf::Time& deltaTime); //TODO delete?
+			void Update(const sf::Time& deltaTime);
 			bool Damage();
 			int32_t GetScore() const;
 

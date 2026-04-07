@@ -27,10 +27,12 @@ namespace pyramidnight {
 	inline constexpr float BMPR_ATK_PWR = 2.22f;
 
 	//Blocks
-	inline constexpr float   BLOCK_ROT_MIN = -4.0f;
-	inline constexpr float   BLOCK_ROT_MAX = -4.0f;
-	inline constexpr float   BLOCK_FLASH_TIME = 0.15f;
-	
+	inline constexpr float     BLOCK_ROT_MIN = 2.0f;
+	inline constexpr float     BLOCK_ROT_MAX = -2.0f;
+	inline constexpr float     BLOCK_FLASH_LAPSE = 0.05f;
+	inline constexpr float     BLOCK_FLASH_TIME = 1.0f;
+	inline constexpr sf::Color BLOCK_FLASH_COLOR = sf::Color::Green;
+
 	//Score
 	inline constexpr float   SCORE_BLOCK_MOD = 25.0f;
 	inline constexpr int32_t SCORE_LOSE_BALL = -100;
