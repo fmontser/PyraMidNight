@@ -13,12 +13,12 @@ namespace pyramidnight {
 	class Game {
 		public:
 			enum class State {
-				MENU, TITLE_SCREEN, ROUND_SCREEN, END_SCREEN
+				MENU, TITLE_SCREEN, ROUND_SCREEN, END_SCREEN, TEST_ROUND
 			};
 		
 			Game();
 
-			void Run();
+			void Run(int testLevel);
 
 		private:
 			State               mState;

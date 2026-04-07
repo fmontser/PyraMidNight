@@ -190,6 +190,7 @@ namespace pyramidnight {
 			.append(std::to_string(update.score)));
 	}
 
+	// lose 1 point per second
 	void RoundScreenView::ScoreTimePenalty(uint32_t &score, sf::Time& deltaTime) {
 		mElapsedTimePenalty += deltaTime.asSeconds();
 		if (mElapsedTimePenalty >= 1.0f) {
