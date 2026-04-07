@@ -1,7 +1,5 @@
 #include <algorithm>
 #include "AudioManager.hpp"
-#include "ResourceManager.hpp"
-#include "RenderManager.hpp"
 
 namespace pyramidnight {
 
@@ -24,11 +22,11 @@ namespace pyramidnight {
 		}
 	}
 
-	void AudioManager::Update() {
+	void AudioManager::Update(const sf::Time& deltaTime) {
 		static float timeElapsed = 0.0f;
 
 		// clean stopped
-		timeElapsed += RenderManager::GetDeltaTime().asSeconds();
+		timeElapsed += deltaTime.asSeconds();
 		if (timeElapsed > CLK_AUD_CLEAN_TIMER_S) {
 			instance().Clean();
 			timeElapsed = 0.0f;

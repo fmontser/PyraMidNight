@@ -22,9 +22,9 @@ namespace pyramidnight {
 	// main loop
 	void Game::Run() {
 		while (RenderManager::GetWindow().isOpen()) {
-			AudioManager::Update();
 			mInput = InputManager::FetchInput();
 			mDeltaTime = RenderManager::GetDeltaTime();
+			AudioManager::Update(mDeltaTime);
 
 			if (mInput.menu) {
 				if (mState != State::MENU) {
