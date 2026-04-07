@@ -79,7 +79,8 @@ namespace pyramidnight {
 
 		AudioManager::SetBgmVolume(mBgmVolume);
 		UserDataManager::SaveBgmVolume(AudioManager::GetBgmVolume());
-		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+		auto sb = ResourceManager::GetAudio(PATH_AUD_CURSOR);
+		AudioManager::Play({sb, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
 
 	}
 
@@ -89,7 +90,8 @@ namespace pyramidnight {
 		
 		AudioManager::SetSfxVolume(mSfxVolume);
 		UserDataManager::SaveSfxVolume(AudioManager::GetSfxVolume());
-		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+		auto sb = ResourceManager::GetAudio(PATH_AUD_CURSOR);
+		AudioManager::Play({sb, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
 	}
 
 	void MenuScreenView::SelectOption(bool up, bool down) {
@@ -99,7 +101,8 @@ namespace pyramidnight {
 			mOptionIndex =  (mOptionIndex + 1) % MENU_OPT_MAX;
 		else
 			return;
-		AudioManager::Play({PATH_AUD_CURSOR, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
+		auto sb = ResourceManager::GetAudio(PATH_AUD_CURSOR);
+		AudioManager::Play({sb, VOL_AUD_CURSOR, PolySound::Type::SFX, false});
 		mOption = static_cast<Option>(mOptionIndex);
 		switch (mOption) {
 			case BGM: InvertOptionColors(mBgmTxt); break;

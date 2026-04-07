@@ -1,8 +1,6 @@
 #include "Blink.hpp"
 #include "RenderManager.hpp"
 
-#include <iostream>
-
 namespace pyramidnight {
 
 	Blink::Blink(float duration, float lapse, const std::weak_ptr<sf::Transformable>& transformable) :
@@ -24,7 +22,6 @@ namespace pyramidnight {
 			mElapsedTime = 0.0f;
 		}
 		if ((!mLoop && mDuration <= 0.0f) || mTransformable.use_count() == 0) {
-			std::cout << "Disposed!\n";
 			Disposable = true;
 		}
 	}

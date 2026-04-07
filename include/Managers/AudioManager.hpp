@@ -6,7 +6,7 @@
 
 namespace pyramidnight {
 	
-	class AudioManager {
+	class AudioManager  {
 		public:
 			static void Init();
 			static void Play(PolySound::Args args);

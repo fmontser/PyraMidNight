@@ -12,7 +12,7 @@ namespace pyramidnight {
 			static const std::shared_ptr<sf::Texture>&     GetTexture(const std::string_view& path);
 			static const std::shared_ptr<sf::Font>&        GetFont(const std::string_view& path);
 			static const std::shared_ptr<sf::SoundBuffer>& GetAudio(const std::string_view& path);
-
+	
 		private:
 			struct Texture {
 				std::string_view             path;

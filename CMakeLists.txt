@@ -70,7 +70,7 @@ set(APP_LIBS
 
 add_executable(PyraMidNight ${APP_SOURCES})
 
-target_include_directories(PyraMidNight PUBLIC include)
+target_include_directories(PyraMidNight PUBLIC include/)
 target_include_directories(PyraMidNight PUBLIC include/Data)
 target_include_directories(PyraMidNight PUBLIC include/GameObjects)
 target_include_directories(PyraMidNight PUBLIC include/ScreenViews)

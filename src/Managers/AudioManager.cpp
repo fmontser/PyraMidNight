@@ -6,14 +6,13 @@ namespace pyramidnight {
 	AudioManager::AudioManager() {}
 
 	void AudioManager::Play(PolySound::Args args) {
-		auto sound = std::make_unique<PolySound>(args);
-		
+		auto sound = std::make_unique<PolySound>(args, instance().mBgmVolume);
 		sound->play();
-		switch (args.type) {
+ 		switch (args.type) {
 			case PolySound::Type::BGM: instance().mBgm.push_back(std::move(sound)); break;
 			case PolySound::Type::SFX: instance().mSfx.push_back(std::move(sound)); break;
 			default: break;
-		}
+		} 
 	}
 	
 	void AudioManager::FadeOutBgm() {
@@ -35,7 +34,7 @@ namespace pyramidnight {
 		// fade bgm
 		for (auto& sound: instance().mBgm) {
 			if (sound->IsFadingOut)
-				sound->FadeOut(0.65f);
+				sound->FadeOut(0.65f, deltaTime);
 		}
 	}
 
