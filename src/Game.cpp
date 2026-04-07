@@ -22,9 +22,11 @@ namespace pyramidnight {
 	
 		// main loop
 		void Game::Run(int testLevel) {
+			if (testLevel != -1) {
+				mState = State::TEST_ROUND;
+				mRound = testLevel;
+			}
 
-			(void)testLevel;
-			
 			auto& window = RenderManager::GetWindow();
 			while (window.isOpen()) {
 				mInput = InputManager::FetchInput(window);
@@ -40,6 +42,17 @@ namespace pyramidnight {
 				}
 				
 				switch (mState) {
+					case State::TEST_ROUND:
+						mCredits = 99;
+						if (mRoundScreen == nullptr)
+							mRoundScreen = std::make_unique<RoundScreenView>();
+						if (!mRoundScreen->Update(WrapRoundScreenUpdate())) {
+							mRoundScreen = nullptr;
+							mRoundScreen = std::make_unique<RoundScreenView>();
+							break;
+						}
+						RenderManager::Update(mRoundScreen->GetDrawables());
+						break;
 					case State::MENU:
 						if (mMenuScreen == nullptr) {
 							RenderManager::PauseClock();

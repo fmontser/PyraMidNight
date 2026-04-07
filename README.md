@@ -35,6 +35,7 @@ Controls:
 Level editing:
 
 The file Levels.hpp contains editable levels, rules:
+ - You can pass the number of level as executable argument to test the level directly
  - has to be 9x9 characters (9 strings). The game will validate at compile time and throw an exception.
  - add the level to ROUNDS vector just below.
  - edit the constexpr GAME_FINAL_ROUND_ID to math the last level index (4 levels = 3).

@@ -10,7 +10,7 @@
 #include "Common.hpp"
 
 int main(int argc, char* argv[]) {
-	int testLevel {};
+	int testLevel = -1;
 	int finalLevel = pyramidnight::GAME_FINAL_ROUND_ID;
 
 	if (argc > 2) {
