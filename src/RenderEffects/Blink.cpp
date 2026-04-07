@@ -10,16 +10,24 @@ namespace pyramidnight {
 	}
 
 	void Blink::Update(const Context& context) {
+		auto obj = mTransformable.lock();
+		if (!obj) {
+			Disposable = true;
+			return;
+		}
+
 		mElapsedTime += context.deltaTime.asSeconds();
 		mDuration -= context.deltaTime.asSeconds();
+		if ((!mLoop && mDuration <= 0.0f) || mTransformable.use_count() == 0) {
+			obj->setScale({1, 1});
+			Disposable = true;
+			return;
+		}
+
 		if (mElapsedTime >= Lapse) {
 			mVisible = !mVisible;
-			auto obj = mTransformable.lock();
-			mVisible ? obj->setScale({1, 1}) : obj->setScale({0, 0});
+			obj->setScale(mVisible ? sf::Vector2f({1, 1}) : sf::Vector2f({0, 0}));
 			mElapsedTime = 0.0f;
-		}
-		if ((!mLoop && mDuration <= 0.0f) || mTransformable.use_count() == 0) {
-			Disposable = true;
 		}
 	}
 	

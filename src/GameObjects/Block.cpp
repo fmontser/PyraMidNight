@@ -1,13 +1,14 @@
 #include "Block.hpp"
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
+#include "RenderManager.hpp"
+#include "Flash.hpp"
 
 namespace pyramidnight {
 
 	Block::Block(const sf::Texture& texture, int8_t hitPoints) : sf::Sprite(texture) {
 		mHitPoints = hitPoints;
 		mScorePoints = SCORE_BLOCK_MOD * mHitPoints;
-		mFlashTimer = 0.0f;
 		if (hitPoints == 2)
 			setColor({255, 128, 64 , 255});
 		else if (hitPoints == 3)
@@ -16,13 +17,7 @@ namespace pyramidnight {
 	}
 
 	void Block::Update(const sf::Time& deltaTime) {
-		if (mFlashTimer > 0.0f) {
-			mFlashTimer -= deltaTime.asSeconds();
-			setColor(sf::Color(sf::Color::White)); 
-		} 
-		else {
-			setColor(mTint);
-		}
+		(void)deltaTime;
 	}
 
 	bool Block::Damage()
@@ -37,7 +32,8 @@ namespace pyramidnight {
 		}
 		auto sb = ResourceManager::GetAudio(PATH_AUD_BLOCK_DAMAGE);
 		AudioManager::Play({sb, VOL_AUD_BLOCK_DAMAGE, PolySound::Type::SFX, false});
-		mFlashTimer = BLOCK_FLASH_TIME;
+		RenderManager::DisplayEffect(std::make_unique<Flash>(
+			1.0f, 0.05f, sf::Color::Green, mTint, shared_from_this()));
 		setRotation(sf::degrees(randomValue));
 		return false;
 	}

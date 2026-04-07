@@ -59,6 +59,7 @@ set(APP_SOURCES
 	src/RenderEffects/RenderEffect.cpp
 	src/RenderEffects/ScreenShake.cpp
 	src/RenderEffects/Blink.cpp
+	src/RenderEffects/Flash.cpp
 )
 
 set(APP_LIBS

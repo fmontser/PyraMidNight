@@ -4,11 +4,11 @@
 
 namespace pyramidnight {
 
-	class Block : public sf::Sprite {
+	class Block : public sf::Sprite, public std::enable_shared_from_this<Block> {
 		public:
 			Block(const sf::Texture& texture, int8_t hitPoints);
 		
-			void Update(const sf::Time& deltaTime);
+			void Update(const sf::Time& deltaTime); //TODO delete?
 			bool Damage();
 			int32_t GetScore() const;
 
@@ -16,6 +16,5 @@ namespace pyramidnight {
 			int8_t    mHitPoints;
 			int32_t   mScorePoints;
 			sf::Color mTint;
-			float     mFlashTimer;
 	};
 }
