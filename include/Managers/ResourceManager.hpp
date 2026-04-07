@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <memory>
+#include <string>
 #include "Common.hpp"
 
 namespace pyramidnight {
@@ -15,17 +16,17 @@ namespace pyramidnight {
 	
 		private:
 			struct Texture {
-				std::string_view             path;
+				std::string                  path;
 				std::shared_ptr<sf::Texture> texture;
 			};
 
 			struct Font {
-				std::string_view          path;
+				std::string               path;
 				std::shared_ptr<sf::Font> font;
 			};
 
 			struct Audio {
-				std::string_view                 path;
+				std::string                      path;
 				std::shared_ptr<sf::SoundBuffer> audio;
 			};
 

@@ -75,13 +75,13 @@ namespace pyramidnight {
 	}
 
 	void ResourceManager::LoadTextures() {
-		std::vector<std::string_view> filePaths {
-			PATH_TEX_BG,
-			PATH_TEX_WALL, 
-			PATH_TEX_CEIL, 
-			PATH_TEX_BUMP, 
-			PATH_TEX_BALL, 
-			PATH_TEX_BLOCK
+		std::vector<std::string> filePaths {
+			std::string(PATH_TEX_BG),
+			std::string(PATH_TEX_WALL), 
+			std::string(PATH_TEX_CEIL), 
+			std::string(PATH_TEX_BUMP), 
+			std::string(PATH_TEX_BALL), 
+			std::string(PATH_TEX_BLOCK)
 		};
 
 		mFailSafeTexture = std::make_shared<sf::Texture>(FAILSAFE_TEXTURE_DATA, FAILSAFE_TEXTURE_DATA_SZ);
@@ -99,8 +99,8 @@ namespace pyramidnight {
 	}
 	void ResourceManager::LoadFonts()
 	{
-		std::vector<std::string_view> filePaths {
-			PATH_FONT
+		std::vector<std::string> filePaths {
+			std::string(PATH_FONT)
 		};
 
 		mFailSafeFont = std::make_shared<sf::Font>(FAILSAFE_FONT_DATA, FAILSAFE_FONT_DATA_SZ);
@@ -118,20 +118,20 @@ namespace pyramidnight {
 		}
 	}
 	void ResourceManager::LoadAudio() {
-		std::vector<std::string_view> filePaths {
-			PATH_AUD_BALL_BOUNCE,
-			PATH_AUD_BALL_LOSE,
-			PATH_AUD_BALL_LAUNCH,
-			PATH_AUD_BLOCK_DAMAGE,
-			PATH_AUD_BLOCK_DESTROY,
-			PATH_AUD_BUMPER_BOUNCE,
-			PATH_AUD_PWRUP_0,
-			PATH_AUD_ENEMY_SPAWN,
-			PATH_AUD_COIN_IN,
-			PATH_AUD_CURSOR,
-			PATH_AUD_NEXTROUND,
-			PATH_AUD_GAMEOVER,
-			PATH_AUD_MUSIC_0
+		std::vector<std::string> filePaths {
+			std::string(PATH_AUD_BALL_BOUNCE),
+			std::string(PATH_AUD_BALL_LOSE),
+			std::string(PATH_AUD_BALL_LAUNCH),
+			std::string(PATH_AUD_BLOCK_DAMAGE),
+			std::string(PATH_AUD_BLOCK_DESTROY),
+			std::string(PATH_AUD_BUMPER_BOUNCE),
+			std::string(PATH_AUD_PWRUP_0),
+			std::string(PATH_AUD_ENEMY_SPAWN),
+			std::string(PATH_AUD_COIN_IN),
+			std::string(PATH_AUD_CURSOR),
+			std::string(PATH_AUD_NEXTROUND),
+			std::string(PATH_AUD_GAMEOVER),
+			std::string(PATH_AUD_MUSIC_0)
 		};
 
 		mFailSafeSound = std::make_shared<sf::SoundBuffer>(FAILSAFE_SOUND_DATA, FAILSAFE_SOUND_DATA_SZ);
