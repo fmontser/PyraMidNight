@@ -41,6 +41,7 @@
 *.dwo
 
 # Misc
+.vs/
 .vscode/
 misc/
 .directory

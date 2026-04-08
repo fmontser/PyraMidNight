@@ -3,7 +3,7 @@
 
 namespace pyramidnight {
 
-	AudioManager::AudioManager() {}
+	AudioManager::AudioManager() : mBgmVolume(60.0f), mSfxVolume(60.0f) {}
 
 	void AudioManager::Play(PolySound::Args args) {
 		auto sound = std::make_unique<PolySound>(args, instance().mBgmVolume);

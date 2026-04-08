@@ -37,7 +37,6 @@ namespace pyramidnight {
 			
 			void SetNextRound();
 			void GameOver();
-			void RecordScore();
 			void ResetScore();
 			void ResetCredits();
 			
