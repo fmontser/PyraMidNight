@@ -18,6 +18,8 @@ namespace pyramidnight {
 		mTitleScreen = nullptr;
 		mRoundScreen = nullptr;
 		mEndScreenView = nullptr;
+		mInput = {};
+		mPrevState = State::TITLE_SCREEN;
 	}
 	
 	// main loop

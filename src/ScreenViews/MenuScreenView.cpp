@@ -95,7 +95,7 @@ namespace pyramidnight {
 	}
 
 	void MenuScreenView::SelectOption(bool up, bool down) {
-		if (up & !down)
+		if (up && !down)
 			mOptionIndex = (mOptionIndex - 1 + MENU_OPT_MAX) % MENU_OPT_MAX;
 		else if (!up && down)
 			mOptionIndex =  (mOptionIndex + 1) % MENU_OPT_MAX;

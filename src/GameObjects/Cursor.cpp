@@ -10,8 +10,8 @@ namespace pyramidnight {
 		mCharIndex = 0;
 		mIsEnabled = false;
 		auto cursorSize =  sf::Vector2f({});
-		cursorSize.x =	mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.x;
-		cursorSize.y =	mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.y;
+		cursorSize.x =	static_cast<const float>(mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.x);
+		cursorSize.y =	static_cast<const float>(mFont.getGlyph('?', CUR_FONT_SZ, false).bounds.size.y);
 	
 		setSize(cursorSize);
 		setFillColor(CUR_FILL_COL);

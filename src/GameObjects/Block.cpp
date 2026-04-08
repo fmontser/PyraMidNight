@@ -8,7 +8,7 @@ namespace pyramidnight {
 
 	Block::Block(const sf::Texture& texture, int8_t hitPoints) : sf::Sprite(texture) {
 		mHitPoints = hitPoints;
-		mScorePoints = SCORE_BLOCK_MOD * mHitPoints;
+		mScorePoints = mHitPoints * SCORE_BLOCK_MOD;
 		
 		// color for hitpoints
 		if (hitPoints == 2)

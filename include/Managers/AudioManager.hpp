@@ -29,7 +29,6 @@ namespace pyramidnight {
 			std::vector<std::unique_ptr<PolySound>> mSfx;
 			
 			void Clean();
-			void FadeOut(std::unique_ptr<PolySound>& sound);
 
 			static AudioManager& instance() {
 				static AudioManager inst;

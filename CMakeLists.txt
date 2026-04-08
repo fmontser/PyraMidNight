@@ -4,7 +4,6 @@ project(PyraMidNight VERSION 0.1)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
-add_compile_options(-Wall -Wextra -Werror)
 
 # SFML local dependencies
 set(SFML_STATIC_LIBRARIES ON CACHE BOOL "" FORCE)
@@ -70,6 +69,13 @@ set(APP_LIBS
 )
 
 add_executable(PyraMidNight ${APP_SOURCES})
+
+if(MSVC)
+    # disabled some type conversion warnings to avoid explicit casting everywhere
+    target_compile_options(PyraMidNight PRIVATE /W4 /WX /wd4244 /wd4267)
+else()
+    target_compile_options(PyraMidNight PRIVATE -Wall -Wextra -Werror)
+endif()
 
 target_include_directories(PyraMidNight PUBLIC include/)
 target_include_directories(PyraMidNight PUBLIC include/Data)
