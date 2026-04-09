@@ -118,14 +118,15 @@ namespace pyramidnight {
 	}
 
 	//TODO remove smelly code, make objects ICollidable
-	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime)
-	{
+	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime) {
 		if (mBall->GetState() == Ball::State::PLAYING) {
 			for (const auto &obj : mColdetVector) {
-				float distance = mBall->GetBallDistance(*obj);
 
-				if (distance <= mBall->GetRadius()) {
-					mBall->Bounce(*obj, distance);
+				if (auto cpos = mBall->GetCollisionPoint(obj->getGlobalBounds()) != std::nullopt) {
+					mBall->Bounce(*obj);
+
+					(void)cpos;
+
 					if (typeid(*obj) == typeid(Block)) {
 						auto* block = dynamic_cast<Block*>(obj.get());
 						if (block->Damage()) {

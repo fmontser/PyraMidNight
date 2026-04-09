@@ -11,6 +11,8 @@ namespace pyramidnight {
 		mSpeed = BALL_INIT_SPEED;
 		mDirection = BALL_INIT_DIR;
 		mRadius = texture.getSize().x / 2;
+		mDistance = 1.0f;
+		mState = State::DOCKED;
 		setOrigin({mRadius,mRadius});
 		ResetPos(BALL_INIT_POS);
 	}
@@ -38,12 +40,12 @@ namespace pyramidnight {
 		}
 	}
 
-	void Ball::Bounce(const sf::Sprite& obj, float distance) {
+	void Ball::Bounce(const sf::Sprite& obj) {
 		auto rPos = obj.getPosition();
 		auto rSize = obj.getGlobalBounds().size;
 		auto bPos = getPosition();
 		
-		ResolveOverlap(distance);
+		ResolveOverlap();
 		auto isBounceHorizontal = (bPos.x < rPos.x || bPos.x > (rPos.x + rSize.x));
 		auto isBounceVertical = (bPos.y < rPos.y || bPos.y > (rPos.y + rSize.y));
 
@@ -75,14 +77,18 @@ namespace pyramidnight {
 		AudioManager::Play({sb, VOL_AUD_BUMPER_BOUNCE, PolySound::Type::SFX, false});
 	}
 
-	float Ball::GetBallDistance(const sf::Sprite& obj) const {
+	std::optional<sf::Vector2f> Ball::GetCollisionPoint(const sf::FloatRect &rect) {
+		sf::Vector2f closest {};
 		auto bPos = getPosition();
-		auto rect = obj.getGlobalBounds();
-		float closestX = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);
-		float closestY = std::clamp(bPos.y, rect.position.y, rect.position.y + rect.size.y);
-		float distX = bPos.x - closestX;
-		float distY = bPos.y - closestY;
-		return std::sqrtf((distX * distX) + (distY * distY));
+		closest.x = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);
+		closest.y = std::clamp(bPos.y, rect.position.y, rect.position.y + rect.size.y);
+		float distX = bPos.x - closest.x;
+		float distY = bPos.y - closest.y;
+		mDistance = std::sqrtf((distX * distX) + (distY * distY));
+
+		if (mDistance <= mRadius)
+			return closest; 
+		return std::nullopt;
 	}
 
 	const Ball::State &Ball::GetState() const { return mState; }
@@ -98,9 +104,9 @@ namespace pyramidnight {
 		setPosition(position);
 	}
 
-	void Ball::ResolveOverlap(float distance) {
+	void Ball::ResolveOverlap() {
 		// bounce back from clipping
-		float overlap = std::abs(distance - mRadius);
+		float overlap = std::abs(mDistance - mRadius);
 		auto invertedDirection = -mDirection;
 		auto pos = this->getPosition();
 
