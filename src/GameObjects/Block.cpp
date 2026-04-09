@@ -2,6 +2,7 @@
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
+#include "Ball.hpp"
 #include "Flash.hpp"
 
 namespace pyramidnight {
@@ -9,6 +10,7 @@ namespace pyramidnight {
 	Block::Block(const sf::Texture& texture, int8_t hitPoints) : sf::Sprite(texture) {
 		mHitPoints = hitPoints;
 		mScorePoints = mHitPoints * SCORE_BLOCK_MOD;
+		CollidableType = CollidableType::BLOCK;
 		
 		// color for hitpoints
 		if (hitPoints == 2)
@@ -18,11 +20,7 @@ namespace pyramidnight {
 		mTint = getColor();
 	}
 
-	void Block::Update(const sf::Time& deltaTime) {
-		(void)deltaTime;
-	}
-
-	bool Block::Damage()
+	void Block::Damage()
 	{
 		float randomValue = 
 			BLOCK_ROT_MIN + (rand() % static_cast<int>(BLOCK_ROT_MAX - BLOCK_ROT_MIN + 1));
@@ -31,7 +29,7 @@ namespace pyramidnight {
 		if (mHitPoints == 0) {
 			auto sb = ResourceManager::GetAudio(PATH_AUD_BLOCK_DESTROY);
 			AudioManager::Play({sb, VOL_AUD_BLOCK_DESTROY, PolySound::Type::SFX, false});
-			return true;
+			return;
 		}
 
 		auto sb = ResourceManager::GetAudio(PATH_AUD_BLOCK_DAMAGE);
@@ -40,8 +38,18 @@ namespace pyramidnight {
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
 			BLOCK_FLASH_TIME, BLOCK_FLASH_LAPSE, BLOCK_FLASH_COLOR, mTint, shared_from_this()));
 		setRotation(sf::degrees(randomValue));
-		return false;
 	}
 
-	int32_t Block::GetScore() const { return mScorePoints; }
+	ICollidable::Info Block::OnCollision(ICollidable &collider) {
+		if (collider.CollidableType == CollidableType::BALL) {
+			auto& ball = static_cast<Ball&>(collider);
+			auto cpos = ball.GetCollisionPoint(getGlobalBounds());
+			if (cpos != std::nullopt) {
+				ball.Bounce(*this);
+				Damage();
+				return {CollidableType, (mHitPoints == 0), mScorePoints, cpos };
+			}
+		}
+		return {CollidableType, false, 0, std::nullopt };
+	}
 }

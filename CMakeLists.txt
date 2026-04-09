@@ -53,6 +53,7 @@ set(APP_SOURCES
 	src/GameObjects/Bumper.cpp
 	src/GameObjects/Ball.cpp
 	src/GameObjects/Block.cpp
+	src/GameObjects/Obstacle.cpp
 	src/GameObjects/Cursor.cpp
 	src/GameObjects/PolySound.cpp
 	src/RenderEffects/RenderEffect.cpp
@@ -80,6 +81,7 @@ endif()
 target_include_directories(PyraMidNight PUBLIC include/)
 target_include_directories(PyraMidNight PUBLIC include/Data)
 target_include_directories(PyraMidNight PUBLIC include/GameObjects)
+target_include_directories(PyraMidNight PUBLIC include/Interfaces)
 target_include_directories(PyraMidNight PUBLIC include/ScreenViews)
 target_include_directories(PyraMidNight PUBLIC include/Managers)
 target_include_directories(PyraMidNight PUBLIC include/RenderEffects)
