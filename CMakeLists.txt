@@ -53,6 +53,7 @@ set(APP_SOURCES
 	src/GameObjects/Bumper.cpp
 	src/GameObjects/Ball.cpp
 	src/GameObjects/Block.cpp
+	src/GameObjects/Obstacle.cpp
 	src/GameObjects/Cursor.cpp
 	src/GameObjects/PolySound.cpp
 	src/RenderEffects/RenderEffect.cpp

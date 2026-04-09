@@ -1,28 +1,27 @@
 #pragma once
-#include <optional>
 #include <SFML/System/Vector2.hpp>
+#include <optional>
 
 namespace pyramidnight {
+
 	class ICollidable {
 		public:
 
 			virtual ~ICollidable() = default;
 
-			struct Info {
-				bool                        destroyed = false;
-				int32_t                     scoreMod = false;
-				std::optional<sf::Vector2f> collisionPos = {};
+			enum class CollidableType {
+				BALL, BLOCK, WALL
 			};
 
-			virtual std::optional<Info> OnCollision(ICollidable& collider) = 0;
-/* 
-			static std::optional<sf::Vector2f> GetCollisionPoint(
-				const sf::FloatRect& rect0, const sf::FloatRect& rect1, float& distance);
-				
-			static std::optional<sf::Vector2f> GetCollisionPoint(
-				sf::Vector2f center0, float radius0, sf::Vector2f center1, float radius1, float& distance);
+			struct Info {
+				CollidableType              type = CollidableType::BALL;
+				bool                        destroyed = false;
+				int32_t                     scoreMod = 0;
+				std::optional<sf::Vector2f> collisionPoint = std::nullopt;
+			};
 
-			static std::optional<sf::Vector2f> GetCollisionPoint(
-				const sf::FloatRect& rect, sf::Vector2f center, float radius, float& distance); */
+			virtual Info OnCollision(ICollidable& collider) = 0;
+
+			CollidableType CollidableType;
 	};
 }

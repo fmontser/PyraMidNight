@@ -37,16 +37,16 @@ namespace pyramidnight {
 		
 		mWallTex = ResourceManager::GetTexture(PATH_TEX_WALL);
 		mWallTex->setRepeated(true);
-		mWallLeft = std::make_shared<sf::Sprite>(sf::Sprite(*mWallTex));
+		mWallLeft = std::make_shared<Obstacle>(*mWallTex);
 		mWallLeft->setTextureRect({{0, 0},{32, 896}});
 		mWallLeft->setPosition({0, 32});
-		mWallRight = std::make_shared<sf::Sprite>(sf::Sprite(*mWallTex));
+		mWallRight = std::make_shared<Obstacle>(*mWallTex);
 		mWallRight->setTextureRect({{0, 0},{32, 896}});
 		mWallRight->setPosition({608, 32});
 
 		mCeilTex = ResourceManager::GetTexture(PATH_TEX_CEIL);
 		mCeilTex->setRepeated(true);
-		mCeil = std::make_shared<sf::Sprite>(*mCeilTex);
+		mCeil = std::make_shared<Obstacle>(*mCeilTex);
 		mCeil->setTextureRect({{0, 0},{640, 32}});
 
 		mBumperTex = std::make_shared<sf::Texture>(PATH_TEX_BUMP);
@@ -117,48 +117,31 @@ namespace pyramidnight {
 		return true;
 	}
 
-	//TODO remove smelly code, make objects ICollidable
 	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime) {
 		if (mBall->GetState() == Ball::State::PLAYING) {
 			for (const auto &obj : mColdetVector) {
-
-				if (auto cpos = mBall->GetCollisionPoint(obj->getGlobalBounds()) != std::nullopt) {
-					mBall->Bounce(*obj);
-
-					(void)cpos;
-
-					if (typeid(*obj) == typeid(Block)) {
-						auto* block = dynamic_cast<Block*>(obj.get());
-						if (block->Damage()) {
-							AddScore(score, block->GetScore());
-							mDestroyedSprites.push_back(obj);
-						}
-					} else if (typeid(*obj) == typeid(Bumper)) {
-						mBall->ApplyBumperMod(*obj);
-					}
-					break;
-				}
+				ICollidable::Info info = obj->OnCollision(*mBall);
+				if (info.scoreMod != 0)
+					AddScore(score, info.scoreMod);
+				if (info.destroyed)
+					mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
 			}
 		}
 		mBall->Update(mBumper->getPosition(), deltaTime);
 	}
 
-
-	void RoundScreenView::UpdateBlocks(const sf::Time& deltaTime) {
-		for (auto& block : mBlockVector) {
-			block->Update(deltaTime);
-		}
-
-		for (const auto& sprt : mDestroyedSprites) {
-			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprt);
+	void RoundScreenView::UpdateBlocks() {
+		for (const auto& sprite : mDestroyedSprites) {
+			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprite);
 			if (itBlock != mBlockVector.end())
 				mBlockVector.erase(itBlock);
 
-			auto itColdet = std::find(mColdetVector.begin(), mColdetVector.end(), sprt);
+			auto collidable = std::dynamic_pointer_cast<ICollidable>(sprite);
+			auto itColdet = std::find(mColdetVector.begin(), mColdetVector.end(), collidable);
 			if (itColdet != mColdetVector.end())
 				mColdetVector.erase(itColdet);
 
-			auto itDrawable = std::find(mDrawables.begin(), mDrawables.end(), sprt);
+			auto itDrawable = std::find(mDrawables.begin(), mDrawables.end(), sprite);
 			if (itDrawable != mDrawables.end())
 				mDrawables.erase(itDrawable);
 		}
@@ -167,7 +150,7 @@ namespace pyramidnight {
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
 		UpdateBall(update.score, update.deltaTime);
-		UpdateBlocks(update.deltaTime);
+		UpdateBlocks();
 		UpdateTexts(update);
 		ScoreTimePenalty(update.score, update.deltaTime);
 

@@ -4,10 +4,10 @@
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
 
-
 namespace pyramidnight {
 
 	Ball::Ball(const sf::Texture& texture) : sf::Sprite(texture) {
+		CollidableType = CollidableType::BALL;
 		mSpeed = BALL_INIT_SPEED;
 		mDirection = BALL_INIT_DIR;
 		mRadius = texture.getSize().x / 2;
@@ -77,7 +77,13 @@ namespace pyramidnight {
 		AudioManager::Play({sb, VOL_AUD_BUMPER_BOUNCE, PolySound::Type::SFX, false});
 	}
 
-	std::optional<sf::Vector2f> Ball::GetCollisionPoint(const sf::FloatRect &rect) {
+	ICollidable::Info Ball::OnCollision(ICollidable &collider) {
+		(void)collider;
+		return { CollidableType, false, 0 };
+	}
+
+	std::optional<sf::Vector2f> Ball::GetCollisionPoint(const sf::FloatRect &rect)
+	{
 		sf::Vector2f closest {};
 		auto bPos = getPosition();
 		closest.x = std::clamp(bPos.x, rect.position.x, rect.position.x + rect.size.x);

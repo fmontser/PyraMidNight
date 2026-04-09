@@ -1,13 +1,27 @@
 #include <algorithm>
 #include "Bumper.hpp"
+#include "Ball.hpp"
 
 namespace pyramidnight {
 	
 	Bumper::Bumper(const sf::Texture& texture) : sf::Sprite(texture) {
 		mSpeed = BMPR_INIT_SPEED;
 	}
-	
-	void Bumper::Move(int8_t magnitude, sf::Time& deltaTime, bool fine, bool coarse) {
+
+	ICollidable::Info Bumper::OnCollision(ICollidable &collider) { 
+		if (collider.CollidableType == CollidableType::BALL) {
+			auto& ball = static_cast<Ball&>(collider);
+			auto cpos = ball.GetCollisionPoint(getGlobalBounds());
+			if (cpos != std::nullopt) {
+				ball.Bounce(*this);
+				ball.ApplyBumperMod(*this);
+			}
+		}
+		return {CollidableType, false, 0, std::nullopt };
+	}
+
+	void Bumper::Move(int8_t magnitude, sf::Time &deltaTime, bool fine, bool coarse)
+	{
 		sf::Vector2 position = this->getPosition();
 		if (fine && !coarse)
 			mSpeed *= BMPR_FINE_SPEED_MOD;
@@ -19,5 +33,4 @@ namespace pyramidnight {
 		this->setPosition(position);
 		mSpeed = BMPR_INIT_SPEED;
 	}
-
 }

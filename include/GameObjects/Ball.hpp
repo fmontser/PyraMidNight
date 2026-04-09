@@ -1,10 +1,11 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include "ICollidable.hpp"
 #include "Common.hpp"
 
 namespace pyramidnight {
 
-	class Ball : public sf::Sprite {
+	class Ball : public sf::Sprite, public ICollidable {
 	public:
 		enum class State {
 			DOCKED, PLAYING
@@ -18,6 +19,7 @@ namespace pyramidnight {
 		void Bounce(const sf::Sprite &obj);
 		void ApplyBumperMod(const sf::Sprite& bumper);
 
+		Info OnCollision(ICollidable& collider) override;
 		std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect);
 
 		float GetBallDistance(const sf::Sprite &obj) const;
@@ -30,6 +32,7 @@ namespace pyramidnight {
 		sf::Vector2f    mDirection;
 		float           mRadius;
 		float           mDistance;
+
 		
 		void  Move(const sf::Time& deltaTime);
 		void  ResolveOverlap();
