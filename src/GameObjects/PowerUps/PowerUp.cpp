@@ -1,19 +1,29 @@
+#include <cmath>
 #include "PowerUp.hpp"
+#include "Common.hpp"
 
 namespace pyramidnight {
-	PowerUp::PowerUp(const sf::Texture& texture) : sf::Sprite(texture) {}
+	PowerUp::PowerUp(const sf::Texture& texture) : sf::Sprite(texture) {
+		mIsSpawned = false;
+		mSpeed = 1.0f;
+		mDirection = GAME_DIRECTION_DOWN;
+	}
 	
 	void PowerUp::Spawn(
 		const sf::Vector2f &position, std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
 		setPosition(position);
 		drawables.push_back(shared_from_this());
+		mIsSpawned = true;
 	}
 
-	void PowerUp::Update() {
-		ApplyGravity();
+	void PowerUp::Update(const sf::Time& deltaTime) {
+		if (mIsSpawned)
+			ApplyGravity(deltaTime);
 	}
 
-	void PowerUp::ApplyGravity() {
-		//TODO implement
+	void PowerUp::ApplyGravity(const sf::Time& deltaTime) {
+		mDirection.y *= GAME_GRAVITY * mSpeed * deltaTime;
+		float gravity = std::sqrtf((mDirection.y * mDirection.y) + (mSpeed * mSpeed));
+		move({0.0f, GAME_GRAVITY});
 	}
 }

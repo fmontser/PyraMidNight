@@ -24,7 +24,8 @@ namespace pyramidnight {
 				PowerUp(const sf::Texture& texture);
 				PowerUp(const PowerUp& src) =  delete;
 				PowerUp& operator=(const PowerUp& src) = delete;
-
+				
+				bool         mIsSpawned;
 				float        mSpeed;
 				sf::Vector2f mDirection;
 

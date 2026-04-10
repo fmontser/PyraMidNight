@@ -6,10 +6,16 @@
 
 namespace pyramidnight {
 	//Game
-	inline constexpr uint32_t GAME_MAX_SCORE = std::numeric_limits<uint32_t>::max();
-	inline constexpr uint8_t  GAME_MAX_CREDITS = std::numeric_limits<uint8_t>::max();
-	inline constexpr uint8_t  GAME_RANK_SIZE = 10;
-	inline constexpr uint8_t  GAME_FINAL_ROUND_ID = 3;
+	inline constexpr uint32_t     GAME_MAX_SCORE = std::numeric_limits<uint32_t>::max();
+	inline constexpr uint8_t      GAME_MAX_CREDITS = std::numeric_limits<uint8_t>::max();
+	inline constexpr uint8_t      GAME_RANK_SIZE = 10;
+	inline constexpr uint8_t      GAME_FINAL_ROUND_ID = 3;
+	inline constexpr float        GAME_GRAVITY = 2.0f;
+	inline constexpr sf::Vector2f GAME_DIRECTION_DOWN = {0, 1};
+	inline constexpr sf::Vector2f GAME_DIRECTION_UP = {0, -1};
+	inline constexpr sf::Vector2f GAME_DIRECTION_LEFT = {-1, 0};
+	inline constexpr sf::Vector2f GAME_DIRECTION_RIGHT = {1, 0};
+
 
 	//Ball
 	inline constexpr float        BALL_INIT_SPEED = 0.6f;
