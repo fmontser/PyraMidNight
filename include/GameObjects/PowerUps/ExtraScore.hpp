@@ -6,15 +6,10 @@ namespace pyramidnight {
 
 	class ExtraScore : public PowerUp {
 		public:
-			ExtraScore(
-				const sf::Texture& texture,
-				std::function<void(uint8_t& score, uint32_t scoreMod)> addScore);
+			ExtraScore(const sf::Texture& texture, uint32_t scoreMod);
+			ICollidable::Info OnCollision(ICollidable &collider);
 
-			void Apply(uint8_t &score);
-				
 		private:
-			uint32_t mScoreMod;
-			std::function<void(uint8_t& score, uint32_t scoreMod)> mAddScore;
-	
+			int32_t mScoreMod;
 	};
 }

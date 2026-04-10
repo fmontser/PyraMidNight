@@ -1,4 +1,5 @@
 #include <algorithm>
+#include <cmath>
 #include "Bumper.hpp"
 #include "Ball.hpp"
 
@@ -18,6 +19,12 @@ namespace pyramidnight {
 			}
 		}
 		return {CollidableType, false, 0, std::nullopt };
+	}
+
+	std::optional<sf::Vector2f> Bumper::GetCollisionPoint(const sf::FloatRect &rect) {
+		if (auto overlap = getGlobalBounds().findIntersection(rect))
+			return overlap->position + (overlap->size / 2.0f);
+		return std::nullopt;
 	}
 
 	void Bumper::Move(int8_t magnitude, sf::Time &deltaTime, bool fine, bool coarse)
