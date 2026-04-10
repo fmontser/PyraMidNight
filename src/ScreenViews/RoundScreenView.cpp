@@ -79,20 +79,6 @@ namespace pyramidnight {
 		mColdetVector.push_back(mBumper);
 	}
 
-	bool RoundScreenView::Update(const RoundScreenUpdate& update) {
- 		if (!mLvlIsLoaded)
-			mLvlIsLoaded = LoadLevel(update.roundId);
-		if (update.action)
-			mBall->Launch();
-		if (update.holdLeft)
-			mBumper->Move(-1, update.deltaTime, update.fine, update.coarse);
-		else if (update.holdRight)
-			mBumper->Move(1, update.deltaTime, update.fine, update.coarse);
-		if (!UpdateGame(update))
-			return false;
-		return true;
-	}
-
 	bool RoundScreenView::LoadLevel(const uint8_t& roundId) {
 		auto& level = ROUNDS[roundId];
 		const auto offset =sf::Vector2f(64,32);
@@ -118,6 +104,40 @@ namespace pyramidnight {
 		return true;
 	}
 
+	bool RoundScreenView::Update(const RoundScreenUpdate& update) {
+ 		if (!mLvlIsLoaded)
+			mLvlIsLoaded = LoadLevel(update.roundId);
+		if (update.action)
+			mBall->Launch();
+		if (update.holdLeft)
+			mBumper->Move(-1, update.deltaTime, update.fine, update.coarse);
+		else if (update.holdRight)
+			mBumper->Move(1, update.deltaTime, update.fine, update.coarse);
+		if (!UpdateGame(update))
+			return false;
+		return true;
+	}
+
+	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
+		UpdateSpawnables(update.score, update.deltaTime);
+		UpdateBall(update.score, update.deltaTime);
+		UpdateBlocks();
+		UpdateTexts(update);
+		ScoreTimePenalty(update.score, update.deltaTime);
+
+		//Lose
+		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
+			return LoseBall(update);;
+		}
+		//Win
+		if (mBlockVector.empty()) {
+			auto sb = ResourceManager::GetAudio(PATH_AUD_NEXTROUND);
+			AudioManager::Play({sb,VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
+			return false;
+		}
+		return true;
+	}
+
 	void RoundScreenView::UpdateSpawnables(uint32_t& score, const sf::Time &deltaTime) {
 		for (const auto &obj : mPowerUpVector) {
 			ICollidable::Info info = obj->OnCollision(*mBumper);
@@ -131,7 +151,6 @@ namespace pyramidnight {
 	}
 
 	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime) {
-
 		if (mBall->GetState() == Ball::State::PLAYING) {
 			for (const auto &obj : mColdetVector) {
 				ICollidable::Info info = obj->OnCollision(*mBall);
@@ -142,8 +161,8 @@ namespace pyramidnight {
 					if (info.scoreMod != 0)
 						AddScore(score, info.scoreMod);
 			}
-			mBall->Update(mBumper->getPosition(), deltaTime);
 		}
+		mBall->Update(mBumper->getPosition(), deltaTime);
 	}
 
 	void RoundScreenView::UpdateBlocks() {
@@ -169,25 +188,6 @@ namespace pyramidnight {
 		mDestroyedSprites.clear();
 	}
 
-	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
-		UpdateSpawnables(update.score, update.deltaTime);
-		UpdateBall(update.score, update.deltaTime);
-		UpdateBlocks();
-		UpdateTexts(update);
-		ScoreTimePenalty(update.score, update.deltaTime);
-
-		//Lose
-		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
-			return LoseBall(update);;
-		}
-		//Win
-		if (mBlockVector.empty()) {
-			auto sb = ResourceManager::GetAudio(PATH_AUD_NEXTROUND);
-			AudioManager::Play({sb,VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
-			return false;
-		}
-		return true;
-	}
 
 	void RoundScreenView::UpdateTexts(const RoundScreenUpdate &update) {
 		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR)
