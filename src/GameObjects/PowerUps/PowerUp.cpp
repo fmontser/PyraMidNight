@@ -7,6 +7,7 @@ namespace pyramidnight {
 		mIsSpawned = false;
 		mSpeed = 1.0f;
 		mDirection = GAME_DIRECTION_DOWN;
+		CollidableType = CollidableType::POWER_UP;
 	}
 	
 	void PowerUp::Spawn(
@@ -22,8 +23,8 @@ namespace pyramidnight {
 	}
 
 	void PowerUp::ApplyGravity(const sf::Time& deltaTime) {
-		mDirection.y *= GAME_GRAVITY * mSpeed * deltaTime;
+		mDirection.y *= GAME_GRAVITY * mSpeed * deltaTime.asSeconds();
 		float gravity = std::sqrtf((mDirection.y * mDirection.y) + (mSpeed * mSpeed));
-		move({0.0f, GAME_GRAVITY});
+		move({0.0f, gravity});
 	}
 }

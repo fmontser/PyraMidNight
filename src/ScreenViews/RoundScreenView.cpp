@@ -7,6 +7,7 @@
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
 #include "ScreenShake.hpp"
+#include "ExtraScore.hpp"
 
 namespace pyramidnight {
 
@@ -117,14 +118,32 @@ namespace pyramidnight {
 		return true;
 	}
 
+	void RoundScreenView::UpdateSpawnables(uint32_t& score, const sf::Time &deltaTime) {
+		for (const auto &obj : mPowerUpVector) {
+			ICollidable::Info info = obj->OnCollision(*mBumper);
+			obj->Update(deltaTime);
+			if (info.destroyed) {
+				mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
+			}
+			if (info.scoreMod != 0)
+				AddScore(score, info.scoreMod);
+		}
+	}
+
 	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime) {
 		if (mBall->GetState() == Ball::State::PLAYING) {
 			for (const auto &obj : mColdetVector) {
 				ICollidable::Info info = obj->OnCollision(*mBall);
+				if (info.destroyed) {
+					if (info.type == ICollidable::CollidableType::BLOCK) {
+						auto spawn = std::make_shared<ExtraScore>(*mBlockTex, 200);
+						spawn->Spawn(*info.collisionPoint, mDrawables);
+						mPowerUpVector.push_back(spawn);
+					}
+					mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
+				}
 				if (info.scoreMod != 0)
 					AddScore(score, info.scoreMod);
-				if (info.destroyed)
-					mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
 			}
 		}
 		mBall->Update(mBumper->getPosition(), deltaTime);
@@ -135,6 +154,11 @@ namespace pyramidnight {
 			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprite);
 			if (itBlock != mBlockVector.end())
 				mBlockVector.erase(itBlock);
+
+			auto powerUp = std::dynamic_pointer_cast<PowerUp>(sprite);
+			auto itPowerUp = std::find(mPowerUpVector.begin(), mPowerUpVector.end(), powerUp);
+			if (itPowerUp != mPowerUpVector.end())
+				mPowerUpVector.erase(itPowerUp);
 
 			auto collidable = std::dynamic_pointer_cast<ICollidable>(sprite);
 			auto itColdet = std::find(mColdetVector.begin(), mColdetVector.end(), collidable);
@@ -149,6 +173,7 @@ namespace pyramidnight {
 	}
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
+		UpdateSpawnables(update.score, update.deltaTime);
 		UpdateBall(update.score, update.deltaTime);
 		UpdateBlocks();
 		UpdateTexts(update);

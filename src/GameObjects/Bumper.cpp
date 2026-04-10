@@ -7,6 +7,7 @@ namespace pyramidnight {
 	
 	Bumper::Bumper(const sf::Texture& texture) : sf::Sprite(texture) {
 		mSpeed = BMPR_INIT_SPEED;
+		CollidableType = CollidableType::BUMPER;
 	}
 
 	ICollidable::Info Bumper::OnCollision(ICollidable &collider) { 

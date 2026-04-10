@@ -6,6 +6,7 @@
 #include "Ball.hpp"
 #include "Block.hpp"
 #include "Common.hpp"
+#include "PowerUp.hpp"
 
 namespace pyramidnight {
 
@@ -51,10 +52,12 @@ namespace pyramidnight {
 			std::shared_ptr<sf::RectangleShape>       mDeathArea;
 			std::vector<std::shared_ptr<ICollidable>> mColdetVector;
 			std::vector<std::shared_ptr<Block>>       mBlockVector;
+			std::vector<std::shared_ptr<PowerUp>>     mPowerUpVector;
 			std::vector<std::shared_ptr<sf::Sprite>>  mDestroyedSprites;
 
 			bool LoadLevel(const uint8_t& roundId);
-			void UpdateBall(uint32_t& score, const sf::Time& deltaTime);
+			void UpdateSpawnables(uint32_t &score, const sf::Time &deltaTime);
+			void UpdateBall(uint32_t &score, const sf::Time &deltaTime);
 			void UpdateBlocks();
 			bool UpdateGame(const RoundScreenUpdate &update);
 			void UpdateTexts(const RoundScreenUpdate &update);

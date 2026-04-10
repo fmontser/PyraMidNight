@@ -11,7 +11,7 @@ namespace pyramidnight {
 			virtual ~ICollidable() = default;
 
 			enum class CollidableType {
-				BALL, BLOCK, WALL, BUMPER
+				BALL, BLOCK, WALL, BUMPER, POWER_UP
 			};
 
 			struct Info {

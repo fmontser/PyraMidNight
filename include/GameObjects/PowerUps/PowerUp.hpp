@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/Time.hpp>
 #include "ICollidable.hpp"
 #include "ISpawnable.hpp"
 
@@ -17,7 +18,7 @@ namespace pyramidnight {
 					const sf::Vector2f& position,
 					std::vector<std::shared_ptr<sf::Drawable>>& drawables) override;
 
-				void Update();
+				void Update(const sf::Time &deltaTime);
 
 			protected:
 
@@ -29,6 +30,6 @@ namespace pyramidnight {
 				float        mSpeed;
 				sf::Vector2f mDirection;
 
-				void ApplyGravity();
+				void ApplyGravity(const sf::Time &deltaTime);
 	};
 }
