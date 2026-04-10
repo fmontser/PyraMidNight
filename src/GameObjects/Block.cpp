@@ -36,7 +36,7 @@ namespace pyramidnight {
 		AudioManager::Play({sb, VOL_AUD_BLOCK_DAMAGE, PolySound::Type::SFX, false});
 
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
-			BLOCK_FLASH_TIME, BLOCK_FLASH_LAPSE, BLOCK_FLASH_COLOR, mTint, shared_from_this()));
+			EFF_FLASH_BLK_TIME, EFF_FLASH_BLK_LAPSE, EFF_FLASH_BLK_COLOR, mTint, shared_from_this()));
 		setRotation(sf::degrees(randomValue));
 	}
 

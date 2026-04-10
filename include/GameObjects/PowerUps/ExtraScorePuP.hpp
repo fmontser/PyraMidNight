@@ -1,6 +1,7 @@
 #pragma once
-#include "PowerUp.hpp"
 #include <functional>
+#include <SFML/System/Angle.hpp>
+#include "PowerUp.hpp"
 
 namespace pyramidnight {
 
@@ -9,7 +10,10 @@ namespace pyramidnight {
 			ExtraScorePuP(const sf::Texture& texture, uint32_t scoreMod);
 			ICollidable::Info OnCollision(ICollidable &collider);
 
+			void EnableFlashEffect();
+
 		private:
-			int32_t mScoreMod;
+			int32_t     mScoreMod;
+			float       mRotation;
 	};
 }

@@ -58,6 +58,7 @@ namespace pyramidnight {
 		mBall = std::make_shared<Ball>(*mBallTex);
 
 		mBlockTex = ResourceManager::GetTexture(PATH_TEX_BLOCK);
+		mScorePuPTex = ResourceManager::GetTexture(PATH_TEX_SCORE_PWRUP);
 
 		mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
 		mDeathArea->setPosition({32, 864});
@@ -247,7 +248,8 @@ namespace pyramidnight {
 		
 		switch (*spawnType) {
 			case PowerUp::Type::SCORE:
-				spawn = std::make_shared<ExtraScorePuP>(*mBlockTex, SCORE_PWRUP_POINTS);
+				spawn = std::make_shared<ExtraScorePuP>(*mScorePuPTex, SCORE_PWRUP_POINTS);
+				std::dynamic_pointer_cast<ExtraScorePuP>(spawn)->EnableFlashEffect();
 				break;
 			default:
 				break;

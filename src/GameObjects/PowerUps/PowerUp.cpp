@@ -5,7 +5,7 @@
 namespace pyramidnight {
 	PowerUp::PowerUp(const sf::Texture& texture) : sf::Sprite(texture) {
 		mIsSpawned = false;
-		mSpeed = 1.0f;
+		mSpeed = 200.0f;
 		mDirection = GAME_DIRECTION_DOWN;
 		CollidableType = ICollidable::Type::POWER_UP;
 	}
@@ -23,8 +23,7 @@ namespace pyramidnight {
 	}
 
 	void PowerUp::ApplyGravity(const sf::Time& deltaTime) {
-		mDirection.y *= GAME_GRAVITY * mSpeed * deltaTime.asSeconds();
-		float gravity = std::sqrtf((mDirection.y * mDirection.y) + (mSpeed * mSpeed));
+		float gravity = mDirection.y * GAME_GRAVITY * mSpeed * deltaTime.asSeconds();
 		move({0.0f, gravity});
 	}
 }
