@@ -16,7 +16,6 @@ namespace pyramidnight {
 	inline constexpr sf::Vector2f GAME_DIRECTION_LEFT = {-1, 0};
 	inline constexpr sf::Vector2f GAME_DIRECTION_RIGHT = {1, 0};
 
-
 	//Ball
 	inline constexpr float        BALL_INIT_SPEED = 0.6f;
 	inline constexpr sf::Vector2f BALL_INIT_DIR = {-1, -1};
@@ -43,6 +42,10 @@ namespace pyramidnight {
 	inline constexpr float   SCORE_BLOCK_MOD = 25.0f;
 	inline constexpr int32_t SCORE_LOSE_BALL = -100;
 	inline constexpr int32_t SCORE_TIME_PENALTY = -1;
+	inline constexpr int32_t SCORE_PWRUP_POINTS = 150;
+
+	//Power ups
+	inline constexpr float PWRUP_SCORE_CHANCE = 0.15f;
 
 	//Cursor
 	inline constexpr float            CUR_MV_OFFSET = 30.0f;

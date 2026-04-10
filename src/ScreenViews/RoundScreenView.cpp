@@ -238,7 +238,6 @@ namespace pyramidnight {
 			credits--;
 	}
 
-	//TODO remove hardcoded pooints
 	std::optional<std::shared_ptr<PowerUp>> RoundScreenView::GeneratePowerUp(ICollidable::Info info) {
 		auto spawnType = mSpawner.RollSpawn();
 		std::shared_ptr<PowerUp> spawn = nullptr;
@@ -248,7 +247,7 @@ namespace pyramidnight {
 		
 		switch (*spawnType) {
 			case PowerUp::Type::SCORE:
-				spawn = std::make_shared<ExtraScorePuP>(*mBlockTex, 150);
+				spawn = std::make_shared<ExtraScorePuP>(*mBlockTex, SCORE_PWRUP_POINTS);
 				break;
 			default:
 				break;
