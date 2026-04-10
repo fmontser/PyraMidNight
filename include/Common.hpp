@@ -6,10 +6,15 @@
 
 namespace pyramidnight {
 	//Game
-	inline constexpr uint32_t GAME_MAX_SCORE = std::numeric_limits<uint32_t>::max();
-	inline constexpr uint8_t  GAME_MAX_CREDITS = std::numeric_limits<uint8_t>::max();
-	inline constexpr uint8_t  GAME_RANK_SIZE = 10;
-	inline constexpr uint8_t  GAME_FINAL_ROUND_ID = 3;
+	inline constexpr uint32_t     GAME_MAX_SCORE = std::numeric_limits<uint32_t>::max();
+	inline constexpr uint8_t      GAME_MAX_CREDITS = std::numeric_limits<uint8_t>::max();
+	inline constexpr uint8_t      GAME_RANK_SIZE = 10;
+	inline constexpr uint8_t      GAME_FINAL_ROUND_ID = 3;
+	inline constexpr float        GAME_GRAVITY = 1.0f;
+	inline constexpr sf::Vector2f GAME_DIRECTION_DOWN = {0, 1};
+	inline constexpr sf::Vector2f GAME_DIRECTION_UP = {0, -1};
+	inline constexpr sf::Vector2f GAME_DIRECTION_LEFT = {-1, 0};
+	inline constexpr sf::Vector2f GAME_DIRECTION_RIGHT = {1, 0};
 
 	//Ball
 	inline constexpr float        BALL_INIT_SPEED = 0.6f;
@@ -29,14 +34,15 @@ namespace pyramidnight {
 	//Blocks
 	inline constexpr float     BLOCK_ROT_MIN = 2.0f;
 	inline constexpr float     BLOCK_ROT_MAX = -2.0f;
-	inline constexpr float     BLOCK_FLASH_LAPSE = 0.05f;
-	inline constexpr float     BLOCK_FLASH_TIME = 1.0f;
-	inline constexpr sf::Color BLOCK_FLASH_COLOR = sf::Color::Green;
 
 	//Score
 	inline constexpr float   SCORE_BLOCK_MOD = 25.0f;
 	inline constexpr int32_t SCORE_LOSE_BALL = -100;
 	inline constexpr int32_t SCORE_TIME_PENALTY = -1;
+	inline constexpr int32_t SCORE_PWRUP_POINTS = 150;
+
+	//Power ups
+	inline constexpr float     PWRUP_SCORE_CHANCE = 0.22f;
 
 	//Cursor
 	inline constexpr float            CUR_MV_OFFSET = 30.0f;
@@ -116,6 +122,7 @@ namespace pyramidnight {
 	inline constexpr std::string_view PATH_TEX_BUMP = "assets/textures/Bumper.png";
 	inline constexpr std::string_view PATH_TEX_BALL = "assets/textures/Ball.png";
 	inline constexpr std::string_view PATH_TEX_BLOCK = "assets/textures/Block32.png";
+	inline constexpr std::string_view PATH_TEX_SCORE_PWRUP = "assets/textures/ScorePuP32.png";
 
 	inline constexpr std::string_view PATH_AUD_BALL_BOUNCE = "assets/audio/BallBounce.ogg";
 	inline constexpr std::string_view PATH_AUD_BALL_LOSE = "assets/audio/BallLose.ogg";
@@ -145,7 +152,7 @@ namespace pyramidnight {
 	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 0.5f;
 	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO enemies feature
 	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.4f;
-	inline constexpr float VOL_AUD_PWRUP_0 = 1.0f;
+	inline constexpr float VOL_AUD_PWRUP_0 = 0.1f;
 	inline constexpr float VOL_AUD_COIN_IN = 1.0f;
 	inline constexpr float VOL_AUD_CURSOR = 1.0f;
 	inline constexpr float VOL_AUD_NEXTROUND = 1.0f;
@@ -159,4 +166,9 @@ namespace pyramidnight {
 		//Effects
 		inline constexpr float        EFF_SHAKE_LOSEBALL_TIME = 0.5f;
 		inline constexpr float        EFF_SHAKE_LOSEBALL_POWER = 2.5f;
+		inline constexpr float        EFF_FLASH_SCOREPUP_LAPSE = 0.042f;
+		inline constexpr sf::Color    EFF_FLASH_SCOREPUP_COLOR = sf::Color::Magenta;
+		inline constexpr float        EFF_FLASH_BLK_LAPSE = 0.05f;
+		inline constexpr float        EFF_FLASH_BLK_TIME = 1.0f;
+		inline constexpr sf::Color    EFF_FLASH_BLK_COLOR = sf::Color::Green;
 }

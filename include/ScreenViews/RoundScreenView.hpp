@@ -6,6 +6,8 @@
 #include "Ball.hpp"
 #include "Block.hpp"
 #include "Common.hpp"
+#include "Spawner.hpp"
+#include "PowerUp.hpp"
 
 namespace pyramidnight {
 
@@ -47,21 +49,26 @@ namespace pyramidnight {
 			std::shared_ptr<sf::Texture> mBallTex;
 			std::shared_ptr<Ball>        mBall;
 			std::shared_ptr<sf::Texture> mBlockTex;
+			std::shared_ptr<sf::Texture> mScorePuPTex;
 			
 			std::shared_ptr<sf::RectangleShape>       mDeathArea;
 			std::vector<std::shared_ptr<ICollidable>> mColdetVector;
 			std::vector<std::shared_ptr<Block>>       mBlockVector;
+			std::vector<std::shared_ptr<PowerUp>>     mPowerUpVector;
 			std::vector<std::shared_ptr<sf::Sprite>>  mDestroyedSprites;
+			Spawner                                   mSpawner;
 
 			bool LoadLevel(const uint8_t& roundId);
-			void UpdateBall(uint32_t& score, const sf::Time& deltaTime);
-			void UpdateBlocks();
 			bool UpdateGame(const RoundScreenUpdate &update);
+			void UpdateSpawnables(uint32_t &score, const sf::Time &deltaTime);
+			void UpdateBall(uint32_t &score, const sf::Time &deltaTime);
+			void UpdateBlocks();
 			void UpdateTexts(const RoundScreenUpdate &update);
 			void ScoreTimePenalty(uint32_t &score, sf::Time &deltaTime);
 			bool LoseBall(const RoundScreenUpdate &update);
 			void AddScore(uint32_t& score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
+			std::optional<std::shared_ptr<PowerUp>> GeneratePowerUp(ICollidable::Info info);
 			void Log(const std::string &msg) override;
 
 	};

@@ -1,0 +1,41 @@
+#pragma once
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/Time.hpp>
+#include "ICollidable.hpp"
+#include "ISpawnable.hpp"
+
+namespace pyramidnight {
+
+	class PowerUp : 
+		public sf::Sprite, public ICollidable,
+		public ISpawnable, public std::enable_shared_from_this<PowerUp> {
+			public:
+
+				enum class Type {
+					SCORE
+				};
+
+				virtual ~PowerUp() = default;
+
+				void Spawn(
+					const sf::Vector2f& position,
+					std::vector<std::shared_ptr<sf::Drawable>>& drawables) override;
+
+				void Update(const sf::Time &deltaTime);
+
+				PowerUp::Type  PowerUpType;
+
+			protected:
+
+				PowerUp(const sf::Texture& texture);
+				PowerUp(const PowerUp& src) =  delete;
+				PowerUp& operator=(const PowerUp& src) = delete;
+				
+				bool         mIsSpawned;
+				float        mSpeed;
+				sf::Vector2f mDirection;
+
+				void ApplyGravity(const sf::Time &deltaTime);
+	};
+}

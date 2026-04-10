@@ -10,7 +10,7 @@ namespace pyramidnight {
 	Block::Block(const sf::Texture& texture, int8_t hitPoints) : sf::Sprite(texture) {
 		mHitPoints = hitPoints;
 		mScorePoints = mHitPoints * SCORE_BLOCK_MOD;
-		CollidableType = CollidableType::BLOCK;
+		CollidableType = ICollidable::Type::BLOCK;
 		
 		// color for hitpoints
 		if (hitPoints == 2)
@@ -36,20 +36,20 @@ namespace pyramidnight {
 		AudioManager::Play({sb, VOL_AUD_BLOCK_DAMAGE, PolySound::Type::SFX, false});
 
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
-			BLOCK_FLASH_TIME, BLOCK_FLASH_LAPSE, BLOCK_FLASH_COLOR, mTint, shared_from_this()));
+			EFF_FLASH_BLK_TIME, EFF_FLASH_BLK_LAPSE, EFF_FLASH_BLK_COLOR, mTint, shared_from_this()));
 		setRotation(sf::degrees(randomValue));
 	}
 
 	ICollidable::Info Block::OnCollision(ICollidable &collider) {
-		if (collider.CollidableType == CollidableType::BALL) {
+		if (collider.CollidableType == ICollidable::Type::BALL) {
 			auto& ball = static_cast<Ball&>(collider);
 			auto cpos = ball.GetCollisionPoint(getGlobalBounds());
 			if (cpos != std::nullopt) {
 				ball.Bounce(*this);
 				Damage();
-				return {CollidableType, (mHitPoints == 0), mScorePoints, cpos };
+				return { CollidableType, (mHitPoints == 0), mScorePoints, cpos };
 			}
 		}
-		return {CollidableType, false, 0, std::nullopt };
+		return { CollidableType, false, 0, std::nullopt };
 	}
 }

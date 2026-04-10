@@ -84,7 +84,8 @@ namespace pyramidnight {
 			std::string(PATH_TEX_CEIL), 
 			std::string(PATH_TEX_BUMP), 
 			std::string(PATH_TEX_BALL), 
-			std::string(PATH_TEX_BLOCK)
+			std::string(PATH_TEX_BLOCK),
+			std::string(PATH_TEX_SCORE_PWRUP)
 		};
 
 		mFailSafeTexture = std::make_shared<sf::Texture>(FAILSAFE_TEXTURE_DATA, FAILSAFE_TEXTURE_DATA_SZ);

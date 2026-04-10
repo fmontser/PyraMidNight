@@ -3,10 +3,12 @@
 
 namespace pyramidnight {
 
-	Obstacle::Obstacle(const sf::Texture &texture) : sf::Sprite(texture) {}
+	Obstacle::Obstacle(const sf::Texture &texture) : sf::Sprite(texture) {
+		CollidableType = ICollidable::Type::OBSTACLE;
+	}
 
 	ICollidable::Info Obstacle::OnCollision(ICollidable &collider) { 
-		if (collider.CollidableType == CollidableType::BALL) {
+		if (collider.CollidableType == ICollidable::Type::BALL) {
 			auto& ball = static_cast<Ball&>(collider);
 			auto cpos = ball.GetCollisionPoint(getGlobalBounds());
 			if (cpos != std::nullopt) {

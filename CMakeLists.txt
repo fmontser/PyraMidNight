@@ -33,6 +33,7 @@ include(FetchContent)
 FetchContent_Declare(
 	SFML
 	URL "${SFML_ZIP_PATH}"
+	DOWNLOAD_EXTRACT_TIMESTAMP TRUE
 )
 FetchContent_MakeAvailable(SFML)
 
@@ -56,6 +57,9 @@ set(APP_SOURCES
 	src/GameObjects/Obstacle.cpp
 	src/GameObjects/Cursor.cpp
 	src/GameObjects/PolySound.cpp
+	src/GameObjects/Spawner.cpp
+	src/GameObjects/PowerUps/PowerUp.cpp
+	src/GameObjects/PowerUps/ExtraScorePuP.cpp
 	src/RenderEffects/RenderEffect.cpp
 	src/RenderEffects/ScreenShake.cpp
 	src/RenderEffects/Blink.cpp
@@ -81,6 +85,7 @@ endif()
 target_include_directories(PyraMidNight PUBLIC include/)
 target_include_directories(PyraMidNight PUBLIC include/Data)
 target_include_directories(PyraMidNight PUBLIC include/GameObjects)
+target_include_directories(PyraMidNight PUBLIC include/GameObjects/PowerUps)
 target_include_directories(PyraMidNight PUBLIC include/Interfaces)
 target_include_directories(PyraMidNight PUBLIC include/ScreenViews)
 target_include_directories(PyraMidNight PUBLIC include/Managers)

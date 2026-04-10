@@ -6,7 +6,7 @@
 namespace pyramidnight {
 
 	class Obstacle : 
-		public sf::Sprite, public ICollidable, public std::enable_shared_from_this<Obstacle> {
+		public sf::Sprite, public ICollidable {
 			public:
 				Obstacle(const sf::Texture& texture);
 			
