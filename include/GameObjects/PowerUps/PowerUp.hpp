@@ -33,9 +33,11 @@ namespace pyramidnight {
 				PowerUp& operator=(const PowerUp& src) = delete;
 				
 				bool         mIsSpawned;
+				bool         mIsDestroyed;
 				float        mSpeed;
 				sf::Vector2f mDirection;
 
 				void ApplyGravity(const sf::Time &deltaTime);
+				void DestroyIfOutside();
 	};
 }
