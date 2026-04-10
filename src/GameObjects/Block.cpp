@@ -10,7 +10,7 @@ namespace pyramidnight {
 	Block::Block(const sf::Texture& texture, int8_t hitPoints) : sf::Sprite(texture) {
 		mHitPoints = hitPoints;
 		mScorePoints = mHitPoints * SCORE_BLOCK_MOD;
-		CollidableType = CollidableType::BLOCK;
+		CollidableType = ICollidable::Type::BLOCK;
 		
 		// color for hitpoints
 		if (hitPoints == 2)
@@ -41,15 +41,15 @@ namespace pyramidnight {
 	}
 
 	ICollidable::Info Block::OnCollision(ICollidable &collider) {
-		if (collider.CollidableType == CollidableType::BALL) {
+		if (collider.CollidableType == ICollidable::Type::BALL) {
 			auto& ball = static_cast<Ball&>(collider);
 			auto cpos = ball.GetCollisionPoint(getGlobalBounds());
 			if (cpos != std::nullopt) {
 				ball.Bounce(*this);
 				Damage();
-				return {CollidableType, (mHitPoints == 0), mScorePoints, cpos };
+				return { CollidableType, (mHitPoints == 0), mScorePoints, cpos };
 			}
 		}
-		return {CollidableType, false, 0, std::nullopt };
+		return { CollidableType, false, 0, std::nullopt };
 	}
 }

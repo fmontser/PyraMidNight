@@ -6,6 +6,7 @@
 #include "Ball.hpp"
 #include "Block.hpp"
 #include "Common.hpp"
+#include "Spawner.hpp"
 #include "PowerUp.hpp"
 
 namespace pyramidnight {
@@ -54,6 +55,7 @@ namespace pyramidnight {
 			std::vector<std::shared_ptr<Block>>       mBlockVector;
 			std::vector<std::shared_ptr<PowerUp>>     mPowerUpVector;
 			std::vector<std::shared_ptr<sf::Sprite>>  mDestroyedSprites;
+			Spawner                                   mSpawner;
 
 			bool LoadLevel(const uint8_t& roundId);
 			void UpdateSpawnables(uint32_t &score, const sf::Time &deltaTime);
@@ -65,6 +67,7 @@ namespace pyramidnight {
 			bool LoseBall(const RoundScreenUpdate &update);
 			void AddScore(uint32_t& score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
+			std::optional<std::shared_ptr<PowerUp>> GeneratePowerUp(ICollidable::Info info);
 			void Log(const std::string &msg) override;
 
 	};

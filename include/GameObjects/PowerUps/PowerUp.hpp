@@ -12,6 +12,10 @@ namespace pyramidnight {
 		public ISpawnable, public std::enable_shared_from_this<PowerUp> {
 			public:
 
+				enum class Type {
+					SCORE
+				};
+
 				virtual ~PowerUp() = default;
 
 				void Spawn(
@@ -19,6 +23,8 @@ namespace pyramidnight {
 					std::vector<std::shared_ptr<sf::Drawable>>& drawables) override;
 
 				void Update(const sf::Time &deltaTime);
+
+				PowerUp::Type  PowerUpType;
 
 			protected:
 

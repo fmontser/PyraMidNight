@@ -7,7 +7,7 @@ namespace pyramidnight {
 		mIsSpawned = false;
 		mSpeed = 1.0f;
 		mDirection = GAME_DIRECTION_DOWN;
-		CollidableType = CollidableType::POWER_UP;
+		CollidableType = ICollidable::Type::POWER_UP;
 	}
 	
 	void PowerUp::Spawn(

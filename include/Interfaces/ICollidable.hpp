@@ -10,12 +10,12 @@ namespace pyramidnight {
 
 			virtual ~ICollidable() = default;
 
-			enum class CollidableType {
-				BALL, BLOCK, WALL, BUMPER, POWER_UP
+			enum class Type {
+				BALL, BLOCK, OBSTACLE, BUMPER, POWER_UP
 			};
 
 			struct Info {
-				CollidableType              type = CollidableType::BALL;
+				Type              type = Type::BALL;
 				bool                        destroyed = false;
 				int32_t                     scoreMod = 0;
 				std::optional<sf::Vector2f> collisionPoint = std::nullopt;
@@ -23,6 +23,6 @@ namespace pyramidnight {
 
 			virtual Info OnCollision(ICollidable& collider) = 0;
 
-			CollidableType CollidableType;
+			Type CollidableType;
 	};
 }

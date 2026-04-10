@@ -7,7 +7,7 @@
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
 #include "ScreenShake.hpp"
-#include "ExtraScore.hpp"
+#include "ExtraScorePuP.hpp"
 
 namespace pyramidnight {
 
@@ -131,22 +131,19 @@ namespace pyramidnight {
 	}
 
 	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime) {
+
 		if (mBall->GetState() == Ball::State::PLAYING) {
 			for (const auto &obj : mColdetVector) {
 				ICollidable::Info info = obj->OnCollision(*mBall);
-				if (info.destroyed) {
-					if (info.type == ICollidable::CollidableType::BLOCK) {
-						auto spawn = std::make_shared<ExtraScore>(*mBlockTex, 200);
-						spawn->Spawn(*info.collisionPoint, mDrawables);
-						mPowerUpVector.push_back(spawn);
+					if (info.destroyed) {
+						GeneratePowerUp(info);
+						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
 					}
-					mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
-				}
-				if (info.scoreMod != 0)
-					AddScore(score, info.scoreMod);
+					if (info.scoreMod != 0)
+						AddScore(score, info.scoreMod);
 			}
+			mBall->Update(mBumper->getPosition(), deltaTime);
 		}
-		mBall->Update(mBumper->getPosition(), deltaTime);
 	}
 
 	void RoundScreenView::UpdateBlocks() {
@@ -239,6 +236,29 @@ namespace pyramidnight {
 	void RoundScreenView::ConsumeCredit(uint8_t& credits) {
 		if (credits > 0)
 			credits--;
+	}
+
+	//TODO remove hardcoded pooints
+	std::optional<std::shared_ptr<PowerUp>> RoundScreenView::GeneratePowerUp(ICollidable::Info info) {
+		auto spawnType = mSpawner.RollSpawn();
+		std::shared_ptr<PowerUp> spawn = nullptr;
+
+		if (spawnType == std::nullopt)
+			return std::nullopt;
+		
+		switch (*spawnType) {
+			case PowerUp::Type::SCORE:
+				spawn = std::make_shared<ExtraScorePuP>(*mBlockTex, 150);
+				break;
+			default:
+				break;
+		}
+		if (spawn != nullptr) {
+			spawn->Spawn(*info.collisionPoint, mDrawables);
+			mPowerUpVector.push_back(spawn);
+			return spawn;
+		}
+		return std::nullopt;
 	}
 
 	void RoundScreenView::Log(const std::string &msg) {

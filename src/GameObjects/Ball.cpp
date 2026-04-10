@@ -7,7 +7,7 @@
 namespace pyramidnight {
 
 	Ball::Ball(const sf::Texture& texture) : sf::Sprite(texture) {
-		CollidableType = CollidableType::BALL;
+		CollidableType = ICollidable::Type::BALL;
 		mSpeed = BALL_INIT_SPEED;
 		mDirection = BALL_INIT_DIR;
 		mRadius = texture.getSize().x / 2;
@@ -79,7 +79,7 @@ namespace pyramidnight {
 
 	ICollidable::Info Ball::OnCollision(ICollidable &collider) {
 		(void)collider;
-		return { CollidableType, false, 0 };
+		return { CollidableType, false, 0, std::nullopt };
 	}
 
 	std::optional<sf::Vector2f> Ball::GetCollisionPoint(const sf::FloatRect &rect)

@@ -57,8 +57,9 @@ set(APP_SOURCES
 	src/GameObjects/Obstacle.cpp
 	src/GameObjects/Cursor.cpp
 	src/GameObjects/PolySound.cpp
+	src/GameObjects/Spawner.cpp
 	src/GameObjects/PowerUps/PowerUp.cpp
-	src/GameObjects/PowerUps/ExtraScore.cpp
+	src/GameObjects/PowerUps/ExtraScorePuP.cpp
 	src/RenderEffects/RenderEffect.cpp
 	src/RenderEffects/ScreenShake.cpp
 	src/RenderEffects/Blink.cpp
