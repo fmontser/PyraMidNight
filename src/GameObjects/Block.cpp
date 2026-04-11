@@ -47,7 +47,7 @@ namespace pyramidnight {
 			if (cpos != std::nullopt) {
 				ball.Bounce(*this);
 				Damage();
-				return { CollidableType, (mHitPoints == 0), mScorePoints, cpos };
+				return { CollidableType, (mHitPoints == 0), static_cast<float>(mScorePoints), cpos };
 			}
 		}
 		return { CollidableType, false, 0, std::nullopt };
