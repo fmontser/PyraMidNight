@@ -14,6 +14,7 @@ namespace pyramidnight {
 
 			void ApplyGhostlyMovement(const sf::Time &deltaTime);
 		private:
+			float         mBumperSpeedPenalty;
 			float         mDiveTimer;
 			float         mDiveLimit;
 			float         mAnimationDelta;
@@ -23,7 +24,11 @@ namespace pyramidnight {
 			float         mDeltaX;
 			float         mDeltaY;
 			bool          mFlashEnabled;
+			float         mAttackTimer;
+			float         mAttackLimit;
+			bool          mIsAttacking;
 			
+			void UpdateAttack();
 			void EnableFlashEffect();
 			int  GenerateDirection();
 			float GenerateTimer();

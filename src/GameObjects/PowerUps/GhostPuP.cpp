@@ -12,12 +12,17 @@ namespace pyramidnight {
 	
 	GhostPuP::GhostPuP(const sf::Texture &texture) : PowerUp(texture) {
 		PowerUpType = PowerUp::Type::GHOST;
+		mBumperSpeedPenalty = BMPR_INIT_SPEED;
 		mSpeed = 50.0f;
 		mDeltaX = 0.0f;
 		mDeltaY = 0.0f;
 		mDiveTimer = 0.0f;
 		mDiveLimit = GenerateTimer();
 		mFlashEnabled = false;
+		mAttackTimer = 0.0f;
+		mAttackLimit = 2.0f; //TODO hardcoded
+		mIsAttacking = false;
+
 		mAnimationDelta = 0.0f;
 		mTextureSize = getTexture().getSize();
 		mAnimationRect = {{0,0},{64,64}};
@@ -33,6 +38,7 @@ namespace pyramidnight {
 			EnableFlashEffect();
 		AnimateFrame(deltaTime);
 		ApplyGhostlyMovement(deltaTime);
+		UpdateAttack();
 		MirrorSprite();
 		PowerUp::Update(deltaTime);
 	}
@@ -42,17 +48,19 @@ namespace pyramidnight {
 			auto& bumper = static_cast<Bumper&>(collider);
 			auto cpos = bumper.GetCollisionPoint(getGlobalBounds());
 
-			if (cpos != std::nullopt) {
+			if (cpos != std::nullopt && !mIsAttacking && !mIsDestroyed) {
 				auto sb = ResourceManager::GetAudio(PATH_AUD_COIN_IN);
 				AudioManager::Play({sb, VOL_AUD_COIN_IN, PolySound::Type::SFX, false});
-				mIsDestroyed = true;
-				return { CollidableType, mIsDestroyed, 1.0f , cpos };
+				mIsAttacking = true;
+				return { CollidableType, mIsDestroyed, mBumperSpeedPenalty , cpos };
 			}
 		}
-		return { CollidableType, mIsDestroyed, 0.0f, std::nullopt };
+		return { CollidableType, mIsDestroyed, mBumperSpeedPenalty, std::nullopt };
 	}
 
 	void GhostPuP::ApplyGhostlyMovement(const sf::Time &deltaTime) {
+		if (mIsAttacking)
+			return;
 		auto deltaTimeSec = deltaTime.asSeconds();
 		mDeltaX += mDirection.x * ANI_GHOST_H_SPEED_MOD * deltaTimeSec;
 		mDeltaY += mDirection.y * ANI_GHOST_V_SPEED_MOD * deltaTimeSec;
@@ -69,7 +77,22 @@ namespace pyramidnight {
 		setPosition(position);
 	}
 
-	void GhostPuP::EnableFlashEffect() {
+	void GhostPuP::UpdateAttack() {
+		if (mIsAttacking) {
+			mAttackTimer += deltaTime.asSeconds();
+			mBumperSpeedPenalty = BMPR_INIT_SPEED * PWRUP_GHOST_PENALTY_MOD;
+			setColor(sf::Color::Red);
+		}
+		if (mIsAttacking && (mAttackTimer >= mAttackLimit)) {
+			mBumperSpeedPenalty = BMPR_INIT_SPEED;
+			mIsAttacking = false;
+			mIsDestroyed = true;
+			setColor(PWRUP_GHOST_COLOR);
+		}
+	}
+
+	void GhostPuP::EnableFlashEffect()
+	{
 		mFlashEnabled = true;
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
 			-1.0f, EFF_FLASH_GHOST_LAPSE, EFF_FLASH_GHOST_COLOR, getColor(), shared_from_this()));

@@ -23,7 +23,7 @@ namespace pyramidnight {
 	inline constexpr sf::Vector2f BALL_DOCKED_OFFSET = {64, -18};
 
 	//Bumper
-	inline constexpr float BMPR_INIT_SPEED = 0.40f;
+	inline constexpr float BMPR_INIT_SPEED = 400.0f;
 	inline constexpr float BMPR_FINE_SPEED_MOD = 0.4f;
 	inline constexpr float BMPR_COARSE_SPEED_MOD = 1.5f;
 	inline constexpr float BMPR_MV_LIMIT_L = 32.0f;
@@ -45,8 +45,9 @@ namespace pyramidnight {
 	inline constexpr float     PWRUP_CREDIT_CHANCE = 0.055f;
 	inline constexpr float     PWRUP_GHOST_CHANCE = 0.5f; //TODO adjust
 	inline constexpr float     PWRUP_SCORE_CHANCE = 0.22f;
-	inline constexpr sf::Color PWRUP_GHOST_COLOR = sf::Color({0, 255, 255, 64});
 
+	inline constexpr float     PWRUP_GHOST_PENALTY_MOD = 0.5f;
+	inline constexpr sf::Color PWRUP_GHOST_COLOR = sf::Color({0, 255, 255, 64});
 
 	//Cursor
 	inline constexpr float            CUR_MV_OFFSET = 30.0f;

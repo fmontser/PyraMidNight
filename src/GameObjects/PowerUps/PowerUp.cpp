@@ -1,6 +1,7 @@
 #include <cmath>
 #include "PowerUp.hpp"
 #include "Common.hpp"
+#include "RenderManager.hpp"
 
 namespace pyramidnight {
 	PowerUp::PowerUp(const sf::Texture& texture) : sf::Sprite(texture) {
@@ -30,7 +31,8 @@ namespace pyramidnight {
 	}
 
 	void PowerUp::DestroyIfOutside() {
-		if (getGlobalBounds().position.y > RNDR_RESOLUTION.y)
+		auto viewPort = RenderManager::GetWindow().getView().getViewport();
+		if (viewPort.contains(getGlobalBounds().position))
 			mIsDestroyed = true;
 	}
 }

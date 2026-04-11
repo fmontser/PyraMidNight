@@ -154,6 +154,7 @@ namespace pyramidnight {
 				switch (obj->PowerUpType) {
 					case PowerUp::Type::SCORE: AddScore(score, info.valueMod); break;
 					case PowerUp::Type::CREDIT: AddCredit(credits); break;
+					case PowerUp::Type::GHOST: mBumper->SetSpeed(info.valueMod); break;
 					default: break;
 				}
 			}

@@ -36,9 +36,11 @@ namespace pyramidnight {
 		else if (!fine && coarse)
 			mSpeed *= BMPR_COARSE_SPEED_MOD;
 
-		position.x += magnitude * mSpeed * deltaTime.asMilliseconds();
+		position.x += magnitude * mSpeed * deltaTime.asSeconds();
 		position.x = std::clamp(position.x, BMPR_MV_LIMIT_L, BMPR_MV_LIMIT_R);
 		this->setPosition(position);
 		mSpeed = BMPR_INIT_SPEED;
 	}
+	
+	void Bumper::SetSpeed(float speed)	{ mSpeed = speed;}
 }
