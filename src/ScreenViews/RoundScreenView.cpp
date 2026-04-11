@@ -120,7 +120,7 @@ namespace pyramidnight {
 	}
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
-		UpdateSpawnables(update.score, update.deltaTime);
+		UpdatePowerUps(update.score, update.deltaTime);
 		UpdateBall(update.score, update.deltaTime);
 		UpdateBlocks();
 		UpdateTexts(update);
@@ -139,7 +139,7 @@ namespace pyramidnight {
 		return true;
 	}
 
-	void RoundScreenView::UpdateSpawnables(uint32_t& score, const sf::Time &deltaTime) {
+	void RoundScreenView::UpdatePowerUps(uint32_t& score, const sf::Time &deltaTime) {
 		for (const auto &obj : mPowerUpVector) {
 			ICollidable::Info info = obj->OnCollision(*mBumper);
 			obj->Update(deltaTime);

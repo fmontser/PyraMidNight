@@ -60,7 +60,7 @@ namespace pyramidnight {
 
 			bool LoadLevel(const uint8_t& roundId);
 			bool UpdateGame(const RoundScreenUpdate &update);
-			void UpdateSpawnables(uint32_t &score, const sf::Time &deltaTime);
+			void UpdatePowerUps(uint32_t &score, const sf::Time &deltaTime);
 			void UpdateBall(uint32_t &score, const sf::Time &deltaTime);
 			void UpdateBlocks();
 			void UpdateTexts(const RoundScreenUpdate &update);
