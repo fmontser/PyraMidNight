@@ -13,7 +13,7 @@ namespace pyramidnight {
 			public:
 
 				enum class Type {
-					SCORE
+					SCORE, CREDIT
 				};
 
 				virtual ~PowerUp() = default;
