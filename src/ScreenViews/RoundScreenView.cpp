@@ -9,6 +9,7 @@
 #include "ScreenShake.hpp"
 #include "ExtraScorePuP.hpp"
 #include "ExtraCreditPuP.hpp"
+#include "GhostPuP.hpp"
 
 namespace pyramidnight {
 
@@ -262,7 +263,7 @@ namespace pyramidnight {
 		switch (*spawnType) {
 			case PowerUp::Type::SCORE: spawn = std::make_shared<ExtraScorePuP>(*mScorePuPTex, SCORE_PWRUP_POINTS); break;
 			case PowerUp::Type::CREDIT: spawn = std::make_shared<ExtraCreditPuP>(*mCreditPuPTex); break;
-			case PowerUp::Type::GHOST: spawn = std::make_shared<ExtraCreditPuP>(*mGhostPuPTex); break;
+			case PowerUp::Type::GHOST: spawn = std::make_shared<GhostPuP>(*mGhostPuPTex); break;
 			default:
 				break;
 		}

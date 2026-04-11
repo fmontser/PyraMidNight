@@ -12,23 +12,28 @@ namespace pyramidnight {
 	
 	GhostPuP::GhostPuP(const sf::Texture &texture) : PowerUp(texture) {
 		PowerUpType = PowerUp::Type::GHOST;
+		mSpeed = 50.0f;
 		mDeltaX = 0.0f;
 		mDeltaY = 0.0f;
+		mDiveTimer = 0.0f;
+		mDiveLimit = GenerateTimer();
 		mFlashEnabled = false;
 		mAnimationDelta = 0.0f;
-		mAnimationRect = {{0,0},{32,32}};
+		mTextureSize = getTexture().getSize();
+		mAnimationRect = {{0,0},{64,64}};
 		setTextureRect(mAnimationRect);
 		mSpriteRect = getTextureRect();
-		mTextureSize = getTexture().getSize();
 		setOrigin(getGlobalBounds().getCenter());
-		GenerateDirection();
+		setColor(PWRUP_GHOST_COLOR);
+		mDirection.x = GenerateDirection();
 	}
 
 	void GhostPuP::Update(const sf::Time &deltaTime) {
-		if (!mFlashEnabled)
+ 		if (!mFlashEnabled)
 			EnableFlashEffect();
 		AnimateFrame(deltaTime);
-		ApplyCurvedMovement(deltaTime);
+		ApplyGhostlyMovement(deltaTime);
+		MirrorSprite();
 		PowerUp::Update(deltaTime);
 	}
 
@@ -47,40 +52,63 @@ namespace pyramidnight {
 		return { CollidableType, mIsDestroyed, 0.0f, std::nullopt };
 	}
 
-	void GhostPuP::ApplyCurvedMovement(const sf::Time &deltaTime) {
-		mDeltaX += mDirection.x * ANI_COIN_H_SPEED_MOD * deltaTime.asSeconds();
-		mDeltaY += ANI_COIN_V_SPEED_MOD * deltaTime.asSeconds();
+	void GhostPuP::ApplyGhostlyMovement(const sf::Time &deltaTime) {
+		auto deltaTimeSec = deltaTime.asSeconds();
+		mDeltaX += mDirection.x * ANI_GHOST_H_SPEED_MOD * deltaTimeSec;
+		mDeltaY += mDirection.y * ANI_GHOST_V_SPEED_MOD * deltaTimeSec;
+
+		if (mDeltaX < -ANI_GHOST_SWING_RANGE || mDeltaX > ANI_GHOST_SWING_RANGE)
+			mDirection.x *= -1;
+		if (mDiveTimer < mDiveLimit) {
+			mDiveTimer += deltaTimeSec;
+			mDirection.y *= -1 ;
+		}
+
 		move({mDeltaX, mDeltaY});
 		sf::Vector2f position(getPosition());
-		position.x = std::clamp(position.x, 54.0f, 592.0f);
 		setPosition(position);
 	}
 
 	void GhostPuP::EnableFlashEffect() {
 		mFlashEnabled = true;
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
-			-1.0f, EFF_FLASH_CREDITUP_LAPSE, EFF_FLASH_CREDITUP_COLOR, getColor(), shared_from_this()));
+			-1.0f, EFF_FLASH_GHOST_LAPSE, EFF_FLASH_GHOST_COLOR, getColor(), shared_from_this()));
 	}
 
-	void GhostPuP::GenerateDirection() { 
+	int GhostPuP::GenerateDirection() { 
 		static std::random_device rd; 
 		static std::mt19937 gen(rd()); 
 		std::uniform_int_distribution<int> x(-1, 0);
 		
 		// zero is right direction
-		mDirection.x = x(gen) == 0 ? 1 : -1;
+		return x(gen) == 0 ? 1 : -1;
 	}
+
+	float GhostPuP::GenerateTimer() { 
+		static std::random_device rd; 
+		static std::mt19937 gen(rd()); 
+		std::uniform_real_distribution<float> t(2.0f, 10.0f);
+		
+		return t(gen);
+	}
+
 
 	void GhostPuP::AnimateFrame(const sf::Time &deltaTime) {
 		mAnimationDelta += deltaTime.asSeconds();
-		if (mAnimationDelta >= ANI_COIN_FRAMERATE) {
+		if (mAnimationDelta >= ANI_GHOST_FRAMERATE) {
 			size_t newFrameX = mAnimationRect.position.x + mSpriteRect.size.x;
 			
-			if (newFrameX > mTextureSize.x)
+			if (newFrameX >= mTextureSize.x)
 				newFrameX = 0;
 			mAnimationRect.position.x = newFrameX;
 			setTextureRect(mAnimationRect);
 			mAnimationDelta = 0;
 		}
+	}
+	
+	void GhostPuP::MirrorSprite() {
+		sf::Vector2f mirror(getScale());
+		mirror.x = mDirection.x;
+		setScale(mirror);
 	}
 }

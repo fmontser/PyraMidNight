@@ -12,8 +12,10 @@ namespace pyramidnight {
 			void Update(const sf::Time &deltaTime) override;
 			ICollidable::Info OnCollision(ICollidable &collider);
 
-			void ApplyCurvedMovement(const sf::Time &deltaTime);
-			private:
+			void ApplyGhostlyMovement(const sf::Time &deltaTime);
+		private:
+			float         mDiveTimer;
+			float         mDiveLimit;
 			float         mAnimationDelta;
 			sf::IntRect   mAnimationRect;
 			sf::IntRect   mSpriteRect;
@@ -23,8 +25,10 @@ namespace pyramidnight {
 			bool          mFlashEnabled;
 			
 			void EnableFlashEffect();
-			void GenerateDirection();
+			int  GenerateDirection();
+			float GenerateTimer();
 			void AnimateFrame(const sf::Time &deltaTime);
+			void MirrorSprite();
 
 	};
 }
