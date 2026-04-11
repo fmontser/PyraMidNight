@@ -8,6 +8,7 @@
 #include "RenderManager.hpp"
 #include "ScreenShake.hpp"
 #include "ExtraScorePuP.hpp"
+#include "ExtraCreditPuP.hpp"
 
 namespace pyramidnight {
 
@@ -120,7 +121,7 @@ namespace pyramidnight {
 	}
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
-		UpdatePowerUps(update.score, update.deltaTime);
+		UpdatePowerUps(update.credits, update.score, update.deltaTime);
 		UpdateBall(update.score, update.deltaTime);
 		UpdateBlocks();
 		UpdateTexts(update);
@@ -139,18 +140,23 @@ namespace pyramidnight {
 		return true;
 	}
 
-	void RoundScreenView::UpdatePowerUps(uint32_t& score, const sf::Time &deltaTime) {
+	void RoundScreenView::UpdatePowerUps(uint8_t& credits, uint32_t& score, const sf::Time &deltaTime) {
 		for (const auto &obj : mPowerUpVector) {
 			ICollidable::Info info = obj->OnCollision(*mBumper);
 			obj->Update(deltaTime);
 			if (info.destroyed) {
 				mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
 			}
-			if (info.scoreMod != 0)
-				AddScore(score, info.scoreMod);
+			if (info.valueMod != 0) {
+				switch (obj->PowerUpType) {
+					case PowerUp::Type::SCORE: AddScore(score, info.valueMod); break;
+					case PowerUp::Type::CREDIT: AddCredit(credits); break;
+					default: break;
+				}
+			}
 		}
 	}
-
+	
 	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime) {
 		if (mBall->GetState() == Ball::State::PLAYING) {
 			for (const auto &obj : mColdetVector) {
@@ -159,8 +165,8 @@ namespace pyramidnight {
 						GeneratePowerUp(info);
 						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
 					}
-					if (info.scoreMod != 0)
-						AddScore(score, info.scoreMod);
+					if (info.valueMod != 0)
+						AddScore(score, info.valueMod);
 			}
 		}
 		mBall->Update(mBumper->getPosition(), deltaTime);
@@ -239,6 +245,11 @@ namespace pyramidnight {
 			credits--;
 	}
 
+	void RoundScreenView::AddCredit(uint8_t& credits) {
+		if (credits < GAME_MAX_CREDITS)
+			credits++;
+	}
+
 	std::optional<std::shared_ptr<PowerUp>> RoundScreenView::GeneratePowerUp(ICollidable::Info info) {
 		auto spawnType = mSpawner.RollSpawn();
 		std::shared_ptr<PowerUp> spawn = nullptr;
@@ -250,6 +261,10 @@ namespace pyramidnight {
 			case PowerUp::Type::SCORE:
 				spawn = std::make_shared<ExtraScorePuP>(*mScorePuPTex, SCORE_PWRUP_POINTS);
 				std::dynamic_pointer_cast<ExtraScorePuP>(spawn)->EnableFlashEffect();
+				break;
+			case PowerUp::Type::CREDIT:
+				spawn = std::make_shared<ExtraCreditPuP>(*mScorePuPTex); //TODO change texture
+				std::dynamic_pointer_cast<ExtraCreditPuP>(spawn)->EnableFlashEffect();
 				break;
 			default:
 				break;

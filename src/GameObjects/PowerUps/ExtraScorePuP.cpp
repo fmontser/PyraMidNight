@@ -26,10 +26,10 @@ namespace pyramidnight {
 				auto sb = ResourceManager::GetAudio(PATH_AUD_PWRUP_0);
 				AudioManager::Play({sb, VOL_AUD_PWRUP_0, PolySound::Type::SFX, false});
 				mIsDestroyed = true;
-				return { CollidableType, mIsDestroyed, mScoreMod, cpos };
+				return { CollidableType, mIsDestroyed, static_cast<float>(mScoreMod), cpos };
 			}
 		}
-		return { CollidableType, mIsDestroyed, 0, std::nullopt };
+		return { CollidableType, mIsDestroyed, 0.0f, std::nullopt };
 	}
 
 	void ExtraScorePuP::EnableFlashEffect() {

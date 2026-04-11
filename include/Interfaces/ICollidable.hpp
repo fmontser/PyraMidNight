@@ -15,9 +15,9 @@ namespace pyramidnight {
 			};
 
 			struct Info {
-				Type              type = Type::BALL;
+				Type                        type = Type::BALL;
 				bool                        destroyed = false;
-				int32_t                     scoreMod = 0;
+				float                     valueMod = 0.0f;
 				std::optional<sf::Vector2f> collisionPoint = std::nullopt;
 			};
 

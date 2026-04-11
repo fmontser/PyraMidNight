@@ -60,6 +60,7 @@ set(APP_SOURCES
 	src/GameObjects/Spawner.cpp
 	src/GameObjects/PowerUps/PowerUp.cpp
 	src/GameObjects/PowerUps/ExtraScorePuP.cpp
+	src/GameObjects/PowerUps/ExtraCreditPuP.cpp
 	src/RenderEffects/RenderEffect.cpp
 	src/RenderEffects/ScreenShake.cpp
 	src/RenderEffects/Blink.cpp

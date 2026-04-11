@@ -7,6 +7,7 @@ namespace pyramidnight {
 	
 	Spawner::Spawner() {
 		mBlockChanceMap [PWRUP_SCORE_CHANCE] = PowerUp::Type::SCORE;
+		mBlockChanceMap [0.5f] = PowerUp::Type::CREDIT;
 	}
 
 	std::optional<PowerUp::Type> Spawner::RollSpawn() {

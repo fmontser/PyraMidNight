@@ -13,7 +13,7 @@ namespace pyramidnight {
 			public:
 
 				enum class Type {
-					SCORE
+					SCORE, CREDIT
 				};
 
 				virtual ~PowerUp() = default;
@@ -22,7 +22,7 @@ namespace pyramidnight {
 					const sf::Vector2f& position,
 					std::vector<std::shared_ptr<sf::Drawable>>& drawables) override;
 
-				void Update(const sf::Time &deltaTime);
+				virtual void Update(const sf::Time &deltaTime);
 
 				PowerUp::Type  PowerUpType;
 

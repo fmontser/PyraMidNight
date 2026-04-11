@@ -60,7 +60,7 @@ namespace pyramidnight {
 
 			bool LoadLevel(const uint8_t& roundId);
 			bool UpdateGame(const RoundScreenUpdate &update);
-			void UpdatePowerUps(uint32_t &score, const sf::Time &deltaTime);
+			void UpdatePowerUps(uint8_t &credits, uint32_t &score, const sf::Time &deltaTime);
 			void UpdateBall(uint32_t &score, const sf::Time &deltaTime);
 			void UpdateBlocks();
 			void UpdateTexts(const RoundScreenUpdate &update);
@@ -68,6 +68,7 @@ namespace pyramidnight {
 			bool LoseBall(const RoundScreenUpdate &update);
 			void AddScore(uint32_t& score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
+			void AddCredit(uint8_t &credits);
 			std::optional<std::shared_ptr<PowerUp>> GeneratePowerUp(ICollidable::Info info);
 			void Log(const std::string &msg) override;
 
