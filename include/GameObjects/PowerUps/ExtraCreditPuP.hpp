@@ -13,11 +13,18 @@ namespace pyramidnight {
 			ICollidable::Info OnCollision(ICollidable &collider);
 
 			void ApplyCurvedMovement(const sf::Time &deltaTime);
+			private:
+			float         mAnimationDelta;
+			sf::IntRect   mAnimationRect;
+			sf::IntRect   mSpriteRect;
+			sf::Vector2u  mTextureSize;
+			float         mDeltaX;
+			float         mDeltaY;
+			bool          mFlashEnabled;
+			
 			void EnableFlashEffect();
-		private:
-			float mDeltaX;
-			float mDeltaY;
-
 			void GenerateDirection();
+			void AnimateFrame(const sf::Time &deltaTime);
+
 	};
 }

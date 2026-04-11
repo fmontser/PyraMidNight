@@ -14,11 +14,20 @@ namespace pyramidnight {
 		PowerUpType = PowerUp::Type::CREDIT;
 		mDeltaX = 0.0f;
 		mDeltaY = 0.0f;
-		GenerateDirection();
+		mFlashEnabled = false;
+		mAnimationDelta = 0.0f;
+		mAnimationRect = {{0,0},{32,32}};
+		setTextureRect(mAnimationRect);
+		mSpriteRect = getTextureRect();
+		mTextureSize = getTexture().getSize();
 		setOrigin(getGlobalBounds().getCenter());
+		GenerateDirection();
 	}
 
-	void ExtraCreditPuP::Update(const sf::Time &deltaTime)	{
+	void ExtraCreditPuP::Update(const sf::Time &deltaTime) {
+		if (!mFlashEnabled)
+			EnableFlashEffect();
+		AnimateFrame(deltaTime);
 		ApplyCurvedMovement(deltaTime);
 		PowerUp::Update(deltaTime);
 	}
@@ -38,20 +47,19 @@ namespace pyramidnight {
 		return { CollidableType, mIsDestroyed, 0.0f, std::nullopt };
 	}
 
-	//TODO hardcorded values
 	void ExtraCreditPuP::ApplyCurvedMovement(const sf::Time &deltaTime) {
-		mDeltaX += mDirection.x * 8.0f * deltaTime.asSeconds();
-		mDeltaY += 10.0f * deltaTime.asSeconds();
+		mDeltaX += mDirection.x * ANI_COIN_H_SPEED_MOD * deltaTime.asSeconds();
+		mDeltaY += ANI_COIN_V_SPEED_MOD * deltaTime.asSeconds();
 		move({mDeltaX, mDeltaY});
 		sf::Vector2f position(getPosition());
 		position.x = std::clamp(position.x, 54.0f, 592.0f);
 		setPosition(position);
 	}
 
-	// TODO remove hardcoded
 	void ExtraCreditPuP::EnableFlashEffect() {
+		mFlashEnabled = true;
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
-			-1.0f, 0.042f, sf::Color::Green, getColor(), shared_from_this()));
+			-1.0f, EFF_FLASH_CREDITUP_LAPSE, EFF_FLASH_CREDITUP_COLOR, getColor(), shared_from_this()));
 	}
 
 	void ExtraCreditPuP::GenerateDirection() { 
@@ -61,5 +69,19 @@ namespace pyramidnight {
 		
 		// zero is right direction
 		mDirection.x = x(gen) == 0 ? 1 : -1;
+	}
+
+	void ExtraCreditPuP::AnimateFrame(const sf::Time &deltaTime) {
+
+		mAnimationDelta += deltaTime.asSeconds();
+		if (mAnimationDelta >= ANI_COIN_FRAMERATE) {
+			size_t newFrameX = mAnimationRect.position.x + mSpriteRect.size.x;
+			
+			if (newFrameX > mTextureSize.x)
+				newFrameX = 0;
+			mAnimationRect.position.x = newFrameX;
+			setTextureRect(mAnimationRect);
+			mAnimationDelta = 0;
+		}
 	}
 }
