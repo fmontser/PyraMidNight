@@ -169,7 +169,12 @@ namespace pyramidnight {
 		inline constexpr float        EFF_SHAKE_LOSEBALL_POWER = 2.5f;
 		inline constexpr float        EFF_FLASH_SCOREPUP_LAPSE = 0.042f;
 		inline constexpr sf::Color    EFF_FLASH_SCOREPUP_COLOR = sf::Color::Magenta;
+		inline constexpr float        EFF_FLASH_CREDITUP_LAPSE = 0.042f;
+		inline constexpr sf::Color    EFF_FLASH_CREDITUP_COLOR = sf::Color::Magenta;
 		inline constexpr float        EFF_FLASH_BLK_LAPSE = 0.05f;
 		inline constexpr float        EFF_FLASH_BLK_TIME = 1.0f;
 		inline constexpr sf::Color    EFF_FLASH_BLK_COLOR = sf::Color::Green;
+		
+		//Animation
+		inline constexpr float        ANI_COIN_FRAMERATE = 0.15f;
 }
