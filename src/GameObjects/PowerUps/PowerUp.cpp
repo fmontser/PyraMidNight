@@ -4,11 +4,11 @@
 
 namespace pyramidnight {
 	PowerUp::PowerUp(const sf::Texture& texture) : sf::Sprite(texture) {
+		CollidableType = ICollidable::Type::POWER_UP;
 		mIsSpawned = false;
 		mIsDestroyed = false;
 		mSpeed = 200.0f;
 		mDirection = GAME_DIRECTION_DOWN;
-		CollidableType = ICollidable::Type::POWER_UP;
 	}
 	
 	void PowerUp::Spawn(

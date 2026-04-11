@@ -4,14 +4,14 @@
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
 #include "AudioManager.hpp"
-#include "ExtraCreditPuP.hpp"
+#include "GhostPuP.hpp"
 #include "Bumper.hpp"
 #include "Flash.hpp"
 
 namespace pyramidnight {
 	
-	ExtraCreditPuP::ExtraCreditPuP(const sf::Texture &texture) : PowerUp(texture) {
-		PowerUpType = PowerUp::Type::CREDIT;
+	GhostPuP::GhostPuP(const sf::Texture &texture) : PowerUp(texture) {
+		PowerUpType = PowerUp::Type::GHOST;
 		mDeltaX = 0.0f;
 		mDeltaY = 0.0f;
 		mFlashEnabled = false;
@@ -24,7 +24,7 @@ namespace pyramidnight {
 		GenerateDirection();
 	}
 
-	void ExtraCreditPuP::Update(const sf::Time &deltaTime) {
+	void GhostPuP::Update(const sf::Time &deltaTime) {
 		if (!mFlashEnabled)
 			EnableFlashEffect();
 		AnimateFrame(deltaTime);
@@ -32,7 +32,7 @@ namespace pyramidnight {
 		PowerUp::Update(deltaTime);
 	}
 
-	ICollidable::Info ExtraCreditPuP::OnCollision(ICollidable &collider) {
+	ICollidable::Info GhostPuP::OnCollision(ICollidable &collider) {
 		if (collider.CollidableType == ICollidable::Type::BUMPER) {
 			auto& bumper = static_cast<Bumper&>(collider);
 			auto cpos = bumper.GetCollisionPoint(getGlobalBounds());
@@ -47,7 +47,7 @@ namespace pyramidnight {
 		return { CollidableType, mIsDestroyed, 0.0f, std::nullopt };
 	}
 
-	void ExtraCreditPuP::ApplyCurvedMovement(const sf::Time &deltaTime) {
+	void GhostPuP::ApplyCurvedMovement(const sf::Time &deltaTime) {
 		mDeltaX += mDirection.x * ANI_COIN_H_SPEED_MOD * deltaTime.asSeconds();
 		mDeltaY += ANI_COIN_V_SPEED_MOD * deltaTime.asSeconds();
 		move({mDeltaX, mDeltaY});
@@ -56,13 +56,13 @@ namespace pyramidnight {
 		setPosition(position);
 	}
 
-	void ExtraCreditPuP::EnableFlashEffect() {
+	void GhostPuP::EnableFlashEffect() {
 		mFlashEnabled = true;
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
 			-1.0f, EFF_FLASH_CREDITUP_LAPSE, EFF_FLASH_CREDITUP_COLOR, getColor(), shared_from_this()));
 	}
 
-	void ExtraCreditPuP::GenerateDirection() { 
+	void GhostPuP::GenerateDirection() { 
 		static std::random_device rd; 
 		static std::mt19937 gen(rd()); 
 		std::uniform_int_distribution<int> x(-1, 0);
@@ -71,7 +71,7 @@ namespace pyramidnight {
 		mDirection.x = x(gen) == 0 ? 1 : -1;
 	}
 
-	void ExtraCreditPuP::AnimateFrame(const sf::Time &deltaTime) {
+	void GhostPuP::AnimateFrame(const sf::Time &deltaTime) {
 		mAnimationDelta += deltaTime.asSeconds();
 		if (mAnimationDelta >= ANI_COIN_FRAMERATE) {
 			size_t newFrameX = mAnimationRect.position.x + mSpriteRect.size.x;
