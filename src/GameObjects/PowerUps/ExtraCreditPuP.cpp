@@ -14,11 +14,16 @@ namespace pyramidnight {
 		PowerUpType = PowerUp::Type::CREDIT;
 		mDeltaX = 0.0f;
 		mDeltaY = 0.0f;
-		GenerateDirection();
+		mAnimationRect = {{0,0},{32,32}};
+		setTextureRect(mAnimationRect);
+		mSpriteRect = getTextureRect();
+		mTextureSize = getTexture().getSize();
 		setOrigin(getGlobalBounds().getCenter());
+		GenerateDirection();
 	}
 
 	void ExtraCreditPuP::Update(const sf::Time &deltaTime)	{
+		AnimateFrame(deltaTime);
 		ApplyCurvedMovement(deltaTime);
 		PowerUp::Update(deltaTime);
 	}
@@ -51,7 +56,7 @@ namespace pyramidnight {
 	// TODO remove hardcoded
 	void ExtraCreditPuP::EnableFlashEffect() {
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
-			-1.0f, 0.042f, sf::Color::Green, getColor(), shared_from_this()));
+			-1.0f, 0.042f, sf::Color::Red, getColor(), shared_from_this()));
 	}
 
 	void ExtraCreditPuP::GenerateDirection() { 
@@ -61,5 +66,20 @@ namespace pyramidnight {
 		
 		// zero is right direction
 		mDirection.x = x(gen) == 0 ? 1 : -1;
+	}
+
+	//TODO remove hardcoded values
+	void ExtraCreditPuP::AnimateFrame(const sf::Time &deltaTime) {
+
+		mAnimationDelta += deltaTime.asSeconds();
+		if (mAnimationDelta >= 0.1f) {
+			size_t newFrameX = mAnimationRect.position.x + mSpriteRect.size.x;
+			
+			if (newFrameX > mTextureSize.x)
+				newFrameX = 0;
+			mAnimationRect.position.x = newFrameX;
+			setTextureRect(mAnimationRect);
+			mAnimationDelta = 0;
+		}
 	}
 }

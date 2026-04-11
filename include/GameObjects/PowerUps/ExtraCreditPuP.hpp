@@ -15,9 +15,16 @@ namespace pyramidnight {
 			void ApplyCurvedMovement(const sf::Time &deltaTime);
 			void EnableFlashEffect();
 		private:
-			float mDeltaX;
-			float mDeltaY;
+			float         mAnimationDelta;
+			sf::IntRect   mAnimationRect;
+			sf::IntRect   mSpriteRect;
+			sf::Vector2u  mTextureSize;
+
+			float         mDeltaX;
+			float         mDeltaY;
 
 			void GenerateDirection();
+			void AnimateFrame(const sf::Time &deltaTime);
+
 	};
 }

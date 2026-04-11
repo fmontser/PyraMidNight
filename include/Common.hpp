@@ -123,6 +123,7 @@ namespace pyramidnight {
 	inline constexpr std::string_view PATH_TEX_BALL = "assets/textures/Ball.png";
 	inline constexpr std::string_view PATH_TEX_BLOCK = "assets/textures/Block32.png";
 	inline constexpr std::string_view PATH_TEX_SCORE_PWRUP = "assets/textures/ScorePuP32.png";
+	inline constexpr std::string_view PATH_TEX_CREDIT_PWRUP = "assets/textures/CreditPuP32.png";
 
 	inline constexpr std::string_view PATH_AUD_BALL_BOUNCE = "assets/audio/BallBounce.ogg";
 	inline constexpr std::string_view PATH_AUD_BALL_LOSE = "assets/audio/BallLose.ogg";
