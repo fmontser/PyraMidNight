@@ -143,6 +143,8 @@ namespace pyramidnight {
 	inline constexpr std::string_view PATH_AUD_CURSOR = "assets/audio/Cursor.ogg";
 	inline constexpr std::string_view PATH_AUD_NEXTROUND = "assets/audio/NextRound.ogg";
 	inline constexpr std::string_view PATH_AUD_GAMEOVER = "assets/audio/GameOver.ogg";
+	inline constexpr std::string_view PATH_AUD_GHOST_SPAWN = "assets/audio/GhostSpawn.ogg";
+	inline constexpr std::string_view PATH_AUD_GHOST_ATTACK = "assets/audio/GhostAttack.ogg";
 
 	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
 
@@ -164,6 +166,9 @@ namespace pyramidnight {
 	inline constexpr float VOL_AUD_CURSOR = 1.0f;
 	inline constexpr float VOL_AUD_NEXTROUND = 1.0f;
 	inline constexpr float VOL_AUD_GAMEOVER = 1.0f;
+	inline constexpr float VOL_AUD_GHOST_SPAWN = 1.0f;
+	inline constexpr float VOL_AUD_GHOST_ATTACK = 1.0f;
+
 	inline constexpr float VOL_AUD_MUSIC_0 = 1.0f;
 
 	//RenderManager (DO NOT EDIT RESOLUTION!!!)

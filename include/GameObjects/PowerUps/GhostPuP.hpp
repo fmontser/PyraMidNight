@@ -28,7 +28,7 @@ namespace pyramidnight {
 			float         mAttackLimit;
 			bool          mIsAttacking;
 			
-			void UpdateAttack();
+			void UpdateAttack(const sf::Time &deltaTime);
 			void EnableFlashEffect();
 			int  GenerateDirection();
 			float GenerateTimer();

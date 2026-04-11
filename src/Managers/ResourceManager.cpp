@@ -136,6 +136,8 @@ namespace pyramidnight {
 			std::string(PATH_AUD_CURSOR),
 			std::string(PATH_AUD_NEXTROUND),
 			std::string(PATH_AUD_GAMEOVER),
+			std::string(PATH_AUD_GHOST_SPAWN),
+			std::string(PATH_AUD_GHOST_ATTACK),
 			std::string(PATH_AUD_MUSIC_0)
 		};
 

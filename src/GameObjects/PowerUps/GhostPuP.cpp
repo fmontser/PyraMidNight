@@ -31,6 +31,8 @@ namespace pyramidnight {
 		setOrigin(getGlobalBounds().getCenter());
 		setColor(PWRUP_GHOST_COLOR);
 		mDirection.x = GenerateDirection();
+		auto sb = ResourceManager::GetAudio(PATH_AUD_GHOST_SPAWN);
+		AudioManager::Play({sb, VOL_AUD_GHOST_SPAWN, PolySound::Type::SFX, false});
 	}
 
 	void GhostPuP::Update(const sf::Time &deltaTime) {
@@ -38,7 +40,7 @@ namespace pyramidnight {
 			EnableFlashEffect();
 		AnimateFrame(deltaTime);
 		ApplyGhostlyMovement(deltaTime);
-		UpdateAttack();
+		UpdateAttack(deltaTime);
 		MirrorSprite();
 		PowerUp::Update(deltaTime);
 	}
@@ -49,8 +51,8 @@ namespace pyramidnight {
 			auto cpos = bumper.GetCollisionPoint(getGlobalBounds());
 
 			if (cpos != std::nullopt && !mIsAttacking && !mIsDestroyed) {
-				auto sb = ResourceManager::GetAudio(PATH_AUD_COIN_IN);
-				AudioManager::Play({sb, VOL_AUD_COIN_IN, PolySound::Type::SFX, false});
+				auto sb = ResourceManager::GetAudio(PATH_AUD_GHOST_ATTACK);
+				AudioManager::Play({sb, VOL_AUD_GHOST_ATTACK, PolySound::Type::SFX, false});
 				mIsAttacking = true;
 				return { CollidableType, mIsDestroyed, mBumperSpeedPenalty , cpos };
 			}
@@ -77,7 +79,8 @@ namespace pyramidnight {
 		setPosition(position);
 	}
 
-	void GhostPuP::UpdateAttack() {
+	//TODO @@@@ fix bug not allways work
+	void GhostPuP::UpdateAttack(const sf::Time &deltaTime) {
 		if (mIsAttacking) {
 			mAttackTimer += deltaTime.asSeconds();
 			mBumperSpeedPenalty = BMPR_INIT_SPEED * PWRUP_GHOST_PENALTY_MOD;
