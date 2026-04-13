@@ -51,6 +51,7 @@ namespace pyramidnight {
 			std::shared_ptr<sf::Texture> mBlockTex;
 			std::shared_ptr<sf::Texture> mScorePuPTex;
 			std::shared_ptr<sf::Texture> mCreditPuPTex;
+			std::shared_ptr<sf::Texture> mGhostPuPTex;
 			
 			std::shared_ptr<sf::RectangleShape>       mDeathArea;
 			std::vector<std::shared_ptr<ICollidable>> mColdetVector;

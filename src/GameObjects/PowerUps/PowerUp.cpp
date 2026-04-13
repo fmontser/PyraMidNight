@@ -1,14 +1,15 @@
 #include <cmath>
 #include "PowerUp.hpp"
 #include "Common.hpp"
+#include "RenderManager.hpp"
 
 namespace pyramidnight {
 	PowerUp::PowerUp(const sf::Texture& texture) : sf::Sprite(texture) {
+		CollidableType = ICollidable::Type::POWER_UP;
 		mIsSpawned = false;
 		mIsDestroyed = false;
 		mSpeed = 200.0f;
 		mDirection = GAME_DIRECTION_DOWN;
-		CollidableType = ICollidable::Type::POWER_UP;
 	}
 	
 	void PowerUp::Spawn(
@@ -30,7 +31,8 @@ namespace pyramidnight {
 	}
 
 	void PowerUp::DestroyIfOutside() {
-		if (getGlobalBounds().position.y > RNDR_RESOLUTION.y)
+		auto viewPort = RenderManager::GetWindow().getView().getViewport();
+		if (viewPort.contains(getGlobalBounds().position))
 			mIsDestroyed = true;
 	}
 }

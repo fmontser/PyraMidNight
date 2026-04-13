@@ -72,12 +72,11 @@ namespace pyramidnight {
 	}
 
 	void ExtraCreditPuP::AnimateFrame(const sf::Time &deltaTime) {
-
 		mAnimationDelta += deltaTime.asSeconds();
 		if (mAnimationDelta >= ANI_COIN_FRAMERATE) {
 			size_t newFrameX = mAnimationRect.position.x + mSpriteRect.size.x;
 			
-			if (newFrameX > mTextureSize.x)
+			if (newFrameX >= mTextureSize.x)
 				newFrameX = 0;
 			mAnimationRect.position.x = newFrameX;
 			setTextureRect(mAnimationRect);

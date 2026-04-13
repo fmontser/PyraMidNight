@@ -12,9 +12,11 @@ namespace pyramidnight {
 			Info OnCollision(ICollidable& collider) override;
 			std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect);
 			void Move(int8_t magnitude, sf::Time &deltaTime, bool fine, bool coarse);
+			void SetSpeedPenalty(float speed);
 
 		private:
 			float mSpeed;
+			float mSpeedPenalty;
 	};
 
 }

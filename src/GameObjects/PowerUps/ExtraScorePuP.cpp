@@ -11,8 +11,15 @@ namespace pyramidnight {
 	ExtraScorePuP::ExtraScorePuP(const sf::Texture &texture, uint32_t scoreMod) : PowerUp(texture) {
 		PowerUpType = PowerUp::Type::SCORE;
 		mScoreMod = scoreMod;
+		mFlashEnabled = false;
 		mRotation = 0.0f;
 		setOrigin(getGlobalBounds().getCenter());
+	}
+
+	void ExtraScorePuP::Update(const sf::Time &deltaTime) {
+		if (!mFlashEnabled)
+			EnableFlashEffect();
+		PowerUp::Update(deltaTime);
 	}
 
 	//TODO move rotation to RenderEffect
@@ -33,6 +40,7 @@ namespace pyramidnight {
 	}
 
 	void ExtraScorePuP::EnableFlashEffect() {
+		mFlashEnabled = true;
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
 			-1.0f, EFF_FLASH_SCOREPUP_LAPSE, EFF_FLASH_SCOREPUP_COLOR, getColor(), shared_from_this()));
 	}

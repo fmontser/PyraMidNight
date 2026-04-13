@@ -9,6 +9,7 @@
 #include "ScreenShake.hpp"
 #include "ExtraScorePuP.hpp"
 #include "ExtraCreditPuP.hpp"
+#include "GhostPuP.hpp"
 
 namespace pyramidnight {
 
@@ -61,6 +62,7 @@ namespace pyramidnight {
 		mBlockTex = ResourceManager::GetTexture(PATH_TEX_BLOCK);
 		mScorePuPTex = ResourceManager::GetTexture(PATH_TEX_SCORE_PWRUP);
 		mCreditPuPTex = ResourceManager::GetTexture(PATH_TEX_CREDIT_PWRUP);
+		mGhostPuPTex = ResourceManager::GetTexture(PATH_TEX_GHOST_PWRUP);
 
 		mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
 		mDeathArea->setPosition({32, 864});
@@ -152,6 +154,7 @@ namespace pyramidnight {
 				switch (obj->PowerUpType) {
 					case PowerUp::Type::SCORE: AddScore(score, info.valueMod); break;
 					case PowerUp::Type::CREDIT: AddCredit(credits); break;
+					case PowerUp::Type::GHOST: mBumper->SetSpeedPenalty(info.valueMod); break;
 					default: break;
 				}
 			}
@@ -259,13 +262,9 @@ namespace pyramidnight {
 			return std::nullopt;
 		
 		switch (*spawnType) {
-			case PowerUp::Type::SCORE:
-				spawn = std::make_shared<ExtraScorePuP>(*mScorePuPTex, SCORE_PWRUP_POINTS);
-				std::dynamic_pointer_cast<ExtraScorePuP>(spawn)->EnableFlashEffect(); //TODO lanzar desde la clase?P
-				break;
-			case PowerUp::Type::CREDIT:
-				spawn = std::make_shared<ExtraCreditPuP>(*mCreditPuPTex);
-				break;
+			case PowerUp::Type::SCORE: spawn = std::make_shared<ExtraScorePuP>(*mScorePuPTex, SCORE_PWRUP_POINTS); break;
+			case PowerUp::Type::CREDIT: spawn = std::make_shared<ExtraCreditPuP>(*mCreditPuPTex); break;
+			case PowerUp::Type::GHOST: spawn = std::make_shared<GhostPuP>(*mGhostPuPTex); break;
 			default:
 				break;
 		}

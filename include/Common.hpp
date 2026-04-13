@@ -23,7 +23,7 @@ namespace pyramidnight {
 	inline constexpr sf::Vector2f BALL_DOCKED_OFFSET = {64, -18};
 
 	//Bumper
-	inline constexpr float BMPR_INIT_SPEED = 0.40f;
+	inline constexpr float BMPR_INIT_SPEED = 400.0f;
 	inline constexpr float BMPR_FINE_SPEED_MOD = 0.4f;
 	inline constexpr float BMPR_COARSE_SPEED_MOD = 1.5f;
 	inline constexpr float BMPR_MV_LIMIT_L = 32.0f;
@@ -42,7 +42,17 @@ namespace pyramidnight {
 	inline constexpr int32_t SCORE_PWRUP_POINTS = 150;
 
 	//Power ups
+	inline constexpr float     PWRUP_CREDIT_CHANCE = 0.055f;
+	inline constexpr float     PWRUP_GHOST_CHANCE = 0.33f;
 	inline constexpr float     PWRUP_SCORE_CHANCE = 0.22f;
+
+	inline constexpr float     PWRUP_GHOST_SPEED = 50.0f;
+	inline constexpr float     PWRUP_GHOST_HOVER_TIME_MIN = 2.0f;
+	inline constexpr float     PWRUP_GHOST_HOVER_TIME_MAX = 5.0f;
+	inline constexpr float     PWRUP_GHOST_PENALTY_TIME = 3.0f;
+	inline constexpr float     PWRUP_GHOST_PENALTY_MOD = 0.66f;
+	inline constexpr sf::Color PWRUP_GHOST_ATTACK_COLOR = sf::Color({255, 64, 64, 64});
+	inline constexpr sf::Color PWRUP_GHOST_COLOR = sf::Color({0, 255, 255, 64});
 
 	//Cursor
 	inline constexpr float            CUR_MV_OFFSET = 30.0f;
@@ -124,6 +134,7 @@ namespace pyramidnight {
 	inline constexpr std::string_view PATH_TEX_BLOCK = "assets/textures/Block32.png";
 	inline constexpr std::string_view PATH_TEX_SCORE_PWRUP = "assets/textures/ScorePuP32.png";
 	inline constexpr std::string_view PATH_TEX_CREDIT_PWRUP = "assets/textures/CreditPuP32.png";
+	inline constexpr std::string_view PATH_TEX_GHOST_PWRUP = "assets/textures/GhostPuP64.png";
 
 	inline constexpr std::string_view PATH_AUD_BALL_BOUNCE = "assets/audio/BallBounce.ogg";
 	inline constexpr std::string_view PATH_AUD_BALL_LOSE = "assets/audio/BallLose.ogg";
@@ -137,6 +148,8 @@ namespace pyramidnight {
 	inline constexpr std::string_view PATH_AUD_CURSOR = "assets/audio/Cursor.ogg";
 	inline constexpr std::string_view PATH_AUD_NEXTROUND = "assets/audio/NextRound.ogg";
 	inline constexpr std::string_view PATH_AUD_GAMEOVER = "assets/audio/GameOver.ogg";
+	inline constexpr std::string_view PATH_AUD_GHOST_SPAWN = "assets/audio/GhostSpawn.ogg";
+	inline constexpr std::string_view PATH_AUD_GHOST_ATTACK = "assets/audio/GhostAttack.ogg";
 
 	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
 
@@ -151,13 +164,15 @@ namespace pyramidnight {
 	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;
 	inline constexpr float VOL_AUD_BLOCK_DESTROY = 0.9f;
 	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 0.5f;
-	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO enemies feature
 	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.4f;
 	inline constexpr float VOL_AUD_PWRUP_0 = 0.1f;
 	inline constexpr float VOL_AUD_COIN_IN = 1.0f;
 	inline constexpr float VOL_AUD_CURSOR = 1.0f;
 	inline constexpr float VOL_AUD_NEXTROUND = 1.0f;
 	inline constexpr float VOL_AUD_GAMEOVER = 1.0f;
+	inline constexpr float VOL_AUD_GHOST_SPAWN = 1.0f;
+	inline constexpr float VOL_AUD_GHOST_ATTACK = 1.0f;
+
 	inline constexpr float VOL_AUD_MUSIC_0 = 1.0f;
 
 	//RenderManager (DO NOT EDIT RESOLUTION!!!)
@@ -171,10 +186,18 @@ namespace pyramidnight {
 		inline constexpr sf::Color    EFF_FLASH_SCOREPUP_COLOR = sf::Color::Magenta;
 		inline constexpr float        EFF_FLASH_CREDITUP_LAPSE = 0.042f;
 		inline constexpr sf::Color    EFF_FLASH_CREDITUP_COLOR = sf::Color::Magenta;
+		inline constexpr float        EFF_FLASH_GHOST_LAPSE = 0.025f;
+		inline constexpr sf::Color    EFF_FLASH_GHOST_COLOR = sf::Color::Cyan;
 		inline constexpr float        EFF_FLASH_BLK_LAPSE = 0.05f;
 		inline constexpr float        EFF_FLASH_BLK_TIME = 1.0f;
 		inline constexpr sf::Color    EFF_FLASH_BLK_COLOR = sf::Color::Green;
 		
 		//Animation
+		inline constexpr float        ANI_GHOST_FRAMERATE = 0.15f;
+		inline constexpr float        ANI_GHOST_V_SPEED_MOD = 1.3f;
+		inline constexpr float        ANI_GHOST_H_SPEED_MOD = 5.0f;
+		inline constexpr float        ANI_GHOST_SWING_RANGE = 4.0f;
 		inline constexpr float        ANI_COIN_FRAMERATE = 0.15f;
+		inline constexpr float        ANI_COIN_V_SPEED_MOD = 8.0f;
+		inline constexpr float        ANI_COIN_H_SPEED_MOD = 6.0f;
 }

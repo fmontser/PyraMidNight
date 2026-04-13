@@ -8,11 +8,12 @@ namespace pyramidnight {
 	class ExtraCreditPuP : public PowerUp {
 		public:
 			ExtraCreditPuP(const sf::Texture& texture);
-
+		
 			void Update(const sf::Time &deltaTime) override;
-			ICollidable::Info OnCollision(ICollidable &collider);
+		
+			ICollidable::Info OnCollision(ICollidable &collider) override;
+				
 
-			void ApplyCurvedMovement(const sf::Time &deltaTime);
 			private:
 			float         mAnimationDelta;
 			sf::IntRect   mAnimationRect;
@@ -25,6 +26,7 @@ namespace pyramidnight {
 			void EnableFlashEffect();
 			void GenerateDirection();
 			void AnimateFrame(const sf::Time &deltaTime);
+			void ApplyCurvedMovement(const sf::Time &deltaTime);
 
 	};
 }

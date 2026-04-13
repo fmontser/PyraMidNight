@@ -86,7 +86,8 @@ namespace pyramidnight {
 			std::string(PATH_TEX_BALL), 
 			std::string(PATH_TEX_BLOCK),
 			std::string(PATH_TEX_SCORE_PWRUP),
-			std::string(PATH_TEX_CREDIT_PWRUP)
+			std::string(PATH_TEX_CREDIT_PWRUP),
+			std::string(PATH_TEX_GHOST_PWRUP)
 		};
 
 		mFailSafeTexture = std::make_shared<sf::Texture>(FAILSAFE_TEXTURE_DATA, FAILSAFE_TEXTURE_DATA_SZ);
@@ -135,6 +136,8 @@ namespace pyramidnight {
 			std::string(PATH_AUD_CURSOR),
 			std::string(PATH_AUD_NEXTROUND),
 			std::string(PATH_AUD_GAMEOVER),
+			std::string(PATH_AUD_GHOST_SPAWN),
+			std::string(PATH_AUD_GHOST_ATTACK),
 			std::string(PATH_AUD_MUSIC_0)
 		};
 
