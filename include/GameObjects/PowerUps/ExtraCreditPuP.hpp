@@ -14,7 +14,7 @@ namespace pyramidnight {
 			ICollidable::Info OnCollision(ICollidable &collider) override;
 				
 
-			private:
+		private:
 			float         mAnimationDelta;
 			sf::IntRect   mAnimationRect;
 			sf::IntRect   mSpriteRect;

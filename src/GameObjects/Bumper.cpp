@@ -11,6 +11,8 @@ namespace pyramidnight {
 	Bumper::Bumper(const sf::Texture& texture) : sf::Sprite(texture) {
 		mSpeed = BMPR_INIT_SPEED;
 		mSpeedPenalty = 1.0f;
+		mIsMagicEnabled = false;
+		mMagicDuration = 0.0f;
 		CollidableType = ICollidable::Type::BUMPER;
 	}
 
@@ -49,6 +51,11 @@ namespace pyramidnight {
 	void Bumper::EnablePenaltyFlashEffect(float duration) {
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
 			duration, EFF_FLASH_GHOST_LAPSE, EFF_FLASH_GHOST_ATTACK_COLOR, getColor(), shared_from_this()));
+	}
+
+	void Bumper::EnableMagic(float duration) {
+		mIsMagicEnabled = true;
+		mMagicDuration = std::abs(duration);
 	}
 
 	void Bumper::SetSpeedPenalty(float penalty) { mSpeedPenalty = penalty;	}

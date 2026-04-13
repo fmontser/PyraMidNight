@@ -15,9 +15,14 @@ namespace pyramidnight {
 			ICollidable::Info OnCollision(ICollidable &collider) override;
 			
 		private:
-			bool mFlashEnabled;
-			bool mIsDestroyed;
+			bool          mFlashEnabled;
+			bool          mIsDestroyed;
+			float         mAnimationDelta;
+			sf::IntRect   mAnimationRect;
+			sf::IntRect   mSpriteRect;
+			sf::Vector2u  mTextureSize;
 
+			void AnimateFrame(const sf::Time &deltaTime);
 			void EnableFlashEffect();
 		};
 }

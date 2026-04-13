@@ -10,6 +10,7 @@
 #include "ExtraScorePuP.hpp"
 #include "ExtraCreditPuP.hpp"
 #include "GhostPuP.hpp"
+#include "MagicPuP.hpp"
 
 namespace pyramidnight {
 
@@ -156,6 +157,7 @@ namespace pyramidnight {
 					case PowerUp::Type::SCORE: AddScore(score, info.valueMod); break;
 					case PowerUp::Type::CREDIT: AddCredit(credits); break;
 					case PowerUp::Type::GHOST: mBumper->SetSpeedPenalty(info.valueMod); break;
+					case PowerUp::Type::MAGIC: mBumper->EnableMagic(info.valueMod); break;
 					default: break;
 				}
 			}
@@ -266,8 +268,8 @@ namespace pyramidnight {
 			case PowerUp::Type::SCORE: spawn = std::make_shared<ExtraScorePuP>(*mScorePuPTex, SCORE_PWRUP_POINTS); break;
 			case PowerUp::Type::CREDIT: spawn = std::make_shared<ExtraCreditPuP>(*mCreditPuPTex); break;
 			case PowerUp::Type::GHOST: spawn = std::make_shared<GhostPuP>(*mGhostPuPTex); break;
-			default:
-				break;
+			case PowerUp::Type::MAGIC: spawn = std::make_shared<MagicPuP>(*mMagicPuPTex); break;
+			default: break;
 		}
 		if (spawn != nullptr) {
 			spawn->Spawn(*info.collisionPoint, mDrawables);
