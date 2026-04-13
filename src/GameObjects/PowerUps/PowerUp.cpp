@@ -25,6 +25,12 @@ namespace pyramidnight {
 		DestroyIfOutside();
 	}
 
+	std::optional<sf::Vector2f> PowerUp::GetCollisionPoint(const sf::FloatRect &rect) {
+		if (auto overlap = getGlobalBounds().findIntersection(rect))
+			return overlap->position + (overlap->size / 2.0f);
+		return std::nullopt;
+	}
+
 	void PowerUp::ApplyGravity(const sf::Time& deltaTime) {
 		float gravity = mDirection.y * GAME_GRAVITY * mSpeed * deltaTime.asSeconds();
 		move({0.0f, gravity});

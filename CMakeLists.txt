@@ -62,6 +62,7 @@ set(APP_SOURCES
 	src/GameObjects/PowerUps/ExtraScorePuP.cpp
 	src/GameObjects/PowerUps/ExtraCreditPuP.cpp
 	src/GameObjects/PowerUps/GhostPuP.cpp
+	src/GameObjects/PowerUps/MagicPuP.cpp
 	src/RenderEffects/RenderEffect.cpp
 	src/RenderEffects/ScreenShake.cpp
 	src/RenderEffects/Blink.cpp

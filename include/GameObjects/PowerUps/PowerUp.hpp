@@ -2,6 +2,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/System/Time.hpp>
+#include <optional>
 #include "ICollidable.hpp"
 #include "ISpawnable.hpp"
 
@@ -13,7 +14,7 @@ namespace pyramidnight {
 			public:
 
 				enum class Type {
-					SCORE, CREDIT, GHOST
+					SCORE, CREDIT, GHOST, MAGIC
 				};
 
 				virtual ~PowerUp() = default;
@@ -23,6 +24,8 @@ namespace pyramidnight {
 					std::vector<std::shared_ptr<sf::Drawable>>& drawables) override;
 
 				virtual void Update(const sf::Time &deltaTime);
+
+				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect);
 
 				PowerUp::Type  PowerUpType;
 
