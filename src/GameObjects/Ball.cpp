@@ -32,10 +32,14 @@ namespace pyramidnight {
 		mState = State::DOCKED;
 	}
 
-	void Ball::Update(const sf::Vector2f &bumperPos, const sf::Time& deltaTime) {
+	void Ball::Update(bool action, const sf::Vector2f &bumperPos, const sf::Time& deltaTime) {
 		switch (mState) {
 			case State::PLAYING: Move(deltaTime); break;
-			case State::DOCKED: ResetPos(bumperPos); break;
+			case State::DOCKED:
+				ResetPos(bumperPos);
+				if (action)
+					Launch();
+				break;
 			default: break;
 		}
 	}
