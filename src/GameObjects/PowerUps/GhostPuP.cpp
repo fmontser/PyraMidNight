@@ -12,7 +12,7 @@ namespace pyramidnight {
 	
 	GhostPuP::GhostPuP(const sf::Texture &texture) : PowerUp(texture) {
 		PowerUpType = PowerUp::Type::GHOST;
-		mBumperSpeedPenalty = BMPR_INIT_SPEED;
+		mBumperSpeedPenalty = 1.0f; //TODO hardcoded
 		mSpeed = 50.0f;
 		mDeltaX = 0.0f;
 		mDeltaY = 0.0f;
@@ -79,15 +79,14 @@ namespace pyramidnight {
 		setPosition(position);
 	}
 
-	//TODO @@@@ fix bug not allways work
 	void GhostPuP::UpdateAttack(const sf::Time &deltaTime) {
 		if (mIsAttacking) {
 			mAttackTimer += deltaTime.asSeconds();
-			mBumperSpeedPenalty = BMPR_INIT_SPEED * PWRUP_GHOST_PENALTY_MOD;
-			setColor(sf::Color::Red);
+			mBumperSpeedPenalty = PWRUP_GHOST_PENALTY_MOD;
+			setColor(PWRUP_GHOST_ATTACK_COLOR);
 		}
 		if (mIsAttacking && (mAttackTimer >= mAttackLimit)) {
-			mBumperSpeedPenalty = BMPR_INIT_SPEED;
+			mBumperSpeedPenalty = 1.0f;
 			mIsAttacking = false;
 			mIsDestroyed = true;
 			setColor(PWRUP_GHOST_COLOR);

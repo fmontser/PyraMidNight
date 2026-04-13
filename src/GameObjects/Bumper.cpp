@@ -7,6 +7,7 @@ namespace pyramidnight {
 	
 	Bumper::Bumper(const sf::Texture& texture) : sf::Sprite(texture) {
 		mSpeed = BMPR_INIT_SPEED;
+		mSpeedPenalty = 1.0f;
 		CollidableType = ICollidable::Type::BUMPER;
 	}
 
@@ -28,19 +29,19 @@ namespace pyramidnight {
 		return std::nullopt;
 	}
 
-	void Bumper::Move(int8_t magnitude, sf::Time &deltaTime, bool fine, bool coarse)
-	{
+	void Bumper::Move(int8_t magnitude, sf::Time &deltaTime, bool fine, bool coarse) {
 		sf::Vector2 position = this->getPosition();
 		if (fine && !coarse)
 			mSpeed *= BMPR_FINE_SPEED_MOD;
 		else if (!fine && coarse)
 			mSpeed *= BMPR_COARSE_SPEED_MOD;
 
+		mSpeed *= mSpeedPenalty;
 		position.x += magnitude * mSpeed * deltaTime.asSeconds();
 		position.x = std::clamp(position.x, BMPR_MV_LIMIT_L, BMPR_MV_LIMIT_R);
 		this->setPosition(position);
-		mSpeed = BMPR_INIT_SPEED;
+		mSpeed = BMPR_INIT_SPEED * mSpeedPenalty;
 	}
-	
-	void Bumper::SetSpeed(float speed)	{ mSpeed = speed;}
+
+	void Bumper::SetSpeedPenalty(float penalty) { mSpeedPenalty = penalty;	}
 }
