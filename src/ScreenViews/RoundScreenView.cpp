@@ -63,6 +63,7 @@ namespace pyramidnight {
 		mScorePuPTex = ResourceManager::GetTexture(PATH_TEX_SCORE_PWRUP);
 		mCreditPuPTex = ResourceManager::GetTexture(PATH_TEX_CREDIT_PWRUP);
 		mGhostPuPTex = ResourceManager::GetTexture(PATH_TEX_GHOST_PWRUP);
+		mMagicPuPTex = ResourceManager::GetTexture(PATH_TEX_MAGIC_PWRUP);
 
 		mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
 		mDeathArea->setPosition({32, 864});
