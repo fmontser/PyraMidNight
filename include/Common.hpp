@@ -43,10 +43,14 @@ namespace pyramidnight {
 
 	//Power ups
 	inline constexpr float     PWRUP_CREDIT_CHANCE = 0.055f;
-	inline constexpr float     PWRUP_GHOST_CHANCE = 0.5f; //TODO adjust
+	inline constexpr float     PWRUP_GHOST_CHANCE = 0.33f;
 	inline constexpr float     PWRUP_SCORE_CHANCE = 0.22f;
 
-	inline constexpr float     PWRUP_GHOST_PENALTY_MOD = 0.5f;
+	inline constexpr float     PWRUP_GHOST_SPEED = 50.0f;
+	inline constexpr float     PWRUP_GHOST_HOVER_TIME_MIN = 2.0f;
+	inline constexpr float     PWRUP_GHOST_HOVER_TIME_MAX = 5.0f;
+	inline constexpr float     PWRUP_GHOST_PENALTY_TIME = 3.0f;
+	inline constexpr float     PWRUP_GHOST_PENALTY_MOD = 0.66f;
 	inline constexpr sf::Color PWRUP_GHOST_ATTACK_COLOR = sf::Color({255, 64, 64, 64});
 	inline constexpr sf::Color PWRUP_GHOST_COLOR = sf::Color({0, 255, 255, 64});
 
@@ -160,7 +164,6 @@ namespace pyramidnight {
 	inline constexpr float VOL_AUD_BALL_LAUNCH = 1.0f;
 	inline constexpr float VOL_AUD_BLOCK_DESTROY = 0.9f;
 	inline constexpr float VOL_AUD_BLOCK_DAMAGE = 0.5f;
-	inline constexpr float VOL_AUD_ENEMY_SPAWN = 1.0f; //TODO enemies feature
 	inline constexpr float VOL_AUD_BUMPER_BOUNCE = 0.4f;
 	inline constexpr float VOL_AUD_PWRUP_0 = 0.1f;
 	inline constexpr float VOL_AUD_COIN_IN = 1.0f;

@@ -12,15 +12,15 @@ namespace pyramidnight {
 	
 	GhostPuP::GhostPuP(const sf::Texture &texture) : PowerUp(texture) {
 		PowerUpType = PowerUp::Type::GHOST;
-		mBumperSpeedPenalty = 1.0f; //TODO hardcoded
-		mSpeed = 50.0f;
+		mBumperSpeedPenalty = 1.0f;
+		mSpeed = PWRUP_GHOST_SPEED;
 		mDeltaX = 0.0f;
 		mDeltaY = 0.0f;
 		mDiveTimer = 0.0f;
-		mDiveLimit = GenerateTimer();
+		mDiveLimit = GenerateHoverTime();
 		mFlashEnabled = false;
 		mAttackTimer = 0.0f;
-		mAttackLimit = 2.0f; //TODO hardcoded
+		mAttackLimit = PWRUP_GHOST_PENALTY_TIME;
 		mIsAttacking = false;
 
 		mAnimationDelta = 0.0f;
@@ -93,8 +93,7 @@ namespace pyramidnight {
 		}
 	}
 
-	void GhostPuP::EnableFlashEffect()
-	{
+	void GhostPuP::EnableFlashEffect() {
 		mFlashEnabled = true;
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
 			-1.0f, EFF_FLASH_GHOST_LAPSE, EFF_FLASH_GHOST_COLOR, getColor(), shared_from_this()));
@@ -109,14 +108,13 @@ namespace pyramidnight {
 		return x(gen) == 0 ? 1 : -1;
 	}
 
-	float GhostPuP::GenerateTimer() { 
+	float GhostPuP::GenerateHoverTime() { 
 		static std::random_device rd; 
 		static std::mt19937 gen(rd()); 
-		std::uniform_real_distribution<float> t(2.0f, 10.0f);
-		
+		std::uniform_real_distribution<float>
+			t(PWRUP_GHOST_HOVER_TIME_MIN, PWRUP_GHOST_HOVER_TIME_MAX);
 		return t(gen);
 	}
-
 
 	void GhostPuP::AnimateFrame(const sf::Time &deltaTime) {
 		mAnimationDelta += deltaTime.asSeconds();

@@ -31,7 +31,7 @@ namespace pyramidnight {
 			void UpdateAttack(const sf::Time &deltaTime);
 			void EnableFlashEffect();
 			int  GenerateDirection();
-			float GenerateTimer();
+			float GenerateHoverTime();
 			void AnimateFrame(const sf::Time &deltaTime);
 			void MirrorSprite();
 
