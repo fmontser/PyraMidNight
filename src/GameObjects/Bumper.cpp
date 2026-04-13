@@ -2,6 +2,9 @@
 #include <cmath>
 #include "Bumper.hpp"
 #include "Ball.hpp"
+#include "PowerUp.hpp"
+#include "RenderManager.hpp"
+#include "Flash.hpp"
 
 namespace pyramidnight {
 	
@@ -41,6 +44,11 @@ namespace pyramidnight {
 		position.x = std::clamp(position.x, BMPR_MV_LIMIT_L, BMPR_MV_LIMIT_R);
 		this->setPosition(position);
 		mSpeed = BMPR_INIT_SPEED * mSpeedPenalty;
+	}
+
+	void Bumper::EnablePenaltyFlashEffect(float duration) {
+		RenderManager::DisplayEffect(std::make_unique<Flash>(
+			duration, EFF_FLASH_GHOST_LAPSE, EFF_FLASH_GHOST_ATTACK_COLOR, getColor(), shared_from_this()));
 	}
 
 	void Bumper::SetSpeedPenalty(float penalty) { mSpeedPenalty = penalty;	}

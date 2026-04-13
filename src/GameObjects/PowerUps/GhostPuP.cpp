@@ -4,8 +4,8 @@
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
 #include "AudioManager.hpp"
-#include "GhostPuP.hpp"
 #include "Bumper.hpp"
+#include "GhostPuP.hpp"
 #include "Flash.hpp"
 
 namespace pyramidnight {
@@ -54,6 +54,7 @@ namespace pyramidnight {
 				auto sb = ResourceManager::GetAudio(PATH_AUD_GHOST_ATTACK);
 				AudioManager::Play({sb, VOL_AUD_GHOST_ATTACK, PolySound::Type::SFX, false});
 				mIsAttacking = true;
+				bumper.EnablePenaltyFlashEffect(PWRUP_GHOST_PENALTY_TIME);
 				EnableAttackFlashEffect();
 				return { CollidableType, mIsDestroyed, mBumperSpeedPenalty , cpos };
 			}
@@ -87,13 +88,11 @@ namespace pyramidnight {
 		if (mIsAttacking) {
 			mAttackTimer += deltaTime.asSeconds();
 			mBumperSpeedPenalty = PWRUP_GHOST_PENALTY_MOD;
-			//setColor(PWRUP_GHOST_ATTACK_COLOR);
 		}
 		if (mIsAttacking && (mAttackTimer >= mAttackLimit)) {
 			mBumperSpeedPenalty = 1.0f;
 			mIsAttacking = false;
 			mIsDestroyed = true;
-			//setColor(PWRUP_GHOST_COLOR);
 		}
 	}
 
