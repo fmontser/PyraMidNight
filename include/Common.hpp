@@ -43,7 +43,7 @@ namespace pyramidnight {
 
 	//Power ups
 	inline constexpr float     PWRUP_CREDIT_CHANCE = 0.055f;
-	inline constexpr float     PWRUP_GHOST_CHANCE = 0.33f;
+	inline constexpr float     PWRUP_GHOST_CHANCE = 0.66f;
 	inline constexpr float     PWRUP_SCORE_CHANCE = 0.22f;
 
 	inline constexpr float     PWRUP_GHOST_SPEED = 50.0f;
@@ -51,7 +51,6 @@ namespace pyramidnight {
 	inline constexpr float     PWRUP_GHOST_HOVER_TIME_MAX = 5.0f;
 	inline constexpr float     PWRUP_GHOST_PENALTY_TIME = 3.0f;
 	inline constexpr float     PWRUP_GHOST_PENALTY_MOD = 0.66f;
-	inline constexpr sf::Color PWRUP_GHOST_ATTACK_COLOR = sf::Color({255, 64, 64, 64});
 	inline constexpr sf::Color PWRUP_GHOST_COLOR = sf::Color({0, 255, 255, 64});
 
 	//Cursor
@@ -188,6 +187,7 @@ namespace pyramidnight {
 		inline constexpr sf::Color    EFF_FLASH_CREDITUP_COLOR = sf::Color::Magenta;
 		inline constexpr float        EFF_FLASH_GHOST_LAPSE = 0.025f;
 		inline constexpr sf::Color    EFF_FLASH_GHOST_COLOR = sf::Color::Cyan;
+		inline constexpr sf::Color    EFF_FLASH_GHOST_ATTACK_COLOR = sf::Color::Red;
 		inline constexpr float        EFF_FLASH_BLK_LAPSE = 0.05f;
 		inline constexpr float        EFF_FLASH_BLK_TIME = 1.0f;
 		inline constexpr sf::Color    EFF_FLASH_BLK_COLOR = sf::Color::Green;

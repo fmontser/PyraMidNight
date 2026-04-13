@@ -4,8 +4,8 @@
 #include "ResourceManager.hpp"
 #include "RenderManager.hpp"
 #include "AudioManager.hpp"
-#include "GhostPuP.hpp"
 #include "Bumper.hpp"
+#include "GhostPuP.hpp"
 #include "Flash.hpp"
 
 namespace pyramidnight {
@@ -54,8 +54,13 @@ namespace pyramidnight {
 				auto sb = ResourceManager::GetAudio(PATH_AUD_GHOST_ATTACK);
 				AudioManager::Play({sb, VOL_AUD_GHOST_ATTACK, PolySound::Type::SFX, false});
 				mIsAttacking = true;
+				bumper.EnablePenaltyFlashEffect(PWRUP_GHOST_PENALTY_TIME);
+				EnableAttackFlashEffect();
 				return { CollidableType, mIsDestroyed, mBumperSpeedPenalty , cpos };
 			}
+			// stick to bumper while attacking
+			if (cpos != std::nullopt && !mIsDestroyed)
+				setPosition(*cpos);
 		}
 		return { CollidableType, mIsDestroyed, mBumperSpeedPenalty, std::nullopt };
 	}
@@ -83,13 +88,11 @@ namespace pyramidnight {
 		if (mIsAttacking) {
 			mAttackTimer += deltaTime.asSeconds();
 			mBumperSpeedPenalty = PWRUP_GHOST_PENALTY_MOD;
-			setColor(PWRUP_GHOST_ATTACK_COLOR);
 		}
 		if (mIsAttacking && (mAttackTimer >= mAttackLimit)) {
 			mBumperSpeedPenalty = 1.0f;
 			mIsAttacking = false;
 			mIsDestroyed = true;
-			setColor(PWRUP_GHOST_COLOR);
 		}
 	}
 
@@ -97,6 +100,11 @@ namespace pyramidnight {
 		mFlashEnabled = true;
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
 			-1.0f, EFF_FLASH_GHOST_LAPSE, EFF_FLASH_GHOST_COLOR, getColor(), shared_from_this()));
+	}
+
+	void GhostPuP::EnableAttackFlashEffect() {
+		RenderManager::DisplayEffect(std::make_unique<Flash>(
+			PWRUP_GHOST_PENALTY_TIME, EFF_FLASH_GHOST_LAPSE, EFF_FLASH_GHOST_ATTACK_COLOR, getColor(), shared_from_this()));
 	}
 
 	int GhostPuP::GenerateDirection() { 

@@ -11,11 +11,11 @@ namespace pyramidnight {
 			virtual ~ICollidable() = default;
 
 			enum class Type {
-				BALL, BLOCK, OBSTACLE, BUMPER, POWER_UP
+				NONE, BALL, BLOCK, OBSTACLE, BUMPER, POWER_UP
 			};
 
 			struct Info {
-				Type                        type = Type::BALL;
+				Type                        type = Type::NONE;
 				bool                        destroyed = false;
 				float                     valueMod = 0.0f;
 				std::optional<sf::Vector2f> collisionPoint = std::nullopt;
