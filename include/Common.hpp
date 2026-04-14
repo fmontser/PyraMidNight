@@ -54,6 +54,7 @@ namespace pyramidnight {
 	inline constexpr float     PWRUP_GHOST_PENALTY_MOD = 0.66f;
 	inline constexpr sf::Color PWRUP_GHOST_COLOR = sf::Color({0, 255, 255, 64});
 	inline constexpr float     PWRUP_MAGIC_DURATION = 15.0f;
+	inline constexpr float     PWRUP_MAGIC_FIRERATE = 0.5f;
 	inline constexpr float     PWRUP_MAGIC_DAMAGE = 1.0f;
 
 	//Cursor
