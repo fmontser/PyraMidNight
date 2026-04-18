@@ -42,9 +42,10 @@ namespace pyramidnight {
 	inline constexpr int32_t SCORE_PWRUP_POINTS = 150;
 
 	//Power ups
-	inline constexpr float     PWRUP_CREDIT_CHANCE = 0.055f;
 	inline constexpr float     PWRUP_GHOST_CHANCE = 0.66f;
 	inline constexpr float     PWRUP_SCORE_CHANCE = 0.22f;
+	inline constexpr float     PWRUP_MAGIC_CHANCE = 0.22f;
+	inline constexpr float     PWRUP_CREDIT_CHANCE = 0.055f;
 
 	inline constexpr float     PWRUP_GHOST_SPEED = 50.0f;
 	inline constexpr float     PWRUP_GHOST_HOVER_TIME_MIN = 2.0f;
@@ -52,6 +53,9 @@ namespace pyramidnight {
 	inline constexpr float     PWRUP_GHOST_PENALTY_TIME = 3.0f;
 	inline constexpr float     PWRUP_GHOST_PENALTY_MOD = 0.66f;
 	inline constexpr sf::Color PWRUP_GHOST_COLOR = sf::Color({0, 255, 255, 64});
+	inline constexpr float     PWRUP_MAGIC_DURATION = 15.0f;
+	inline constexpr float     PWRUP_MAGIC_FIRERATE = 0.5f;
+	inline constexpr float     PWRUP_MAGIC_DAMAGE = 1.0f;
 
 	//Cursor
 	inline constexpr float            CUR_MV_OFFSET = 30.0f;
@@ -134,6 +138,7 @@ namespace pyramidnight {
 	inline constexpr std::string_view PATH_TEX_SCORE_PWRUP = "assets/textures/ScorePuP32.png";
 	inline constexpr std::string_view PATH_TEX_CREDIT_PWRUP = "assets/textures/CreditPuP32.png";
 	inline constexpr std::string_view PATH_TEX_GHOST_PWRUP = "assets/textures/GhostPuP64.png";
+	inline constexpr std::string_view PATH_TEX_MAGIC_PWRUP = "assets/textures/Magic32.png";
 
 	inline constexpr std::string_view PATH_AUD_BALL_BOUNCE = "assets/audio/BallBounce.ogg";
 	inline constexpr std::string_view PATH_AUD_BALL_LOSE = "assets/audio/BallLose.ogg";
@@ -200,4 +205,7 @@ namespace pyramidnight {
 		inline constexpr float        ANI_COIN_FRAMERATE = 0.15f;
 		inline constexpr float        ANI_COIN_V_SPEED_MOD = 8.0f;
 		inline constexpr float        ANI_COIN_H_SPEED_MOD = 6.0f;
+		inline constexpr float        ANI_MAGIC_FRAMERATE = 0.05f;
+		inline constexpr float        ANI_MAGIC_V_SPEED_MOD = 2.0f;
+		inline constexpr float        ANI_HOLYMISILE_V_SPEED_MOD = 3.5f;
 }

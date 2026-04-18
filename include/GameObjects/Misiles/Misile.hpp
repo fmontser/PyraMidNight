@@ -8,16 +8,16 @@
 
 namespace pyramidnight {
 
-	class PowerUp : 
+	class Misile : 
 		public sf::Sprite, public ICollidable,
-		public ISpawnable, public std::enable_shared_from_this<PowerUp> {
+		public ISpawnable, public std::enable_shared_from_this<Misile> {
 			public:
 
 				enum class Type {
-					SCORE, CREDIT, GHOST, MAGIC
+					HOLY_MISILE
 				};
 
-				virtual ~PowerUp() = default;
+				virtual ~Misile() = default;
 
 				void Spawn(
 					const sf::Vector2f& position,
@@ -27,20 +27,20 @@ namespace pyramidnight {
 
 				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect);
 
-				PowerUp::Type  PowerUpType;
+				Misile::Type  MisileType;
 
 			protected:
 
-				PowerUp(const sf::Texture& texture);
-				PowerUp(const PowerUp& src) =  delete;
-				PowerUp& operator=(const PowerUp& src) = delete;
+				Misile(const sf::Texture& texture);
+				Misile(const Misile& src) =  delete;
+				Misile& operator=(const Misile& src) = delete;
 				
 				bool         mIsSpawned;
 				bool         mIsDestroyed;
 				float        mSpeed;
 				sf::Vector2f mDirection;
 
-				void ApplyGravity(const sf::Time &deltaTime);
+				void ApplyMovement(const sf::Time &deltaTime);
 				void DestroyIfOutside() override;
 	};
 }

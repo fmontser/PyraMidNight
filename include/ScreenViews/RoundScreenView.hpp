@@ -8,6 +8,7 @@
 #include "Common.hpp"
 #include "Spawner.hpp"
 #include "PowerUp.hpp"
+#include "Misile.hpp"
 
 namespace pyramidnight {
 
@@ -52,19 +53,23 @@ namespace pyramidnight {
 			std::shared_ptr<sf::Texture> mScorePuPTex;
 			std::shared_ptr<sf::Texture> mCreditPuPTex;
 			std::shared_ptr<sf::Texture> mGhostPuPTex;
+			std::shared_ptr<sf::Texture> mMagicPuPTex;
 			
 			std::shared_ptr<sf::RectangleShape>       mDeathArea;
 			std::vector<std::shared_ptr<ICollidable>> mColdetVector;
 			std::vector<std::shared_ptr<Block>>       mBlockVector;
 			std::vector<std::shared_ptr<PowerUp>>     mPowerUpVector;
+			std::vector<std::shared_ptr<Misile>>      mMisileVector;
 			std::vector<std::shared_ptr<sf::Sprite>>  mDestroyedSprites;
 			Spawner                                   mSpawner;
 
 			bool LoadLevel(const uint8_t& roundId);
 			bool UpdateGame(const RoundScreenUpdate &update);
+			void UpdateBumper(const RoundScreenUpdate &update);
 			void UpdatePowerUps(uint8_t &credits, uint32_t &score, const sf::Time &deltaTime);
-			void UpdateBall(uint32_t &score, const sf::Time &deltaTime);
-			void UpdateBlocks();
+			void UpdateMisiles(const sf::Time &deltaTime);
+			void UpdateBall(bool action, uint32_t &score, const sf::Time &deltaTime);
+			void CleanObjectVectors();
 			void UpdateTexts(const RoundScreenUpdate &update);
 			void ScoreTimePenalty(uint32_t &score, sf::Time &deltaTime);
 			bool LoseBall(const RoundScreenUpdate &update);

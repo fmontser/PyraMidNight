@@ -13,5 +13,7 @@ namespace pyramidnight {
 			virtual void Spawn(
 				const sf::Vector2f& position,
 				std::vector<std::shared_ptr<sf::Drawable>>& drawables) = 0;
+		protected:
+			virtual void DestroyIfOutside() = 0;
 	};
 }

@@ -22,6 +22,7 @@ namespace pyramidnight {
 		mAttackTimer = 0.0f;
 		mAttackLimit = PWRUP_GHOST_PENALTY_TIME;
 		mIsAttacking = false;
+		mIsDefeated = false;
 
 		mAnimationDelta = 0.0f;
 		mTextureSize = getTexture().getSize();
@@ -65,9 +66,19 @@ namespace pyramidnight {
 		return { CollidableType, mIsDestroyed, mBumperSpeedPenalty, std::nullopt };
 	}
 
+	void GhostPuP::Defeat() {
+		mIsDefeated = true;
+		EnableAttackFlashEffect();
+	}
+
 	void GhostPuP::ApplyGhostlyMovement(const sf::Time &deltaTime) {
 		if (mIsAttacking)
 			return;
+		if (mIsDefeated) {
+			mDirection.y = -100; // will be inverted bellow
+			mDiveTimer = mDiveLimit;
+			rotate(sf::degrees(mDirection.x * deltaTime.asSeconds() * 2.0f)); //TODO hardcoded mod
+		}
 		auto deltaTimeSec = deltaTime.asSeconds();
 		mDeltaX += mDirection.x * ANI_GHOST_H_SPEED_MOD * deltaTimeSec;
 		mDeltaY += mDirection.y * ANI_GHOST_V_SPEED_MOD * deltaTimeSec;

@@ -62,6 +62,9 @@ set(APP_SOURCES
 	src/GameObjects/PowerUps/ExtraScorePuP.cpp
 	src/GameObjects/PowerUps/ExtraCreditPuP.cpp
 	src/GameObjects/PowerUps/GhostPuP.cpp
+	src/GameObjects/PowerUps/MagicPuP.cpp
+	src/GameObjects/Misiles/Misile.cpp
+	src/GameObjects/Misiles/HolyMisile.cpp
 	src/RenderEffects/RenderEffect.cpp
 	src/RenderEffects/ScreenShake.cpp
 	src/RenderEffects/Blink.cpp
@@ -88,6 +91,7 @@ target_include_directories(PyraMidNight PUBLIC include/)
 target_include_directories(PyraMidNight PUBLIC include/Data)
 target_include_directories(PyraMidNight PUBLIC include/GameObjects)
 target_include_directories(PyraMidNight PUBLIC include/GameObjects/PowerUps)
+target_include_directories(PyraMidNight PUBLIC include/GameObjects/Misiles)
 target_include_directories(PyraMidNight PUBLIC include/Interfaces)
 target_include_directories(PyraMidNight PUBLIC include/ScreenViews)
 target_include_directories(PyraMidNight PUBLIC include/Managers)

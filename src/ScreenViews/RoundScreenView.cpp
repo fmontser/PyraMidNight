@@ -10,6 +10,7 @@
 #include "ExtraScorePuP.hpp"
 #include "ExtraCreditPuP.hpp"
 #include "GhostPuP.hpp"
+#include "MagicPuP.hpp"
 
 namespace pyramidnight {
 
@@ -34,6 +35,11 @@ namespace pyramidnight {
 		mScoreTxt->setOutlineThickness(ROUND_TXT_OUTLINE_SZ);
 		mScoreTxt->setPosition({352.0f, 864.f});
 		
+		mScorePuPTex = ResourceManager::GetTexture(PATH_TEX_SCORE_PWRUP);
+		mCreditPuPTex = ResourceManager::GetTexture(PATH_TEX_CREDIT_PWRUP);
+		mGhostPuPTex = ResourceManager::GetTexture(PATH_TEX_GHOST_PWRUP);
+		mMagicPuPTex = ResourceManager::GetTexture(PATH_TEX_MAGIC_PWRUP);
+
 		mBackgroundTex = ResourceManager::GetTexture(PATH_TEX_BG);
 		mBackground = std::make_shared<sf::Sprite>(sf::Sprite(*mBackgroundTex));
 		mBackground->setColor(ROUND_BG_TINT);
@@ -53,17 +59,14 @@ namespace pyramidnight {
 		mCeil->setTextureRect({{0, 0},{640, 32}});
 
 		mBumperTex = std::make_shared<sf::Texture>(PATH_TEX_BUMP);
-		mBumper = std::make_shared<Bumper>(*mBumperTex);
+		mBumper = std::make_shared<Bumper>(*mBumperTex, *mMagicPuPTex);
 		mBumper->setPosition({256, 832});
 		
 		mBallTex = ResourceManager::GetTexture(PATH_TEX_BALL);
 		mBall = std::make_shared<Ball>(*mBallTex);
-
+		
 		mBlockTex = ResourceManager::GetTexture(PATH_TEX_BLOCK);
-		mScorePuPTex = ResourceManager::GetTexture(PATH_TEX_SCORE_PWRUP);
-		mCreditPuPTex = ResourceManager::GetTexture(PATH_TEX_CREDIT_PWRUP);
-		mGhostPuPTex = ResourceManager::GetTexture(PATH_TEX_GHOST_PWRUP);
-
+		
 		mDeathArea = std::make_shared<sf::RectangleShape>(sf::RectangleShape({576.0f, 64.0f}));
 		mDeathArea->setPosition({32, 864});
 		mDeathArea->setFillColor(sf::Color::Transparent);
@@ -112,21 +115,17 @@ namespace pyramidnight {
 	bool RoundScreenView::Update(const RoundScreenUpdate& update) {
  		if (!mLvlIsLoaded)
 			mLvlIsLoaded = LoadLevel(update.roundId);
-		if (update.action)
-			mBall->Launch();
-		if (update.holdLeft)
-			mBumper->Move(-1, update.deltaTime, update.fine, update.coarse);
-		else if (update.holdRight)
-			mBumper->Move(1, update.deltaTime, update.fine, update.coarse);
 		if (!UpdateGame(update))
 			return false;
 		return true;
 	}
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
+		UpdateBumper(update);
 		UpdatePowerUps(update.credits, update.score, update.deltaTime);
-		UpdateBall(update.score, update.deltaTime);
-		UpdateBlocks();
+		UpdateMisiles(update.deltaTime);
+		UpdateBall(update.action, update.score, update.deltaTime);
+		CleanObjectVectors();
 		UpdateTexts(update);
 		ScoreTimePenalty(update.score, update.deltaTime);
 
@@ -143,6 +142,20 @@ namespace pyramidnight {
 		return true;
 	}
 
+	void RoundScreenView::UpdateBumper(const RoundScreenUpdate& update) {
+		Bumper::BumperUpdate bumperUpdate {
+			update.holdLeft,
+			update.holdRight,
+			update.action,
+			update.fine,
+			update.coarse,
+			update.deltaTime,
+			mDrawables,
+			mMisileVector
+		};
+		mBumper->Update(bumperUpdate);
+	}
+
 	void RoundScreenView::UpdatePowerUps(uint8_t& credits, uint32_t& score, const sf::Time &deltaTime) {
 		for (const auto &obj : mPowerUpVector) {
 			ICollidable::Info info = obj->OnCollision(*mBumper);
@@ -155,13 +168,38 @@ namespace pyramidnight {
 					case PowerUp::Type::SCORE: AddScore(score, info.valueMod); break;
 					case PowerUp::Type::CREDIT: AddCredit(credits); break;
 					case PowerUp::Type::GHOST: mBumper->SetSpeedPenalty(info.valueMod); break;
+					case PowerUp::Type::MAGIC: mBumper->EnableMagic(info.valueMod); break;
 					default: break;
 				}
 			}
 		}
 	}
+
+	void RoundScreenView::UpdateMisiles(const sf::Time &deltaTime) {
+		for (const auto& obj : mMisileVector) {
+			for (const auto& pup : mPowerUpVector) {
+				if (pup->PowerUpType == PowerUp::Type::GHOST) {
+					auto& ghost = static_cast<GhostPuP&>(*pup);
+					ICollidable::Info info = obj->OnCollision(ghost);
+					obj->Update(deltaTime);
+
+					if (info.destroyed) {
+						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
+					}
+
+					if (info.valueMod != 0) {
+						switch (obj->MisileType) {
+							case Misile::Type::HOLY_MISILE: ghost.Defeat(); break;
+							default: break;
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
 	
-	void RoundScreenView::UpdateBall(uint32_t& score, const sf::Time &deltaTime) {
+	void RoundScreenView::UpdateBall(bool action, uint32_t& score, const sf::Time &deltaTime) {
 		if (mBall->GetState() == Ball::State::PLAYING) {
 			for (const auto &obj : mColdetVector) {
 				ICollidable::Info info = obj->OnCollision(*mBall);
@@ -173,10 +211,10 @@ namespace pyramidnight {
 						AddScore(score, info.valueMod);
 			}
 		}
-		mBall->Update(mBumper->getPosition(), deltaTime);
+		mBall->Update(action, mBumper->getPosition(), deltaTime);
 	}
 
-	void RoundScreenView::UpdateBlocks() {
+	void RoundScreenView::CleanObjectVectors() {
 		for (const auto& sprite : mDestroyedSprites) {
 			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprite);
 			if (itBlock != mBlockVector.end())
@@ -186,6 +224,11 @@ namespace pyramidnight {
 			auto itPowerUp = std::find(mPowerUpVector.begin(), mPowerUpVector.end(), powerUp);
 			if (itPowerUp != mPowerUpVector.end())
 				mPowerUpVector.erase(itPowerUp);
+
+			auto misile = std::dynamic_pointer_cast<Misile>(sprite);
+			auto itMisile = std::find(mMisileVector.begin(), mMisileVector.end(), misile);
+			if (itMisile != mMisileVector.end())
+				mMisileVector.erase(itMisile);
 
 			auto collidable = std::dynamic_pointer_cast<ICollidable>(sprite);
 			auto itColdet = std::find(mColdetVector.begin(), mColdetVector.end(), collidable);
@@ -265,8 +308,8 @@ namespace pyramidnight {
 			case PowerUp::Type::SCORE: spawn = std::make_shared<ExtraScorePuP>(*mScorePuPTex, SCORE_PWRUP_POINTS); break;
 			case PowerUp::Type::CREDIT: spawn = std::make_shared<ExtraCreditPuP>(*mCreditPuPTex); break;
 			case PowerUp::Type::GHOST: spawn = std::make_shared<GhostPuP>(*mGhostPuPTex); break;
-			default:
-				break;
+			case PowerUp::Type::MAGIC: spawn = std::make_shared<MagicPuP>(*mMagicPuPTex); break;
+			default: break;
 		}
 		if (spawn != nullptr) {
 			spawn->Spawn(*info.collisionPoint, mDrawables);
