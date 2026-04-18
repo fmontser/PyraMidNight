@@ -21,7 +21,7 @@ namespace pyramidnight {
 
 		void Launch();
 		void ResetPos(const sf::Vector2f& bumperPos);
-		void Update(bool action, const sf::Vector2f &bumperPos, const sf::Time &deltaTime);
+		void Update(UpdateBall update);
 		void Bounce(const sf::Sprite &obj);
 		void ApplyBumperMod(const sf::Sprite& bumper);
 
