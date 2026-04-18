@@ -65,6 +65,11 @@ namespace pyramidnight {
 		return { CollidableType, mIsDestroyed, mBumperSpeedPenalty, std::nullopt };
 	}
 
+	void GhostPuP::Defeat() {
+		mDirection.y = -1;
+		EnableAttackFlashEffect();
+	}
+
 	void GhostPuP::ApplyGhostlyMovement(const sf::Time &deltaTime) {
 		if (mIsAttacking)
 			return;

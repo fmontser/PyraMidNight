@@ -4,11 +4,12 @@
 #include "AudioManager.hpp"
 #include "HolyMisile.hpp"
 #include "Bumper.hpp"
+#include "PowerUp.hpp"
 #include "Flash.hpp"
 
 namespace pyramidnight {
 	
-	HolyMisile::HolyMisile(const sf::Texture &texture) : PowerUp(texture) {
+	HolyMisile::HolyMisile(const sf::Texture &texture) : Misile(texture) {
 		MisileType = Misile::Type::HOLY_MISILE;
 		mSpeed *= ANI_HOLYMISILE_V_SPEED_MOD;
 		mFlashEnabled = false;
@@ -18,7 +19,7 @@ namespace pyramidnight {
 		setTextureRect(mAnimationRect);
 		mSpriteRect = getTextureRect();
 		mTextureSize = getTexture().getSize();
-		setOrigin(getGlobalBounds().getCenter());
+		setOrigin(getGlobalBounds().getCenter()); //TODO check?
 		setScale({1.5f,-1.5f});
 	}
 
@@ -26,19 +27,20 @@ namespace pyramidnight {
 		if (!mFlashEnabled)
 			EnableFlashEffect();
 		AnimateFrame(deltaTime);
-		PowerUp::Update(deltaTime);
+		Misile::Update(deltaTime);
 	}
 
 	ICollidable::Info HolyMisile::OnCollision(ICollidable &collider) {
-		if (collider.CollidableType == ICollidable::Type::BUMPER) {
-			auto& bumper = static_cast<Bumper&>(collider);
-			auto cpos = bumper.GetCollisionPoint(getGlobalBounds());
+		if (collider.CollidableType == ICollidable::Type::POWER_UP) {
+			auto& powerUp = static_cast<PowerUp&>(collider);
+			auto cpos = powerUp.GetCollisionPoint(getGlobalBounds());
 
-			if (cpos != std::nullopt) {
+			if (cpos != std::nullopt && powerUp.PowerUpType == PowerUp::Type::GHOST) {
+				//TODO impact sound effect
 				auto sb = ResourceManager::GetAudio(PATH_AUD_COIN_IN);
 				AudioManager::Play({sb, VOL_AUD_COIN_IN, PolySound::Type::SFX, false});
 				mIsDestroyed = true;
-				return { CollidableType, mIsDestroyed, PWRUP_MAGIC_DURATION , cpos };
+				return { CollidableType, mIsDestroyed, 1.0f , cpos };
 			}
 		}
 		return { CollidableType, mIsDestroyed, 0.0f , std::nullopt };

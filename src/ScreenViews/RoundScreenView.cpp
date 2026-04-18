@@ -123,8 +123,9 @@ namespace pyramidnight {
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
 		UpdateBumper(update);
 		UpdatePowerUps(update.credits, update.score, update.deltaTime);
+		UpdateMisiles(update.deltaTime);
 		UpdateBall(update.action, update.score, update.deltaTime);
-		UpdateBlocks();
+		CleanObjectVectors();
 		UpdateTexts(update);
 		ScoreTimePenalty(update.score, update.deltaTime);
 
@@ -149,7 +150,8 @@ namespace pyramidnight {
 			update.fine,
 			update.coarse,
 			update.deltaTime,
-			mDrawables
+			mDrawables,
+			mMisileVector
 		};
 		mBumper->Update(bumperUpdate);
 	}
@@ -172,6 +174,30 @@ namespace pyramidnight {
 			}
 		}
 	}
+
+	void RoundScreenView::UpdateMisiles(const sf::Time &deltaTime) {
+		for (const auto& obj : mMisileVector) {
+			for (const auto& pup : mPowerUpVector) {
+				if (pup->PowerUpType == PowerUp::Type::GHOST) {
+					auto& ghost = static_cast<GhostPuP&>(*pup);
+					ICollidable::Info info = obj->OnCollision(ghost);
+					obj->Update(deltaTime);
+
+					if (info.destroyed) {
+						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
+					}
+
+					if (info.valueMod != 0) {
+						switch (obj->MisileType) {
+							case Misile::Type::HOLY_MISILE: ghost.Defeat(); break;
+							default: break;
+						}
+					}
+					break;
+				}
+			}
+		}
+	}
 	
 	void RoundScreenView::UpdateBall(bool action, uint32_t& score, const sf::Time &deltaTime) {
 		if (mBall->GetState() == Ball::State::PLAYING) {
@@ -188,7 +214,7 @@ namespace pyramidnight {
 		mBall->Update(action, mBumper->getPosition(), deltaTime);
 	}
 
-	void RoundScreenView::UpdateBlocks() {
+	void RoundScreenView::CleanObjectVectors() {
 		for (const auto& sprite : mDestroyedSprites) {
 			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprite);
 			if (itBlock != mBlockVector.end())
@@ -198,6 +224,11 @@ namespace pyramidnight {
 			auto itPowerUp = std::find(mPowerUpVector.begin(), mPowerUpVector.end(), powerUp);
 			if (itPowerUp != mPowerUpVector.end())
 				mPowerUpVector.erase(itPowerUp);
+
+			auto misile = std::dynamic_pointer_cast<Misile>(sprite);
+			auto itMisile = std::find(mMisileVector.begin(), mMisileVector.end(), misile);
+			if (itMisile != mMisileVector.end())
+				mMisileVector.erase(itMisile);
 
 			auto collidable = std::dynamic_pointer_cast<ICollidable>(sprite);
 			auto itColdet = std::find(mColdetVector.begin(), mColdetVector.end(), collidable);

@@ -3,7 +3,7 @@
 #include "RenderManager.hpp"
 
 namespace pyramidnight {
-	PowerUp::Misile(const sf::Texture& texture) : sf::Sprite(texture) {
+	Misile::Misile(const sf::Texture& texture) : sf::Sprite(texture) {
 		CollidableType = ICollidable::Type::MISILE;
 		mIsSpawned = false;
 		mIsDestroyed = false;
@@ -11,6 +11,7 @@ namespace pyramidnight {
 		mDirection = GAME_DIRECTION_UP;
 	}
 	
+	//TODO use with spawner
 	void Misile::Spawn(
 		const sf::Vector2f &position, std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
 		setPosition(position);

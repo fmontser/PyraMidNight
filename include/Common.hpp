@@ -207,5 +207,5 @@ namespace pyramidnight {
 		inline constexpr float        ANI_COIN_H_SPEED_MOD = 6.0f;
 		inline constexpr float        ANI_MAGIC_FRAMERATE = 0.05f;
 		inline constexpr float        ANI_MAGIC_V_SPEED_MOD = 2.0f;
-		inline constexpr float        ANI_HOLYMISILE_V_SPEED_MOD = 5.0f;
+		inline constexpr float        ANI_HOLYMISILE_V_SPEED_MOD = 3.5f;
 }

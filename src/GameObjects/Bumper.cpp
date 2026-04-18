@@ -3,6 +3,7 @@
 #include "Bumper.hpp"
 #include "Ball.hpp"
 #include "PowerUp.hpp"
+#include "HolyMisile.hpp"
 #include "RenderManager.hpp"
 #include "Flash.hpp"
 
@@ -43,15 +44,7 @@ namespace pyramidnight {
 			Move(update);
 
 		if (mIsMagicEnabled)
-			FireMagic(update.action, update.deltaTime, update.drawables);
-
-		////TODO temp test
-		for (auto& misile : mMisileVector) {
-			auto position =  misile->getPosition();
-			position.y -= 200.0f * update.deltaTime.asSeconds(); //TODO hardcoded
-			misile->setPosition(position);
-			AnimateFrame(*misile,update.deltaTime);
-		}
+			FireMagic(update.action, update.deltaTime, update.mMisileVector, update.drawables);
 	}
 
 	void Bumper::Move(BumperUpdate update) {
@@ -84,7 +77,9 @@ namespace pyramidnight {
 	}
 
 	void Bumper::FireMagic(bool action, const sf::Time& deltaTime,
+		std::vector<std::shared_ptr<Misile>>& misiles,
 		std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
+
 		mMagicDuration -= deltaTime.asSeconds();
 		mMagicFireRate += deltaTime.asSeconds();
 		if (mMagicDuration <= 0) {
@@ -95,29 +90,21 @@ namespace pyramidnight {
 		if (mMagicFireRate > PWRUP_MAGIC_FIRERATE && action) {
 			mMagicFireRate = 0.0f;
 
-			auto misile =  std::make_shared<sf::Sprite>(mMagicTexture);
-			misile->setScale({1, -1});
-			misile->setPosition(getPosition());
+			//TODO projectiles to spawner!!s
+			auto misile =  std::make_shared<HolyMisile>(mMagicTexture);
 			misile->setTextureRect(mAnimationRect);
-			mMisileVector.push_back(misile);
-			drawables.push_back(misile);
-			//TODO limpiar los drawables? al crear el objeto que se eliminen duera de la zona de juego
-		}
-	}
+			misile->Spawn(GetBumperFirePosition(), drawables);
+			misiles.push_back(misile);
 
-	//TODO test delete
-	void Bumper::AnimateFrame(sf::Sprite& sprite, const sf::Time &deltaTime) {
-		mAnimationDelta += deltaTime.asSeconds();
-		if (mAnimationDelta >= ANI_MAGIC_FRAMERATE) {
-			size_t newFrameX = mAnimationRect.position.x + sprite.getGlobalBounds().size.x;
-			
-			if (newFrameX >= 96) //TODO hardcoded
-				newFrameX = 0;
-			mAnimationRect.position.x = newFrameX;
-			sprite.setTextureRect(mAnimationRect);
-			mAnimationDelta = 0;
+
 		}
 	}
 
 	void Bumper::SetSpeedPenalty(float penalty) { mSpeedPenalty = penalty;	}
+	
+	sf::Vector2f Bumper::GetBumperFirePosition() {
+		auto pos = getPosition();
+		pos += {getGlobalBounds().size.x / 2.0f, 0.0f};
+		return pos;
+	}
 }

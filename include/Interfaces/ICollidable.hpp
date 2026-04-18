@@ -17,7 +17,7 @@ namespace pyramidnight {
 			struct Info {
 				Type                        type = Type::NONE;
 				bool                        destroyed = false;
-				float                     valueMod = 0.0f;
+				float                       valueMod = 0.0f;
 				std::optional<sf::Vector2f> collisionPoint = std::nullopt;
 			};
 

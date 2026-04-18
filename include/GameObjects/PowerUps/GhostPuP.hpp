@@ -11,6 +11,7 @@ namespace pyramidnight {
 
 			void Update(const sf::Time &deltaTime) override;
 			ICollidable::Info OnCollision(ICollidable &collider);
+			void Defeat();
 
 			void ApplyGhostlyMovement(const sf::Time &deltaTime);
 		private:
@@ -35,6 +36,5 @@ namespace pyramidnight {
 			float GenerateHoverTime();
 			void AnimateFrame(const sf::Time &deltaTime);
 			void MirrorSprite();
-
 	};
 }

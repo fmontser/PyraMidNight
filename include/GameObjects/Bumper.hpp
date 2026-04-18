@@ -4,6 +4,7 @@
 #include <memory>
 #include "ICollidable.hpp"
 #include "Common.hpp"
+#include "Misile.hpp"
 
 namespace pyramidnight {
 
@@ -17,6 +18,7 @@ namespace pyramidnight {
 				bool coarse;
 				sf::Time &deltaTime;
 				std::vector<std::shared_ptr<sf::Drawable>>& drawables;
+				std::vector<std::shared_ptr<Misile>>&       mMisileVector;
 			};
 
 			Bumper(const sf::Texture& texture, const sf::Texture& magicTexture);
@@ -27,10 +29,9 @@ namespace pyramidnight {
 			void Move(BumperUpdate update);
 			void EnablePenaltyFlashEffect(float duration);
 			void EnableMagic(float duration);
-			void FireMagic(bool action, const sf::Time &deltaTime,
-				std::vector<std::shared_ptr<sf::Drawable>>& drawables);
-
-
+			void FireMagic(bool action, const sf::Time& deltaTime,
+					std::vector<std::shared_ptr<Misile>>& misiles,
+					std::vector<std::shared_ptr<sf::Drawable>>& drawables);
 
 			void SetSpeedPenalty(float speed);
 
@@ -42,15 +43,11 @@ namespace pyramidnight {
 			float              mMagicFireRate;
 			const sf::Texture& mMagicTexture;
 
-
-			//TODO test temp
-
+			sf::Vector2f GetBumperFirePosition();
 			void AnimateFrame(sf::Sprite &sprite, const sf::Time &deltaTime);
 
 			float         mAnimationDelta;
 			sf::IntRect   mAnimationRect;
-
-			std::vector<std::shared_ptr<sf::Sprite>> mMisileVector;
 	};
 
 }
