@@ -95,10 +95,10 @@ namespace pyramidnight {
 		if (mMagicFireRate > PWRUP_MAGIC_FIRERATE && action) {
 			mMagicFireRate = 0.0f;
 
-
 			auto misile =  std::make_shared<sf::Sprite>(mMagicTexture);
 			misile->setScale({1, -1});
 			misile->setPosition(getPosition());
+			misile->setTextureRect(mAnimationRect);
 			mMisileVector.push_back(misile);
 			drawables.push_back(misile);
 			//TODO limpiar los drawables? al crear el objeto que se eliminen duera de la zona de juego
