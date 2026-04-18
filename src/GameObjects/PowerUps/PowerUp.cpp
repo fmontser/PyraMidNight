@@ -1,4 +1,3 @@
-#include <cmath>
 #include "PowerUp.hpp"
 #include "Common.hpp"
 #include "RenderManager.hpp"

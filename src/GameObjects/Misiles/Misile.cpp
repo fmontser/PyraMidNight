@@ -7,7 +7,7 @@ namespace pyramidnight {
 		CollidableType = ICollidable::Type::MISILE;
 		mIsSpawned = false;
 		mIsDestroyed = false;
-		mSpeed = 500.0f;
+		mSpeed = 200.0f;
 		mDirection = GAME_DIRECTION_UP;
 	}
 	

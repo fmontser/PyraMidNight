@@ -41,6 +41,6 @@ namespace pyramidnight {
 				sf::Vector2f mDirection;
 
 				void ApplyGravity(const sf::Time &deltaTime);
-				void DestroyIfOutside();
+				void DestroyIfOutside() override;
 	};
 }
