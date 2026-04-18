@@ -124,7 +124,7 @@ namespace pyramidnight {
 		for (const auto &collidable : mColdetVector) {
 			if (collidable->IsDynamic) {
 				for (const auto &collider : mColdetVector) {
-					if (collidable != collider) {
+					if (collidable != collider && collidable->CollidableType != collider->CollidableType) {
 						ICollidable::Info info = collidable->OnCollision(*collider);
 						if (info.destroyed)
 							mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(collidable)); //TODO optimize this, move out of collisions
@@ -282,7 +282,15 @@ namespace pyramidnight {
 		RenderManager::DisplayEffect(std::make_unique<ScreenShake>(EFF_SHAKE_LOSEBALL_TIME, EFF_SHAKE_LOSEBALL_POWER));
 		auto sb = ResourceManager::GetAudio(PATH_AUD_BALL_LOSE);
 		AudioManager::Play({sb, VOL_AUD_BALL_LOSE, PolySound::Type::SFX, false});
+		mDestroyedSprites.push_back(mBall);
+		ReplaceBall();
 	};
+
+	void RoundScreenView::ReplaceBall() {
+		mBall = std::make_shared<Ball>(*mBallTex);
+		mDrawables.push_back(mBall);
+		mColdetVector.push_back(mBall);
+	}
 
 	void RoundScreenView::AddScore(uint32_t& score, int32_t points) {
 		int64_t score64 = static_cast<int64_t>(score);

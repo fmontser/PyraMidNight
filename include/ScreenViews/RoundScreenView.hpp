@@ -75,7 +75,8 @@ namespace pyramidnight {
 			void UpdateTexts(const RoundScreenUpdate &update);
 			void ScoreTimePenalty(uint32_t &score, sf::Time &deltaTime);
 			void LoseBall(const RoundScreenUpdate &update);
-			void AddScore(uint32_t& score, int32_t points);
+			void ReplaceBall();
+			void AddScore(uint32_t &score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
 			void AddCredit(uint8_t &credits);
 			std::optional<std::shared_ptr<PowerUp>> GeneratePowerUp(ICollidable::Info info);
