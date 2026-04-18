@@ -1,15 +1,12 @@
 #pragma once
-#include <SFML/System/Vector2.hpp>
 #include <optional>
-#include <cinttypes>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Rect.hpp>
 
 namespace pyramidnight {
 
 	class ICollidable {
 		public:
-
-			virtual ~ICollidable() = default;
-
 			enum class Type {
 				NONE, BALL, BLOCK, OBSTACLE, BUMPER, POWER_UP, MISILE
 			};
@@ -20,9 +17,14 @@ namespace pyramidnight {
 				float                       valueMod = 0.0f;
 				std::optional<sf::Vector2f> collisionPoint = std::nullopt;
 			};
+			
+			Type CollidableType = Type::NONE;
+			bool IsDynamic = false;
 
+			virtual ~ICollidable() = default;
 			virtual Info OnCollision(ICollidable& collider) = 0;
 
-			Type CollidableType;
+		protected:
+			virtual std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect) = 0;
 	};
 }
