@@ -85,6 +85,7 @@ namespace pyramidnight {
 		mColdetVector.push_back(mWallLeft);
 		mColdetVector.push_back(mWallRight);
 		mColdetVector.push_back(mBumper);
+		mColdetVector.push_back(mBall);
 	}
 
 	bool RoundScreenView::LoadLevel(const uint8_t& roundId) {
@@ -122,9 +123,9 @@ namespace pyramidnight {
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
 		UpdateBumper(update);
+		UpdateBall(update.action, update.score, update.deltaTime);
 		UpdatePowerUps(update.credits, update.score, update.deltaTime);
 		UpdateMisiles(update.deltaTime);
-		UpdateBall(update.action, update.score, update.deltaTime);
 		CleanObjectVectors();
 		UpdateTexts(update);
 		ScoreTimePenalty(update.score, update.deltaTime);
@@ -154,6 +155,28 @@ namespace pyramidnight {
 			mMisileVector
 		};
 		mBumper->Update(bumperUpdate);
+	}
+
+	void RoundScreenView::UpdateBall(bool action, uint32_t& score, const sf::Time &deltaTime) {
+		Ball::UpdateBall update {
+			action,
+			score,
+			deltaTime
+		};
+		mBall->Update(update);
+
+		if (mBall->GetState() == Ball::State::PLAYING) {
+			for (const auto &obj : mColdetVector) {
+				ICollidable::Info info = obj->OnCollision(*mBall);
+					if (info.destroyed) {
+						GeneratePowerUp(info);
+						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
+					}
+					if (info.valueMod != 0)
+						AddScore(score, info.valueMod);
+			}
+		}
+
 	}
 
 	void RoundScreenView::UpdatePowerUps(uint8_t& credits, uint32_t& score, const sf::Time &deltaTime) {
@@ -199,20 +222,7 @@ namespace pyramidnight {
 		}
 	}
 	
-	void RoundScreenView::UpdateBall(bool action, uint32_t& score, const sf::Time &deltaTime) {
-		if (mBall->GetState() == Ball::State::PLAYING) {
-			for (const auto &obj : mColdetVector) {
-				ICollidable::Info info = obj->OnCollision(*mBall);
-					if (info.destroyed) {
-						GeneratePowerUp(info);
-						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
-					}
-					if (info.valueMod != 0)
-						AddScore(score, info.valueMod);
-			}
-		}
-		mBall->Update(action, mBumper->getPosition(), deltaTime);
-	}
+
 
 	void RoundScreenView::CleanObjectVectors() {
 		for (const auto& sprite : mDestroyedSprites) {

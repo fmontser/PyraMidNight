@@ -42,7 +42,6 @@ namespace pyramidnight {
 	void Bumper::Update(BumperUpdate update) {
 		if (update.holdLeft || update.holdRight)
 			Move(update);
-
 		if (mIsMagicEnabled)
 			FireMagic(update.action, update.deltaTime, update.mMisileVector, update.drawables);
 	}

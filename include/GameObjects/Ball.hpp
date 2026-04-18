@@ -11,6 +11,12 @@ namespace pyramidnight {
 			DOCKED, PLAYING
 		};
 
+		struct UpdateBall {
+			bool                action;
+			const sf::Vector2f& bumperPos;
+			const sf::Time&     deltaTime;
+		};
+
 		Ball(const sf::Texture& texture);
 
 		void Launch();
