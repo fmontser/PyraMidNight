@@ -13,7 +13,8 @@ namespace pyramidnight {
 			ICollidable::Info OnCollision(ICollidable &collider);
 			void Defeat();
 
-			void ApplyGhostlyMovement(const sf::Time &deltaTime);
+
+
 		private:
 			float         mBumperSpeedPenalty;
 			float         mDiveTimer;
@@ -28,7 +29,9 @@ namespace pyramidnight {
 			float         mAttackTimer;
 			float         mAttackLimit;
 			bool          mIsAttacking;
+			bool          mIsDefeated;
 			
+			void ApplyGhostlyMovement(const sf::Time &deltaTime);
 			void UpdateAttack(const sf::Time &deltaTime);
 			void EnableFlashEffect();
 			void EnableAttackFlashEffect();
