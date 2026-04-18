@@ -126,8 +126,8 @@ namespace pyramidnight {
 				for (const auto &collider : mColdetVector) {
 					if (collidable != collider && collidable->CollidableType != collider->CollidableType) {
 						ICollidable::Info info = collidable->OnCollision(*collider);
-						if (info.destroyed)
-							mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(collidable)); //TODO optimize this, move out of collisions
+						if (info.valueMod != 0)
+							ProcessInteractions(update, info, collidable);
 						if (info.collisionPoint != std::nullopt)
 							break;
 					}
@@ -137,9 +137,8 @@ namespace pyramidnight {
 
 		if (UpdateBall(update.action, update.deltaTime) == Ball::State::DEAD)
 			LoseBall(update) ;
-
 		UpdateBumper(update);
-		//UpdatePowerUps(update.credits, update.score, update.deltaTime);
+		UpdatePowerUps(update.credits, update.score, update.deltaTime);
 		//UpdateMisiles(update.deltaTime);
 		CleanObjectVectors();
 		UpdateTexts(update);
@@ -173,22 +172,46 @@ namespace pyramidnight {
 	}
 
 	void RoundScreenView::UpdatePowerUps(uint8_t& credits, uint32_t& score, const sf::Time &deltaTime) {
-		for (const auto &obj : mPowerUpVector) {
-			ICollidable::Info info = obj->OnCollision(*mBumper);
-			obj->Update(deltaTime);
-			if (info.destroyed) {
-				mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
-			}
+		(void)score;
+		(void)credits;
+
+		for (const auto &obj : mColdetVector) {
+			if (obj->CollidableType != ICollidable::Type::POWER_UP)
+				continue ;
+			auto& pup = static_cast<PowerUp&>(*obj);
+			pup.Update(deltaTime);
+		}
+	}
+
+	//TODO @@@@@@@ refactor to switch
+	void RoundScreenView::ProcessInteractions(const RoundScreenUpdate& update, 
+		const ICollidable::Info& info, std::shared_ptr<ICollidable> collidable) {
+
+		if (collidable->CollidableType == ICollidable::Type::POWER_UP) {
+			auto pup = std::static_pointer_cast<PowerUp>(collidable);
 			if (info.valueMod != 0) {
-				switch (obj->PowerUpType) {
-					case PowerUp::Type::SCORE: AddScore(score, info.valueMod); break;
-					case PowerUp::Type::CREDIT: AddCredit(credits); break;
-					case PowerUp::Type::GHOST: /*mBumper->SetSpeedPenalty(info.valueMod);*/ break;	//TODO move to coldet logic
-					case PowerUp::Type::MAGIC: /*mBumper->EnableMagic(info.valueMod);*/ break;	//TODO move to coldet logic
+				switch (pup->PowerUpType) {
+					case PowerUp::Type::SCORE: AddScore(update.score, info.valueMod); break;
+					case PowerUp::Type::CREDIT: AddCredit(update.credits); break;
+					case PowerUp::Type::GHOST: /*mBumper->SetSpeedPenalty(info.valueMod); */break;
+					case PowerUp::Type::MAGIC: /*mBumper->EnableMagic(info.valueMod);*/ break;
 					default: break;
 				}
 			}
+			if (info.destroyed) {
+				mDestroyedSprites.push_back(pup);
+			}
 		}
+		else if (collidable->CollidableType == ICollidable::Type::BLOCK) {
+			auto block = std::static_pointer_cast<Block>(collidable);
+			if (info.destroyed) {
+				AddScore(update.score, info.valueMod);
+				GeneratePowerUp(info);
+				mDestroyedSprites.push_back(block);
+			}
+		}
+
+
 	}
 
 	void RoundScreenView::UpdateMisiles(const sf::Time &deltaTime) {
@@ -254,7 +277,6 @@ namespace pyramidnight {
 		mDestroyedSprites.clear();
 	}
 
-
 	void RoundScreenView::UpdateTexts(const RoundScreenUpdate &update) {
 		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR)
 			.append(std::to_string(update.credits)));
@@ -316,6 +338,9 @@ namespace pyramidnight {
 	}
 
 	std::optional<std::shared_ptr<PowerUp>> RoundScreenView::GeneratePowerUp(ICollidable::Info info) {
+		if (info.type != ICollidable::Type::BLOCK)
+			return std::nullopt;
+	
 		auto spawnType = mSpawner.RollSpawn();
 		std::shared_ptr<PowerUp> spawn = nullptr;
 
@@ -331,11 +356,12 @@ namespace pyramidnight {
 		}
 		if (spawn != nullptr) {
 			spawn->Spawn(*info.collisionPoint, mDrawables);
-			mPowerUpVector.push_back(spawn);
+			mColdetVector.push_back(spawn);
 			return spawn;
 		}
 		return std::nullopt;
 	}
+
 
 	void RoundScreenView::Log(const std::string &msg) {
 		(void)msg;

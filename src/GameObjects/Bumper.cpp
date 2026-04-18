@@ -15,14 +15,17 @@ namespace pyramidnight {
 		IsDynamic = true;
 		mSpeed = BMPR_INIT_SPEED;
 		mSpeedPenalty = 1.0f;
+		mSpeedPenaltyTime = 0.0f;
 		mIsMagicEnabled = false;
 		mMagicDuration = 0.0f;
 		mMagicFireRate = 0.0f;
+		mTint = getColor();
 	}
 
 	ICollidable::Info Bumper::OnCollision(ICollidable &collider) { 
 		switch (collider.CollidableType) {
 			case ICollidable::Type::BALL: return OnBallCollision(collider);
+			case ICollidable::Type::POWER_UP: return OnPowerUpCollision(collider);
 			default: break;
 		}
 		return { CollidableType, false, 0, std::nullopt };
@@ -33,6 +36,19 @@ namespace pyramidnight {
 		auto& ball = static_cast<Ball&>(collider);
 		auto cpos = GetCollisionPoint(ball.getGlobalBounds());
 		if (cpos != std::nullopt) {
+			return { CollidableType, false, 0, cpos };
+		}
+		return { CollidableType, false, 0, std::nullopt };
+	}
+
+	ICollidable::Info Bumper::OnPowerUpCollision(ICollidable &collider) {
+		auto& pup = static_cast<PowerUp&>(collider);
+		auto cpos = GetCollisionPoint(pup.getGlobalBounds());
+		if (cpos != std::nullopt) {
+			switch(pup.PowerUpType) {
+				case PowerUp::Type::GHOST: {SetSpeedPenalty(PWRUP_GHOST_PENALTY_MOD, PWRUP_GHOST_PENALTY_TIME); break;}
+				default: break;
+			}
 			return { CollidableType, false, 0, cpos };
 		}
 		return { CollidableType, false, 0, std::nullopt };
@@ -58,6 +74,12 @@ namespace pyramidnight {
 		else if (!update.fine && update.coarse)
 			mSpeed *= BMPR_COARSE_SPEED_MOD;
 	
+		mSpeedPenaltyTime -= update.deltaTime.asSeconds();
+		if (mSpeedPenaltyTime <= 0) {
+			mSpeedPenalty = 1.0;
+			mSpeedPenaltyTime = 0.0f;
+		}
+
 		mSpeed *= mSpeedPenalty;
 		position.x += direction * mSpeed * update.deltaTime.asSeconds();
 		position.x = std::clamp(position.x, BMPR_MV_LIMIT_L, BMPR_MV_LIMIT_R);
@@ -67,7 +89,7 @@ namespace pyramidnight {
 
 	void Bumper::EnablePenaltyFlashEffect(float duration) {
 		RenderManager::DisplayEffect(std::make_unique<Flash>(
-			duration, EFF_FLASH_GHOST_LAPSE, EFF_FLASH_GHOST_ATTACK_COLOR, getColor(), shared_from_this()));
+			duration, EFF_FLASH_GHOST_LAPSE, EFF_FLASH_GHOST_ATTACK_COLOR, mTint, shared_from_this()));
 	}
 
 	void Bumper::EnableMagic(float duration) {
@@ -97,7 +119,13 @@ namespace pyramidnight {
 		}
 	}
 
-	void Bumper::SetSpeedPenalty(float penalty) { mSpeedPenalty = penalty;	}
+	void Bumper::SetSpeedPenalty(float penalty, float duration) {
+		if (mSpeedPenaltyTime <= 0) {
+			EnablePenaltyFlashEffect(duration);
+			mSpeedPenalty = penalty;
+			mSpeedPenaltyTime = duration;
+		}
+	}
 	
 
 	std::optional<sf::Vector2f> Bumper::GetCollisionPoint(const sf::FloatRect &rect) {

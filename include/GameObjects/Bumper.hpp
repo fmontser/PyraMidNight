@@ -32,10 +32,12 @@ namespace pyramidnight {
 		private:
 			float              mSpeed;
 			float              mSpeedPenalty;
+			float              mSpeedPenaltyTime;
 			float              mIsMagicEnabled;
 			float              mMagicDuration;
 			float              mMagicFireRate;
-			const sf::Texture& mMagicTexture;
+			sf::Color          mTint;
+			const sf::Texture& mMagicTexture; //TODO remove when refactored
 
 			void Move(BumperUpdate update);
 			void EnablePenaltyFlashEffect(float duration);
@@ -44,8 +46,9 @@ namespace pyramidnight {
 					std::vector<std::shared_ptr<Misile>>& misiles,
 					std::vector<std::shared_ptr<sf::Drawable>>& drawables);
 
-			void SetSpeedPenalty(float speed);
+			void SetSpeedPenalty(float penalty, float duration);
 			ICollidable::Info OnBallCollision(ICollidable &collider);
+			ICollidable::Info OnPowerUpCollision(ICollidable &collider);
 			std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect) override;
 			sf::Vector2f GetBumperFirePosition();
 	};
