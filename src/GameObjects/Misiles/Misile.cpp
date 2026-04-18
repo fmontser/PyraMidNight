@@ -5,6 +5,7 @@
 namespace pyramidnight {
 	Misile::Misile(const sf::Texture& texture) : sf::Sprite(texture) {
 		CollidableType = ICollidable::Type::MISILE;
+		IsDynamic = true;
 		mIsSpawned = false;
 		mIsDestroyed = false;
 		mSpeed = 200.0f;

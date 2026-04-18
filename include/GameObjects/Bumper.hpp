@@ -21,19 +21,13 @@ namespace pyramidnight {
 				std::vector<std::shared_ptr<Misile>>&       mMisileVector;
 			};
 
-			Bumper(const sf::Texture& texture, const sf::Texture& magicTexture);
+			Bumper(const sf::Texture& texture, const sf::Texture& mMagicTexture);
 
 			Info OnCollision(ICollidable& collider) override;
-			std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect);
-			void Update(BumperUpdate update);
-			void Move(BumperUpdate update);
-			void EnablePenaltyFlashEffect(float duration);
-			void EnableMagic(float duration);
-			void FireMagic(bool action, const sf::Time& deltaTime,
-					std::vector<std::shared_ptr<Misile>>& misiles,
-					std::vector<std::shared_ptr<sf::Drawable>>& drawables);
 
-			void SetSpeedPenalty(float speed);
+
+			void Update(BumperUpdate update);
+
 
 		private:
 			float              mSpeed;
@@ -43,11 +37,17 @@ namespace pyramidnight {
 			float              mMagicFireRate;
 			const sf::Texture& mMagicTexture;
 
-			sf::Vector2f GetBumperFirePosition();
-			void AnimateFrame(sf::Sprite &sprite, const sf::Time &deltaTime);
+			void Move(BumperUpdate update);
+			void EnablePenaltyFlashEffect(float duration);
+			void EnableMagic(float duration);
+			void FireMagic(bool action, const sf::Time& deltaTime,
+					std::vector<std::shared_ptr<Misile>>& misiles,
+					std::vector<std::shared_ptr<sf::Drawable>>& drawables);
 
-			float         mAnimationDelta;
-			sf::IntRect   mAnimationRect;
+			void SetSpeedPenalty(float speed);
+			ICollidable::Info OnBallCollision(ICollidable &collider);
+			std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect) override;
+			sf::Vector2f GetBumperFirePosition();
 	};
 
 }

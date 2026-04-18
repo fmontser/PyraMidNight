@@ -16,6 +16,7 @@ namespace pyramidnight {
 
 	RoundScreenView::RoundScreenView() : ScreenView() {
 		mLvlIsLoaded = false;
+		mIsLevelCompleted = false;
 		mElapsedTimePenalty = 0.0f;
 		mFont = ResourceManager::GetFont(PATH_FONT);
 
@@ -88,6 +89,7 @@ namespace pyramidnight {
 		mColdetVector.push_back(mBall);
 	}
 
+	//TODO remove hardcoded 
 	bool RoundScreenView::LoadLevel(const uint8_t& roundId) {
 		auto& level = ROUNDS[roundId];
 		const auto offset =sf::Vector2f(64,32);
@@ -98,17 +100,13 @@ namespace pyramidnight {
 				if (chara != '0') {
 					auto block = std::make_shared<Block>(*mBlockTex, chara - '0');
 					block->setPosition(actualPos);
-					mBlockVector.push_back(block);
+					mDrawables.push_back(block);
+					mColdetVector.push_back(block);
 				}
 				actualPos.x += offset.x;
 			}
 			actualPos.x = 32;
 			actualPos.y += offset.y;
-		}
-
-		for (const auto& block : mBlockVector) {
-			mDrawables.push_back(block);
-			mColdetVector.push_back(block);
 		}
 		return true;
 	}
@@ -116,31 +114,38 @@ namespace pyramidnight {
 	bool RoundScreenView::Update(const RoundScreenUpdate& update) {
  		if (!mLvlIsLoaded)
 			mLvlIsLoaded = LoadLevel(update.roundId);
-		if (!UpdateGame(update))
+		if (UpdateGame(update))
 			return false;
 		return true;
 	}
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
+
+		for (const auto &collidable : mColdetVector) {
+			if (collidable->IsDynamic) {
+				for (const auto &collider : mColdetVector) {
+					if (collidable != collider) {
+						ICollidable::Info info = collidable->OnCollision(*collider);
+						if (info.destroyed)
+							mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(collidable)); //TODO optimize this, move out of collisions
+						if (info.collisionPoint != std::nullopt)
+							break;
+					}
+				}
+			}
+		}
+
+		if (UpdateBall(update.action, update.deltaTime) == Ball::State::DEAD)
+			LoseBall(update) ;
+
 		UpdateBumper(update);
-		UpdateBall(update.action, update.score, update.deltaTime);
-		UpdatePowerUps(update.credits, update.score, update.deltaTime);
-		UpdateMisiles(update.deltaTime);
+		//UpdatePowerUps(update.credits, update.score, update.deltaTime);
+		//UpdateMisiles(update.deltaTime);
 		CleanObjectVectors();
 		UpdateTexts(update);
 		ScoreTimePenalty(update.score, update.deltaTime);
-
-		//Lose
-		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
-			return LoseBall(update);;
-		}
-		//Win
-		if (mBlockVector.empty()) {
-			auto sb = ResourceManager::GetAudio(PATH_AUD_NEXTROUND);
-			AudioManager::Play({sb,VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
-			return false;
-		}
-		return true;
+		CheckWinLoseConditions();
+		return mIsLevelCompleted;
 	}
 
 	void RoundScreenView::UpdateBumper(const RoundScreenUpdate& update) {
@@ -156,27 +161,15 @@ namespace pyramidnight {
 		};
 		mBumper->Update(bumperUpdate);
 	}
-
-	void RoundScreenView::UpdateBall(bool action, uint32_t& score, const sf::Time &deltaTime) {
+	
+	Ball::State RoundScreenView::UpdateBall(bool action, const sf::Time &deltaTime) {
 		Ball::UpdateBall update {
 			action,
-			score,
-			deltaTime
+			mBumper->getPosition(),
+			deltaTime,
+			*mDeathArea
 		};
-		mBall->Update(update);
-
-		if (mBall->GetState() == Ball::State::PLAYING) {
-			for (const auto &obj : mColdetVector) {
-				ICollidable::Info info = obj->OnCollision(*mBall);
-					if (info.destroyed) {
-						GeneratePowerUp(info);
-						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
-					}
-					if (info.valueMod != 0)
-						AddScore(score, info.valueMod);
-			}
-		}
-
+		return mBall->Update(update);
 	}
 
 	void RoundScreenView::UpdatePowerUps(uint8_t& credits, uint32_t& score, const sf::Time &deltaTime) {
@@ -190,8 +183,8 @@ namespace pyramidnight {
 				switch (obj->PowerUpType) {
 					case PowerUp::Type::SCORE: AddScore(score, info.valueMod); break;
 					case PowerUp::Type::CREDIT: AddCredit(credits); break;
-					case PowerUp::Type::GHOST: mBumper->SetSpeedPenalty(info.valueMod); break;
-					case PowerUp::Type::MAGIC: mBumper->EnableMagic(info.valueMod); break;
+					case PowerUp::Type::GHOST: /*mBumper->SetSpeedPenalty(info.valueMod);*/ break;	//TODO move to coldet logic
+					case PowerUp::Type::MAGIC: /*mBumper->EnableMagic(info.valueMod);*/ break;	//TODO move to coldet logic
 					default: break;
 				}
 			}
@@ -222,13 +215,22 @@ namespace pyramidnight {
 		}
 	}
 	
+	void RoundScreenView::CheckWinLoseConditions() {
+		auto it = std::find_if(mColdetVector.begin(), mColdetVector.end(),
+		[](const std::shared_ptr<ICollidable> collidable){
+			return collidable->CollidableType == ICollidable::Type::BLOCK;
+		});
+		if (it == mColdetVector.end())
+			mIsLevelCompleted = true;
 
+		if (mIsLevelCompleted) {
+			auto sb = ResourceManager::GetAudio(PATH_AUD_NEXTROUND);
+			AudioManager::Play({sb,VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
+		}
+	}
 
 	void RoundScreenView::CleanObjectVectors() {
 		for (const auto& sprite : mDestroyedSprites) {
-			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprite);
-			if (itBlock != mBlockVector.end())
-				mBlockVector.erase(itBlock);
 
 			auto powerUp = std::dynamic_pointer_cast<PowerUp>(sprite);
 			auto itPowerUp = std::find(mPowerUpVector.begin(), mPowerUpVector.end(), powerUp);
@@ -269,19 +271,17 @@ namespace pyramidnight {
 		}
 	}
 
-	bool RoundScreenView::LoseBall(const RoundScreenUpdate &update) {
+	void RoundScreenView::LoseBall(const RoundScreenUpdate &update) {
 		ConsumeCredit(update.credits);
-		AddScore(update.score, SCORE_LOSE_BALL);
+		AddScore(update.score, SCORE_LOSE_BALL_PENALTY);
 		if (update.credits == 0) {
 			auto sb = ResourceManager::GetAudio(PATH_AUD_GAMEOVER);
 			AudioManager::Play({sb,VOL_AUD_GAMEOVER, PolySound::Type::SFX, false});
-			return false;
+			mIsLevelCompleted = true;
 		}
-		mBall->ResetPos(mBumper->getPosition());
 		RenderManager::DisplayEffect(std::make_unique<ScreenShake>(EFF_SHAKE_LOSEBALL_TIME, EFF_SHAKE_LOSEBALL_POWER));
 		auto sb = ResourceManager::GetAudio(PATH_AUD_BALL_LOSE);
 		AudioManager::Play({sb, VOL_AUD_BALL_LOSE, PolySound::Type::SFX, false});
-		return true;
 	};
 
 	void RoundScreenView::AddScore(uint32_t& score, int32_t points) {

@@ -11,12 +11,14 @@ namespace pyramidnight {
 				Block(const sf::Texture& texture, int8_t hitPoints);
 
 				Info OnCollision(ICollidable& collider) override;
-				
+
 			private:
 				int8_t    mHitPoints;
 				int32_t   mScorePoints;
 				sf::Color mTint;
 
+				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect) override;
+				ICollidable::Info OnBallCollision(ICollidable &collider);
 				void Damage();
 	};
 }

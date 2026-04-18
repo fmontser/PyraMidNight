@@ -49,13 +49,13 @@ namespace pyramidnight {
 	ICollidable::Info GhostPuP::OnCollision(ICollidable &collider) {
 		if (collider.CollidableType == ICollidable::Type::BUMPER) {
 			auto& bumper = static_cast<Bumper&>(collider);
-			auto cpos = bumper.GetCollisionPoint(getGlobalBounds());
+			auto cpos = GetCollisionPoint(bumper.getGlobalBounds());
 
 			if (cpos != std::nullopt && !mIsAttacking && !mIsDestroyed) {
 				auto sb = ResourceManager::GetAudio(PATH_AUD_GHOST_ATTACK);
 				AudioManager::Play({sb, VOL_AUD_GHOST_ATTACK, PolySound::Type::SFX, false});
 				mIsAttacking = true;
-				bumper.EnablePenaltyFlashEffect(PWRUP_GHOST_PENALTY_TIME);
+				//bumper.EnablePenaltyFlashEffect(PWRUP_GHOST_PENALTY_TIME); //TODO delete
 				EnableAttackFlashEffect();
 				return { CollidableType, mIsDestroyed, mBumperSpeedPenalty , cpos };
 			}

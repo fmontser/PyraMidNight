@@ -11,33 +11,33 @@ namespace pyramidnight {
 	
 	Bumper::Bumper(const sf::Texture& texture, const sf::Texture& magicTexture) :
 		sf::Sprite(texture), mMagicTexture(magicTexture) {
+		CollidableType = ICollidable::Type::BUMPER;
+		IsDynamic = true;
 		mSpeed = BMPR_INIT_SPEED;
 		mSpeedPenalty = 1.0f;
 		mIsMagicEnabled = false;
-		mAnimationDelta = 0.0f;
-		mAnimationRect = {{0,0},{32,32}};
 		mMagicDuration = 0.0f;
 		mMagicFireRate = 0.0f;
-		CollidableType = ICollidable::Type::BUMPER;
 	}
 
 	ICollidable::Info Bumper::OnCollision(ICollidable &collider) { 
-		if (collider.CollidableType == ICollidable::Type::BALL) {
-			auto& ball = static_cast<Ball&>(collider);
-			auto cpos = ball.GetCollisionPoint(getGlobalBounds());
-			if (cpos != std::nullopt) {
-				ball.Bounce(*this);
-				ball.ApplyBumperMod(*this);
-			}
+		switch (collider.CollidableType) {
+			case ICollidable::Type::BALL: return OnBallCollision(collider);
+			default: break;
 		}
 		return { CollidableType, false, 0, std::nullopt };
 	}
 
-	std::optional<sf::Vector2f> Bumper::GetCollisionPoint(const sf::FloatRect &rect) {
-		if (auto overlap = getGlobalBounds().findIntersection(rect))
-			return overlap->position + (overlap->size / 2.0f);
-		return std::nullopt;
+
+	ICollidable::Info Bumper::OnBallCollision(ICollidable &collider) {
+		auto& ball = static_cast<Ball&>(collider);
+		auto cpos = GetCollisionPoint(ball.getGlobalBounds());
+		if (cpos != std::nullopt) {
+			return { CollidableType, false, 0, cpos };
+		}
+		return { CollidableType, false, 0, std::nullopt };
 	}
+
 
 	void Bumper::Update(BumperUpdate update) {
 		if (update.holdLeft || update.holdRight)
@@ -91,16 +91,21 @@ namespace pyramidnight {
 
 			//TODO projectiles to spawner!!s
 			auto misile =  std::make_shared<HolyMisile>(mMagicTexture);
-			misile->setTextureRect(mAnimationRect);
+			misile->setTextureRect({{0,0},{32,32}});
 			misile->Spawn(GetBumperFirePosition(), drawables);
 			misiles.push_back(misile);
-
-
 		}
 	}
 
 	void Bumper::SetSpeedPenalty(float penalty) { mSpeedPenalty = penalty;	}
 	
+
+	std::optional<sf::Vector2f> Bumper::GetCollisionPoint(const sf::FloatRect &rect) {
+		if (auto overlap = getGlobalBounds().findIntersection(rect))
+			return overlap->position + (overlap->size / 2.0f);
+		return std::nullopt;
+	}
+
 	sf::Vector2f Bumper::GetBumperFirePosition() {
 		auto pos = getPosition();
 		pos += {getGlobalBounds().size.x / 2.0f, 0.0f};

@@ -5,6 +5,7 @@
 namespace pyramidnight {
 	PowerUp::PowerUp(const sf::Texture& texture) : sf::Sprite(texture) {
 		CollidableType = ICollidable::Type::POWER_UP;
+		IsDynamic = true;
 		mIsSpawned = false;
 		mIsDestroyed = false;
 		mSpeed = 200.0f;

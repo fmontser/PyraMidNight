@@ -25,7 +25,6 @@ namespace pyramidnight {
 
 				virtual void Update(const sf::Time &deltaTime);
 
-				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect);
 
 				Misile::Type  MisileType;
 
@@ -40,6 +39,7 @@ namespace pyramidnight {
 				float        mSpeed;
 				sf::Vector2f mDirection;
 
+				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect) override;
 				void ApplyMovement(const sf::Time &deltaTime);
 				void DestroyIfOutside() override;
 	};

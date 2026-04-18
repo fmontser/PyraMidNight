@@ -26,7 +26,7 @@ namespace pyramidnight {
 	ICollidable::Info ExtraScorePuP::OnCollision(ICollidable &collider) {
 		if (collider.CollidableType == ICollidable::Type::BUMPER) {
 			auto& bumper = static_cast<Bumper&>(collider);
-			auto cpos = bumper.GetCollisionPoint(getGlobalBounds());
+			auto cpos = GetCollisionPoint(bumper.getGlobalBounds());
 			mRotation += 5.0f;
 			setRotation(sf::degrees(mRotation));
 			if (cpos != std::nullopt) {

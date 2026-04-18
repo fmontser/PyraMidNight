@@ -25,7 +25,7 @@ namespace pyramidnight {
 
 				virtual void Update(const sf::Time &deltaTime);
 
-				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect);
+				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect) override;
 
 				PowerUp::Type  PowerUpType;
 

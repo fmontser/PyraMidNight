@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <limits>
 #include <SFML/Graphics.hpp>
+#include <iostream> //TODO delete after tests
 
 namespace pyramidnight {
 	//Game
@@ -37,7 +38,7 @@ namespace pyramidnight {
 
 	//Score
 	inline constexpr float   SCORE_BLOCK_MOD = 25.0f;
-	inline constexpr int32_t SCORE_LOSE_BALL = -100;
+	inline constexpr int32_t SCORE_LOSE_BALL_PENALTY = -100;
 	inline constexpr int32_t SCORE_TIME_PENALTY = -1;
 	inline constexpr int32_t SCORE_PWRUP_POINTS = 150;
 

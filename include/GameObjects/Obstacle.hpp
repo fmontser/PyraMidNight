@@ -11,5 +11,6 @@ namespace pyramidnight {
 				Obstacle(const sf::Texture& texture);
 			
 				Info OnCollision(ICollidable& collider) override;
+				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect) override;
 	};
 }
