@@ -5,7 +5,7 @@
 
 namespace pyramidnight {
 
-	class Ball : public sf::Sprite, public ICollidable {
+	class Ball : public sf::Sprite, public ICollidable, public std::enable_shared_from_this<Ball> {
 	public:
 		enum class State {
 			DOCKED, PLAYING, DEAD
@@ -16,6 +16,7 @@ namespace pyramidnight {
 			const sf::Vector2f&       bumperPos;
 			const sf::Time&           deltaTime;
 			const sf::RectangleShape& deathArea;
+			std::vector<std::shared_ptr<sf::Drawable>>& drawablesVector;
 		};
 
 		Ball(const sf::Texture& texture);
@@ -29,6 +30,7 @@ namespace pyramidnight {
 		sf::Vector2f    mDirection;
 		float           mRadius;
 		float           mDistance;
+		bool            mIsTrailing;
 
 		void Move(const sf::Time& deltaTime);
 		void CheckDeath(const sf::RectangleShape &deathArea);

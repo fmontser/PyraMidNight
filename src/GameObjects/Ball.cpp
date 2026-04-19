@@ -3,9 +3,11 @@
 #include "Ball.hpp"
 #include "AudioManager.hpp"
 #include "ResourceManager.hpp"
+#include "RenderManager.hpp"
 #include "Obstacle.hpp"
 #include "Bumper.hpp"
 #include "Block.hpp"
+#include "Trail.hpp"
 
 namespace pyramidnight {
 
@@ -16,12 +18,19 @@ namespace pyramidnight {
 		mDirection = BALL_INIT_DIR;
 		mRadius = texture.getSize().x / 2;
 		mDistance = 1.0f;
+		mIsTrailing = false;
 		mState = State::DOCKED;
 		setOrigin({mRadius,mRadius});
 		Dock(BALL_INIT_POS);
 	}
 
 	Ball::State Ball::Update(UpdateBall update) {
+		if (!mIsTrailing) {
+			RenderManager::DisplayEffect(std::make_unique<Trail>(
+				-1.0f, EFF_TRAIL_BALL_LAPSE, EFF_TRAIL_BALL_COLOR, shared_from_this(), update.drawablesVector));
+			mIsTrailing = true;
+		}
+
 		switch (mState) {
 			case State::PLAYING: Move(update.deltaTime); CheckDeath(update.deathArea); break;
 			case State::DOCKED: Dock(update.bumperPos); Launch(update.action); break;
