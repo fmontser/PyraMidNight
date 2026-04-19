@@ -180,7 +180,7 @@ namespace pyramidnight {
 	inline constexpr float VOL_AUD_GAMEOVER = 1.0f;
 	inline constexpr float VOL_AUD_GHOST_SPAWN = 1.0f;
 	inline constexpr float VOL_AUD_GHOST_ATTACK = 1.0f;
-	inline constexpr float VOL_AUD_GHOST_DEFEAT = 0.5f;
+	inline constexpr float VOL_AUD_GHOST_DEFEAT = 0.3f;
 	inline constexpr float VOL_AUD_MAGIC_ATTACK = 0.9f;
 	inline constexpr float VOL_AUD_MAGIC_HIT = 1.0f;
 

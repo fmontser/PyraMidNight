@@ -58,9 +58,6 @@ namespace pyramidnight {
 			
 			std::shared_ptr<sf::RectangleShape>       mDeathArea;
 			std::vector<std::shared_ptr<ICollidable>> mColdetVector;
-			std::vector<std::shared_ptr<Block>>       mBlockVector;
-			std::vector<std::shared_ptr<PowerUp>>     mPowerUpVector;
-			std::vector<std::shared_ptr<Misile>>      mMisileVector;
 			std::vector<std::shared_ptr<sf::Sprite>>  mDestroyedSprites;
 			Spawner                                   mSpawner;
 
