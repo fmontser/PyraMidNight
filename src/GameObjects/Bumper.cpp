@@ -47,6 +47,7 @@ namespace pyramidnight {
 		if (cpos != std::nullopt) {
 			switch(pup.PowerUpType) {
 				case PowerUp::Type::GHOST: {SetSpeedPenalty(PWRUP_GHOST_PENALTY_MOD, PWRUP_GHOST_PENALTY_TIME); break;}
+				case PowerUp::Type::MAGIC: { break;} //TODO new outline effect
 				default: break;
 			}
 			return { CollidableType, false, 0, cpos };

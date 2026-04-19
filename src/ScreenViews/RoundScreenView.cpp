@@ -183,35 +183,42 @@ namespace pyramidnight {
 		}
 	}
 
-	//TODO @@@@@@@ refactor to switch
 	void RoundScreenView::ProcessInteractions(const RoundScreenUpdate& update, 
 		const ICollidable::Info& info, std::shared_ptr<ICollidable> collidable) {
 
-		if (collidable->CollidableType == ICollidable::Type::POWER_UP) {
-			auto pup = std::static_pointer_cast<PowerUp>(collidable);
-			if (info.valueMod != 0) {
-				switch (pup->PowerUpType) {
-					case PowerUp::Type::SCORE: AddScore(update.score, info.valueMod); break;
-					case PowerUp::Type::CREDIT: AddCredit(update.credits); break;
-					case PowerUp::Type::GHOST: /*mBumper->SetSpeedPenalty(info.valueMod); */break;
-					case PowerUp::Type::MAGIC: /*mBumper->EnableMagic(info.valueMod);*/ break;
-					default: break;
-				}
-			}
-			if (info.destroyed) {
-				mDestroyedSprites.push_back(pup);
+		switch (collidable->CollidableType) {
+			case ICollidable::Type::POWER_UP: ProcessPowerUpInteraction(update, info, collidable); break;
+			case ICollidable::Type::BLOCK: ProcessBlockInteraction(update, info, collidable); break;
+			default: break;
+		}
+	}
+
+	void RoundScreenView::ProcessPowerUpInteraction(const RoundScreenUpdate& update, 
+		const ICollidable::Info& info, std::shared_ptr<ICollidable> collidable) {
+
+		auto pup = std::static_pointer_cast<PowerUp>(collidable);
+		if (info.valueMod != 0) {
+			switch (pup->PowerUpType) {
+				case PowerUp::Type::SCORE: AddScore(update.score, info.valueMod); break;
+				case PowerUp::Type::CREDIT: AddCredit(update.credits); break;
+				case PowerUp::Type::GHOST: /*mBumper->SetSpeedPenalty(info.valueMod); */break;
+				case PowerUp::Type::MAGIC: /*mBumper->EnableMagic(info.valueMod);*/ break;
+				default: break;
 			}
 		}
-		else if (collidable->CollidableType == ICollidable::Type::BLOCK) {
-			auto block = std::static_pointer_cast<Block>(collidable);
-			if (info.destroyed) {
-				AddScore(update.score, info.valueMod);
-				GeneratePowerUp(info);
-				mDestroyedSprites.push_back(block);
-			}
+		if (info.destroyed)
+			mDestroyedSprites.push_back(pup);
+	}
+
+	void RoundScreenView::ProcessBlockInteraction(const RoundScreenUpdate& update, 
+		const ICollidable::Info& info, std::shared_ptr<ICollidable> collidable) {
+
+		auto block = std::static_pointer_cast<Block>(collidable);
+		if (info.destroyed) {
+			AddScore(update.score, info.valueMod);
+			GeneratePowerUp(info);
+			mDestroyedSprites.push_back(block);
 		}
-
-
 	}
 
 	void RoundScreenView::UpdateMisiles(const sf::Time &deltaTime) {
