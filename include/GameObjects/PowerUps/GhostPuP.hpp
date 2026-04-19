@@ -11,9 +11,8 @@ namespace pyramidnight {
 
 			void Update(const sf::Time &deltaTime) override;
 			ICollidable::Info OnCollision(ICollidable &collider);
+
 			void Defeat();
-
-
 
 		private:
 			float         mBumperSpeedPenalty;
@@ -31,6 +30,8 @@ namespace pyramidnight {
 			bool          mIsAttacking;
 			bool          mIsDefeated;
 			
+			ICollidable::Info OnBumperCollision(ICollidable &collider);
+			ICollidable::Info OnMisileCollision(ICollidable &collider);
 			void ApplyGhostlyMovement(const sf::Time &deltaTime);
 			void UpdateAttack(const sf::Time &deltaTime);
 			void EnableFlashEffect();

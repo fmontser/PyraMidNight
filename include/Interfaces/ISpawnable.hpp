@@ -3,6 +3,7 @@
 #include <SFML/System/Vector2.hpp>
 #include <memory>
 #include <vector>
+#include "ICollidable.hpp"
 
 namespace pyramidnight {
 
@@ -10,9 +11,10 @@ namespace pyramidnight {
 		public:
 			virtual ~ISpawnable() = default;
 
-			virtual void Spawn(
-				const sf::Vector2f& position,
-				std::vector<std::shared_ptr<sf::Drawable>>& drawables) = 0;
+			virtual void Spawn(const sf::Vector2f &position,
+				std::vector<std::shared_ptr<sf::Drawable>> &drawables,
+				std::vector<std::shared_ptr<ICollidable>> &coldetVector) = 0;
+
 		protected:
 			virtual void DestroyIfOutside() = 0;
 	};

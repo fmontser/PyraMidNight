@@ -89,7 +89,6 @@ namespace pyramidnight {
 		mColdetVector.push_back(mBall);
 	}
 
-	//TODO remove hardcoded 
 	bool RoundScreenView::LoadLevel(const uint8_t& roundId) {
 		auto& level = ROUNDS[roundId];
 		const auto offset =sf::Vector2f(64,32);
@@ -134,12 +133,11 @@ namespace pyramidnight {
 				}
 			}
 		}
-
 		if (UpdateBall(update.action, update.deltaTime) == Ball::State::DEAD)
 			LoseBall(update) ;
 		UpdateBumper(update);
-		UpdatePowerUps(update.credits, update.score, update.deltaTime);
-		//UpdateMisiles(update.deltaTime);
+		UpdatePowerUps(update.deltaTime);
+		UpdateMisiles(update.deltaTime);
 		CleanObjectVectors();
 		UpdateTexts(update);
 		ScoreTimePenalty(update.score, update.deltaTime);
@@ -156,7 +154,7 @@ namespace pyramidnight {
 			update.coarse,
 			update.deltaTime,
 			mDrawables,
-			mMisileVector
+			mColdetVector
 		};
 		mBumper->Update(bumperUpdate);
 	}
@@ -171,10 +169,7 @@ namespace pyramidnight {
 		return mBall->Update(update);
 	}
 
-	void RoundScreenView::UpdatePowerUps(uint8_t& credits, uint32_t& score, const sf::Time &deltaTime) {
-		(void)score;
-		(void)credits;
-
+	void RoundScreenView::UpdatePowerUps(const sf::Time &deltaTime) {
 		for (const auto &obj : mColdetVector) {
 			if (obj->CollidableType != ICollidable::Type::POWER_UP)
 				continue ;
@@ -189,6 +184,7 @@ namespace pyramidnight {
 		switch (collidable->CollidableType) {
 			case ICollidable::Type::POWER_UP: ProcessPowerUpInteraction(update, info, collidable); break;
 			case ICollidable::Type::BLOCK: ProcessBlockInteraction(update, info, collidable); break;
+			case ICollidable::Type::MISILE: ProcessMisileInteraction(update, info, collidable); break;
 			default: break;
 		}
 	}
@@ -201,13 +197,22 @@ namespace pyramidnight {
 			switch (pup->PowerUpType) {
 				case PowerUp::Type::SCORE: AddScore(update.score, info.valueMod); break;
 				case PowerUp::Type::CREDIT: AddCredit(update.credits); break;
-				case PowerUp::Type::GHOST: /*mBumper->SetSpeedPenalty(info.valueMod); */break;
-				case PowerUp::Type::MAGIC: /*mBumper->EnableMagic(info.valueMod);*/ break;
+				case PowerUp::Type::GHOST: break;
+				case PowerUp::Type::MAGIC: break;
 				default: break;
 			}
 		}
 		if (info.destroyed)
 			mDestroyedSprites.push_back(pup);
+	}
+
+	void RoundScreenView::ProcessMisileInteraction(const RoundScreenUpdate& update, 
+		const ICollidable::Info& info, std::shared_ptr<ICollidable> collidable) {
+
+		(void)update;
+		auto misile = std::static_pointer_cast<Misile>(collidable);
+		if (info.destroyed)
+			mDestroyedSprites.push_back(misile);
 	}
 
 	void RoundScreenView::ProcessBlockInteraction(const RoundScreenUpdate& update, 
@@ -222,26 +227,11 @@ namespace pyramidnight {
 	}
 
 	void RoundScreenView::UpdateMisiles(const sf::Time &deltaTime) {
-		for (const auto& obj : mMisileVector) {
-			for (const auto& pup : mPowerUpVector) {
-				if (pup->PowerUpType == PowerUp::Type::GHOST) {
-					auto& ghost = static_cast<GhostPuP&>(*pup);
-					ICollidable::Info info = obj->OnCollision(ghost);
-					obj->Update(deltaTime);
-
-					if (info.destroyed) {
-						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
-					}
-
-					if (info.valueMod != 0) {
-						switch (obj->MisileType) {
-							case Misile::Type::HOLY_MISILE: ghost.Defeat(); break;
-							default: break;
-						}
-					}
-					break;
-				}
-			}
+		for (const auto &obj : mColdetVector) {
+			if (obj->CollidableType != ICollidable::Type::MISILE)
+				continue ;
+			auto& misile = static_cast<Misile&>(*obj);
+			misile.Update(deltaTime);
 		}
 	}
 	
@@ -362,8 +352,7 @@ namespace pyramidnight {
 			default: break;
 		}
 		if (spawn != nullptr) {
-			spawn->Spawn(*info.collisionPoint, mDrawables);
-			mColdetVector.push_back(spawn);
+			spawn->Spawn(*info.collisionPoint, mDrawables, mColdetVector);
 			return spawn;
 		}
 		return std::nullopt;

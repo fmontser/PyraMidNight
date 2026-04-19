@@ -8,7 +8,7 @@
 #include "Flash.hpp"
 
 namespace pyramidnight {
-	
+
 	Bumper::Bumper(const sf::Texture& texture, const sf::Texture& magicTexture) :
 		sf::Sprite(texture), mMagicTexture(magicTexture) {
 		CollidableType = ICollidable::Type::BUMPER;
@@ -31,7 +31,6 @@ namespace pyramidnight {
 		return { CollidableType, false, 0, std::nullopt };
 	}
 
-
 	ICollidable::Info Bumper::OnBallCollision(ICollidable &collider) {
 		auto& ball = static_cast<Ball&>(collider);
 		auto cpos = GetCollisionPoint(ball.getGlobalBounds());
@@ -47,7 +46,7 @@ namespace pyramidnight {
 		if (cpos != std::nullopt) {
 			switch(pup.PowerUpType) {
 				case PowerUp::Type::GHOST: {SetSpeedPenalty(PWRUP_GHOST_PENALTY_MOD, PWRUP_GHOST_PENALTY_TIME); break;}
-				case PowerUp::Type::MAGIC: { break;} //TODO new outline effect
+				case PowerUp::Type::MAGIC: { EnableMagic(PWRUP_MAGIC_DURATION); break;} //TODO new outline effect
 				default: break;
 			}
 			return { CollidableType, false, 0, cpos };
@@ -60,7 +59,7 @@ namespace pyramidnight {
 		if (update.holdLeft || update.holdRight)
 			Move(update);
 		if (mIsMagicEnabled)
-			FireMagic(update.action, update.deltaTime, update.mMisileVector, update.drawables);
+			FireMagic(update);
 	}
 
 	void Bumper::Move(BumperUpdate update) {
@@ -98,25 +97,19 @@ namespace pyramidnight {
 		mMagicDuration = std::abs(duration);
 	}
 
-	void Bumper::FireMagic(bool action, const sf::Time& deltaTime,
-		std::vector<std::shared_ptr<Misile>>& misiles,
-		std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
-
-		mMagicDuration -= deltaTime.asSeconds();
-		mMagicFireRate += deltaTime.asSeconds();
+	void Bumper::FireMagic(BumperUpdate& update) {
+		mMagicDuration -= update.deltaTime.asSeconds();
+		mMagicFireRate += update.deltaTime.asSeconds();
 		if (mMagicDuration <= 0) {
 			mIsMagicEnabled = false;
 			mMagicDuration = 0.0f;
 		}
 
-		if (mMagicFireRate > PWRUP_MAGIC_FIRERATE && action) {
+		if (mMagicFireRate > PWRUP_MAGIC_FIRERATE && update.action) {
 			mMagicFireRate = 0.0f;
 
-			//TODO projectiles to spawner!!s
 			auto misile =  std::make_shared<HolyMisile>(mMagicTexture);
-			misile->setTextureRect({{0,0},{32,32}});
-			misile->Spawn(GetBumperFirePosition(), drawables);
-			misiles.push_back(misile);
+			misile->Spawn(GetBumperFirePosition(), update.drawableVector, update.coldetVector);
 		}
 	}
 
@@ -128,7 +121,6 @@ namespace pyramidnight {
 		}
 	}
 	
-
 	std::optional<sf::Vector2f> Bumper::GetCollisionPoint(const sf::FloatRect &rect) {
 		if (auto overlap = getGlobalBounds().findIntersection(rect))
 			return overlap->position + (overlap->size / 2.0f);

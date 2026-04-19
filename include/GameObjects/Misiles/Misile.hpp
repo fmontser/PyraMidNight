@@ -19,9 +19,9 @@ namespace pyramidnight {
 
 				virtual ~Misile() = default;
 
-				void Spawn(
-					const sf::Vector2f& position,
-					std::vector<std::shared_ptr<sf::Drawable>>& drawables) override;
+				void Spawn(const sf::Vector2f &position,
+					std::vector<std::shared_ptr<sf::Drawable>> &drawables,
+					std::vector<std::shared_ptr<ICollidable>> &coldetVector) override;
 
 				virtual void Update(const sf::Time &deltaTime);
 
@@ -31,7 +31,7 @@ namespace pyramidnight {
 			protected:
 
 				Misile(const sf::Texture& texture);
-				Misile(const Misile& src) =  delete;
+				Misile(const Misile &src) = delete;
 				Misile& operator=(const Misile& src) = delete;
 				
 				bool         mIsSpawned;

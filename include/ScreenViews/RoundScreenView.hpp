@@ -68,13 +68,20 @@ namespace pyramidnight {
 			bool UpdateGame(const RoundScreenUpdate &update);
 			Ball::State UpdateBall(bool action, const sf::Time &deltaTime);
 			void UpdateBumper(const RoundScreenUpdate &update);
-			void UpdatePowerUps(uint8_t &credits, uint32_t &score, const sf::Time &deltaTime);
+			void UpdatePowerUps(const sf::Time &deltaTime);
+			
 			void ProcessInteractions(const RoundScreenUpdate &update,
 				const ICollidable::Info &info, std::shared_ptr<ICollidable> collidable);
+				
 			void ProcessPowerUpInteraction(const RoundScreenUpdate &update,
 				const ICollidable::Info &info, std::shared_ptr<ICollidable> collidable);
+
+			void ProcessMisileInteraction(const RoundScreenUpdate &update,
+				const ICollidable::Info &info, std::shared_ptr<ICollidable> collidable);
+
 			void ProcessBlockInteraction(const RoundScreenUpdate &update,
 				const ICollidable::Info &info, std::shared_ptr<ICollidable> collidable);
+				
 			void UpdateMisiles(const sf::Time &deltaTime);
 			void CheckWinLoseConditions();
 			void CleanObjectVectors();

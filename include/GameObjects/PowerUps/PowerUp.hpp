@@ -19,9 +19,9 @@ namespace pyramidnight {
 
 				virtual ~PowerUp() = default;
 
-				void Spawn(
-					const sf::Vector2f& position,
-					std::vector<std::shared_ptr<sf::Drawable>>& drawables) override;
+				void Spawn(const sf::Vector2f &position,
+					std::vector<std::shared_ptr<sf::Drawable>> &drawables,
+					std::vector<std::shared_ptr<ICollidable>> &coldetVector) override;
 
 				virtual void Update(const sf::Time &deltaTime);
 

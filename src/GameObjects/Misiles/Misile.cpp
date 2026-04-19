@@ -12,11 +12,14 @@ namespace pyramidnight {
 		mDirection = GAME_DIRECTION_UP;
 	}
 	
-	//TODO use with spawner
 	void Misile::Spawn(
-		const sf::Vector2f &position, std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
+		const sf::Vector2f &position,
+			std::vector<std::shared_ptr<sf::Drawable>>& drawables,
+			std::vector<std::shared_ptr<ICollidable>>&  coldetVector) {
+
 		setPosition(position);
 		drawables.push_back(shared_from_this());
+		coldetVector.push_back(shared_from_this());
 		mIsSpawned = true;
 	}
 
