@@ -148,8 +148,6 @@ namespace pyramidnight {
 		return std::nullopt;
 	}
 
-
-
 	void Ball::ResolveOverlap() {
 		// bounce back from clipping
 		float overlap = std::abs(mDistance - mRadius);

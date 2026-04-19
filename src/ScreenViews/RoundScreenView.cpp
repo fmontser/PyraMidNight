@@ -120,7 +120,8 @@ namespace pyramidnight {
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
 
-		for (const auto &collidable : mColdetVector) {
+		const auto coldet = mColdetVector;
+		for (const auto &collidable : coldet) {
 			if (collidable->IsDynamic) {
 				for (const auto &collider : mColdetVector) {
 					if (collidable != collider && collidable->CollidableType != collider->CollidableType) {
@@ -133,6 +134,7 @@ namespace pyramidnight {
 				}
 			}
 		}
+
 		if (UpdateBall(update.action, update.deltaTime) == Ball::State::DEAD)
 			LoseBall(update) ;
 		UpdateBumper(update);

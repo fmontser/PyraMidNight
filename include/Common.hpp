@@ -183,8 +183,6 @@ namespace pyramidnight {
 	inline constexpr float VOL_AUD_GHOST_DEFEAT = 0.6f;
 	inline constexpr float VOL_AUD_MAGIC_ATTACK = 0.8f;
 	inline constexpr float VOL_AUD_MAGIC_HIT = 0.8f;
-
-
 	inline constexpr float VOL_AUD_MUSIC_0 = 1.0f;
 
 	//RenderManager (DO NOT EDIT RESOLUTION!!!)
