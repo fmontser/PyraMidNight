@@ -155,6 +155,9 @@ namespace pyramidnight {
 	inline constexpr std::string_view PATH_AUD_GAMEOVER = "assets/audio/GameOver.ogg";
 	inline constexpr std::string_view PATH_AUD_GHOST_SPAWN = "assets/audio/GhostSpawn.ogg";
 	inline constexpr std::string_view PATH_AUD_GHOST_ATTACK = "assets/audio/GhostAttack.ogg";
+	inline constexpr std::string_view PATH_AUD_GHOST_DEFEAT = "assets/audio/GhostDefeat.ogg";
+	inline constexpr std::string_view PATH_AUD_MAGIC_ATTACK = "assets/audio/MagicAttack.ogg";
+	inline constexpr std::string_view PATH_AUD_MAGIC_HIT = "assets/audio/MagicHit.ogg";
 
 	inline constexpr std::string_view PATH_AUD_MUSIC_0 = "assets/audio/MusicTheme0.ogg";
 
@@ -177,6 +180,10 @@ namespace pyramidnight {
 	inline constexpr float VOL_AUD_GAMEOVER = 1.0f;
 	inline constexpr float VOL_AUD_GHOST_SPAWN = 1.0f;
 	inline constexpr float VOL_AUD_GHOST_ATTACK = 1.0f;
+	inline constexpr float VOL_AUD_GHOST_DEFEAT = 0.5f;
+	inline constexpr float VOL_AUD_MAGIC_ATTACK = 0.9f;
+	inline constexpr float VOL_AUD_MAGIC_HIT = 1.0f;
+
 
 	inline constexpr float VOL_AUD_MUSIC_0 = 1.0f;
 
@@ -200,7 +207,7 @@ namespace pyramidnight {
 		
 		//Animation
 		inline constexpr float        ANI_GHOST_FRAMERATE = 0.15f;
-		inline constexpr float        ANI_GHOST_V_SPEED_DEFEAT_MOD = 3.0f;
+		inline constexpr float        ANI_GHOST_V_SPEED_DEFEAT_MOD = 65.0f;
 		inline constexpr float        ANI_GHOST_V_SPEED_MOD = 1.3f;
 		inline constexpr float        ANI_GHOST_H_SPEED_MOD = 5.0f;
 		inline constexpr float        ANI_GHOST_SWING_RANGE = 4.0f;
