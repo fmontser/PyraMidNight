@@ -200,7 +200,7 @@ namespace pyramidnight {
 		
 		//Animation
 		inline constexpr float        ANI_GHOST_FRAMERATE = 0.15f;
-		inline constexpr float        ANI_GHOST_V_SPEED_DEFEAT_MOD = 1.3f;
+		inline constexpr float        ANI_GHOST_V_SPEED_DEFEAT_MOD = 3.0f;
 		inline constexpr float        ANI_GHOST_V_SPEED_MOD = 1.3f;
 		inline constexpr float        ANI_GHOST_H_SPEED_MOD = 5.0f;
 		inline constexpr float        ANI_GHOST_SWING_RANGE = 4.0f;
