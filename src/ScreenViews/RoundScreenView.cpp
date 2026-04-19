@@ -135,9 +135,9 @@ namespace pyramidnight {
 			}
 		}
 
+		UpdateBumper(update);
 		if (UpdateBall(update.action, update.deltaTime) == Ball::State::DEAD)
 			LoseBall(update) ;
-		UpdateBumper(update);
 		UpdatePowerUps(update.deltaTime);
 		UpdateMisiles(update.deltaTime);
 		CleanObjectVectors();
