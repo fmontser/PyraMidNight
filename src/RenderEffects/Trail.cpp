@@ -5,7 +5,7 @@
 namespace pyramidnight {
 
 	Trail::Trail(float duration, float lapse, sf::Color trail, std::weak_ptr<sf::Sprite> sprite,
-				std::vector<std::shared_ptr<sf::Drawable>>& drawableVector) :
+				std::vector<std::shared_ptr<sf::Drawable>> drawableVector) :
 			RenderEffect(duration) , mSprite(sprite), mDrawableVector(drawableVector) {
 				Lapse = lapse;
 				mElapsedTime = 0.0f;

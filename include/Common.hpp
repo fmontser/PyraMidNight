@@ -43,10 +43,10 @@ namespace pyramidnight {
 	inline constexpr int32_t SCORE_PWRUP_POINTS = 150;
 
 	//Power ups
-	inline constexpr float     PWRUP_GHOST_CHANCE = 0.66f;
-	inline constexpr float     PWRUP_SCORE_CHANCE = 0.22f;
+	inline constexpr float     PWRUP_GHOST_CHANCE = 0.38f;
+	inline constexpr float     PWRUP_SCORE_CHANCE = 0.18f;
 	inline constexpr float     PWRUP_MAGIC_CHANCE = 0.22f;
-	inline constexpr float     PWRUP_CREDIT_CHANCE = 0.055f;
+	inline constexpr float     PWRUP_CREDIT_CHANCE = 0.05f;
 
 	inline constexpr float     PWRUP_GHOST_SPEED = 50.0f;
 	inline constexpr float     PWRUP_GHOST_HOVER_TIME_MIN = 2.0f;
