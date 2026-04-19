@@ -86,6 +86,8 @@ namespace pyramidnight {
 	void GhostPuP::Defeat() {
 		mIsDefeated = true;
 		EnableAttackFlashEffect();
+		auto sb = ResourceManager::GetAudio(PATH_AUD_GHOST_DEFEAT);
+		AudioManager::Play({sb, VOL_AUD_GHOST_DEFEAT, PolySound::Type::SFX, false});
 	}
 
 	void GhostPuP::ApplyGhostlyMovement(const sf::Time &deltaTime) {
@@ -93,7 +95,7 @@ namespace pyramidnight {
 			return;
 		if (mIsDefeated) {
 			mDirection.y = -1; // will be inverted bellow
-			mSpeed *= ANI_GHOST_V_SPEED_DEFEAT_MOD;
+			mSpeed *= ANI_GHOST_V_SPEED_DEFEAT_MOD * deltaTime.asSeconds();
 			mDiveTimer = mDiveLimit;
 			rotate(sf::degrees(mDirection.x * deltaTime.asSeconds() * ANI_GHOST_SPIN_SPEED_MOD));
 		}

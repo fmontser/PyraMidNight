@@ -69,6 +69,7 @@ set(APP_SOURCES
 	src/RenderEffects/ScreenShake.cpp
 	src/RenderEffects/Blink.cpp
 	src/RenderEffects/Flash.cpp
+	src/RenderEffects/BreathColor.cpp
 )
 
 set(APP_LIBS
@@ -81,10 +82,10 @@ set(APP_LIBS
 add_executable(PyraMidNight ${APP_SOURCES})
 
 if(MSVC)
-    # disabled some type conversion warnings to avoid explicit casting everywhere
-    target_compile_options(PyraMidNight PRIVATE /W4 /WX /wd4244 /wd4267)
+	# disabled some type conversion warnings to avoid explicit casting everywhere
+	target_compile_options(PyraMidNight PRIVATE /W4 /WX /wd4244 /wd4267)
 else()
-    target_compile_options(PyraMidNight PRIVATE -Wall -Wextra -Werror)
+	target_compile_options(PyraMidNight PRIVATE -Wall -Wextra -Werror)
 endif()
 
 target_include_directories(PyraMidNight PUBLIC include/)

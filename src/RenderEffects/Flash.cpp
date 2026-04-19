@@ -34,9 +34,4 @@ namespace pyramidnight {
 			mElapsedTime = 0.0f;
 		}
 	}
-	
-	void Flash::Log(const std::string &msg) {
-		(void)msg;
-		//TODO log system
-	}
 }

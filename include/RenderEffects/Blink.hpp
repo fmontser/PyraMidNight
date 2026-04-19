@@ -7,7 +7,7 @@ namespace pyramidnight {
 			// on/off effect
 			Blink(float duration, float lapse, const std::weak_ptr<sf::Transformable>& drawable);
 			void Update(const Context& context);
-			void Log(const std::string& msg) override;
+			
 
 			float Lapse;
 		private:

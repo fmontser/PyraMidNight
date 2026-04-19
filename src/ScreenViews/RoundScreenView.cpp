@@ -120,7 +120,8 @@ namespace pyramidnight {
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
 
-		for (const auto &collidable : mColdetVector) {
+		const auto coldet = mColdetVector;
+		for (const auto &collidable : coldet) {
 			if (collidable->IsDynamic) {
 				for (const auto &collider : mColdetVector) {
 					if (collidable != collider && collidable->CollidableType != collider->CollidableType) {
@@ -133,6 +134,7 @@ namespace pyramidnight {
 				}
 			}
 		}
+
 		if (UpdateBall(update.action, update.deltaTime) == Ball::State::DEAD)
 			LoseBall(update) ;
 		UpdateBumper(update);
@@ -251,17 +253,6 @@ namespace pyramidnight {
 
 	void RoundScreenView::CleanObjectVectors() {
 		for (const auto& sprite : mDestroyedSprites) {
-
-			auto powerUp = std::dynamic_pointer_cast<PowerUp>(sprite);
-			auto itPowerUp = std::find(mPowerUpVector.begin(), mPowerUpVector.end(), powerUp);
-			if (itPowerUp != mPowerUpVector.end())
-				mPowerUpVector.erase(itPowerUp);
-
-			auto misile = std::dynamic_pointer_cast<Misile>(sprite);
-			auto itMisile = std::find(mMisileVector.begin(), mMisileVector.end(), misile);
-			if (itMisile != mMisileVector.end())
-				mMisileVector.erase(itMisile);
-
 			auto collidable = std::dynamic_pointer_cast<ICollidable>(sprite);
 			auto itColdet = std::find(mColdetVector.begin(), mColdetVector.end(), collidable);
 			if (itColdet != mColdetVector.end())
@@ -357,11 +348,4 @@ namespace pyramidnight {
 		}
 		return std::nullopt;
 	}
-
-
-	void RoundScreenView::Log(const std::string &msg) {
-		(void)msg;
-		//TODO log system
-	}
-
 }

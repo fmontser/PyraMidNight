@@ -30,9 +30,4 @@ namespace pyramidnight {
 			mElapsedTime = 0.0f;
 		}
 	}
-	
-	void Blink::Log(const std::string &msg) {
-		(void)msg;
-		//TODO log system
-	}
 }

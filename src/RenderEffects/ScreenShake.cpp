@@ -31,9 +31,4 @@ namespace pyramidnight {
 		}
 		context.window.setView(view);
 	}
-
-	void ScreenShake::Log(const std::string &msg) {
-		(void)msg;
-		//TODO log system
-	}
 }

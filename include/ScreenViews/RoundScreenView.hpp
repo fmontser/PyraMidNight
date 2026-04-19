@@ -58,9 +58,6 @@ namespace pyramidnight {
 			
 			std::shared_ptr<sf::RectangleShape>       mDeathArea;
 			std::vector<std::shared_ptr<ICollidable>> mColdetVector;
-			std::vector<std::shared_ptr<Block>>       mBlockVector;
-			std::vector<std::shared_ptr<PowerUp>>     mPowerUpVector;
-			std::vector<std::shared_ptr<Misile>>      mMisileVector;
 			std::vector<std::shared_ptr<sf::Sprite>>  mDestroyedSprites;
 			Spawner                                   mSpawner;
 
@@ -93,8 +90,6 @@ namespace pyramidnight {
 			void ConsumeCredit(uint8_t& credits);
 			void AddCredit(uint8_t &credits);
 			std::optional<std::shared_ptr<PowerUp>> GeneratePowerUp(ICollidable::Info info);
-			void Log(const std::string &msg) override;
-
 	};
 
 }

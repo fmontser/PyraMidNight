@@ -21,6 +21,8 @@ namespace pyramidnight {
 		mTextureSize = getTexture().getSize();
 		setOrigin(getGlobalBounds().getCenter());
 		setScale({1.5f,-1.5f});
+		auto sb = ResourceManager::GetAudio(PATH_AUD_MAGIC_ATTACK);
+		AudioManager::Play({sb, VOL_AUD_MAGIC_ATTACK, PolySound::Type::SFX, false});
 	}
 
 	void HolyMisile::Update(const sf::Time &deltaTime) {
@@ -52,9 +54,8 @@ namespace pyramidnight {
 	}
 
 	ICollidable::Info HolyMisile::OnGhostCollision(std::optional<sf::Vector2f>& cpos) {
-		//TODO impact sound effect
-		auto sb = ResourceManager::GetAudio(PATH_AUD_COIN_IN);
-		AudioManager::Play({sb, VOL_AUD_COIN_IN, PolySound::Type::SFX, false});
+		auto sb = ResourceManager::GetAudio(PATH_AUD_MAGIC_HIT);
+		AudioManager::Play({sb, VOL_AUD_MAGIC_HIT, PolySound::Type::SFX, false});
 		mIsDestroyed = true;
 		return { CollidableType, mIsDestroyed, 1.0f , cpos };
 	}
