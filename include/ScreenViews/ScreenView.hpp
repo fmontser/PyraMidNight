@@ -12,8 +12,6 @@ namespace pyramidnight {
 			virtual ~ScreenView() = default;
 		
 		protected:
-			virtual void Log(const std::string& msg) = 0;
-
 			std::vector<std::shared_ptr<sf::Drawable>> mDrawables;
 		};
 

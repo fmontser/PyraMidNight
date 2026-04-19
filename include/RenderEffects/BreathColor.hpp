@@ -8,7 +8,7 @@ namespace pyramidnight {
 			BreathColor(float duration, float lapse, sf::Color breath, sf::Color original,
 				const std::weak_ptr<sf::Sprite>& sprite);
 			void Update(const Context& context);
-			void Log(const std::string& msg) override;
+			
 			float Lapse;
 			
 		private:

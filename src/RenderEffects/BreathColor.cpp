@@ -45,9 +45,4 @@ namespace pyramidnight {
 
 		obj->setColor(currentColor);
 	}
-	
-	void BreathColor::Log(const std::string &msg) {
-		(void)msg;
-		//TODO log system
-	}
 }

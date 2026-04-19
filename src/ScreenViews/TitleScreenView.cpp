@@ -76,9 +76,4 @@ namespace pyramidnight {
 		}
 		mCreditsTxt->setString(mCreditsStr);
 	}
-
-	void TitleScreenView::Log(const std::string &msg) {
-		(void)msg;
-		//TODO log system
-	}
 }

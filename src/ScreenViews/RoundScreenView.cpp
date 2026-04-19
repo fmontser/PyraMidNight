@@ -346,11 +346,4 @@ namespace pyramidnight {
 		}
 		return std::nullopt;
 	}
-
-
-	void RoundScreenView::Log(const std::string &msg) {
-		(void)msg;
-		//TODO log system
-	}
-
 }

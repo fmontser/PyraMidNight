@@ -18,7 +18,6 @@ namespace pyramidnight {
 		
 		protected:
 			RenderEffect(float durationSeconds);
-			virtual void Log(const std::string& msg) = 0;
 			
 			float mDuration;
 			bool  mLoop;

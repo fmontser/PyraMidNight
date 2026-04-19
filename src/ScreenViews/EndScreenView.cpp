@@ -156,10 +156,5 @@ namespace pyramidnight {
 			mRecordNameTxt
 		};
 	}
-
-	void EndScreenView::Log(const std::string &msg) {
-		(void)msg;
-		//TODO log system
-	}
 }
 

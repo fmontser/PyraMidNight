@@ -22,7 +22,6 @@ namespace pyramidnight {
 		PowerUp::Update(deltaTime);
 	}
 
-	//TODO move rotation to RenderEffect
 	ICollidable::Info ExtraScorePuP::OnCollision(ICollidable &collider) {
 		if (collider.CollidableType == ICollidable::Type::BUMPER) {
 			auto& bumper = static_cast<Bumper&>(collider);

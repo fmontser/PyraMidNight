@@ -90,8 +90,6 @@ namespace pyramidnight {
 			void ConsumeCredit(uint8_t& credits);
 			void AddCredit(uint8_t &credits);
 			std::optional<std::shared_ptr<PowerUp>> GeneratePowerUp(ICollidable::Info info);
-			void Log(const std::string &msg) override;
-
 	};
 
 }
