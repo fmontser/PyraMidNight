@@ -75,7 +75,7 @@ namespace pyramidnight {
 		auto rSize = obj.getGlobalBounds().size;
 		auto bPos = getPosition();
 		
-		//TODO fix overlap function
+
 		ResolveOverlap();
 		auto isBounceHorizontal = (bPos.x < rPos.x || bPos.x > (rPos.x + rSize.x));
 		auto isBounceVertical = (bPos.y < rPos.y || bPos.y > (rPos.y + rSize.y));

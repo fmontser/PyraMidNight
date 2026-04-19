@@ -29,8 +29,8 @@ namespace pyramidnight {
 	inline constexpr float BMPR_COARSE_SPEED_MOD = 1.5f;
 	inline constexpr float BMPR_MV_LIMIT_L = 32.0f;
 	inline constexpr float BMPR_MV_LIMIT_R = 480.0f;
-	inline constexpr float BMPR_ATK_DEADZONE = 0.66f;
-	inline constexpr float BMPR_ATK_PWR = 1.085f;
+	inline constexpr float BMPR_ATK_DEADZONE = 0.52f;
+	inline constexpr float BMPR_ATK_PWR = 1.07f;
 
 	//Blocks
 	inline constexpr float     BLOCK_ROT_MIN = 2.0f;
