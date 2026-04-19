@@ -32,6 +32,7 @@ namespace pyramidnight {
 
 		private:
 			bool                         mLvlIsLoaded;
+			bool                         mIsLevelCompleted;
 			float                        mElapsedTimePenalty;
 			std::shared_ptr<sf::Font>    mFont;
 			std::shared_ptr<sf::Text>    mCreditsTxt;
@@ -65,15 +66,30 @@ namespace pyramidnight {
 
 			bool LoadLevel(const uint8_t& roundId);
 			bool UpdateGame(const RoundScreenUpdate &update);
+			Ball::State UpdateBall(bool action, const sf::Time &deltaTime);
 			void UpdateBumper(const RoundScreenUpdate &update);
-			void UpdatePowerUps(uint8_t &credits, uint32_t &score, const sf::Time &deltaTime);
+			void UpdatePowerUps(const sf::Time &deltaTime);
+			
+			void ProcessInteractions(const RoundScreenUpdate &update,
+				const ICollidable::Info &info, std::shared_ptr<ICollidable> collidable);
+				
+			void ProcessPowerUpInteraction(const RoundScreenUpdate &update,
+				const ICollidable::Info &info, std::shared_ptr<ICollidable> collidable);
+
+			void ProcessMisileInteraction(const RoundScreenUpdate &update,
+				const ICollidable::Info &info, std::shared_ptr<ICollidable> collidable);
+
+			void ProcessBlockInteraction(const RoundScreenUpdate &update,
+				const ICollidable::Info &info, std::shared_ptr<ICollidable> collidable);
+				
 			void UpdateMisiles(const sf::Time &deltaTime);
-			void UpdateBall(bool action, uint32_t &score, const sf::Time &deltaTime);
+			void CheckWinLoseConditions();
 			void CleanObjectVectors();
 			void UpdateTexts(const RoundScreenUpdate &update);
 			void ScoreTimePenalty(uint32_t &score, sf::Time &deltaTime);
-			bool LoseBall(const RoundScreenUpdate &update);
-			void AddScore(uint32_t& score, int32_t points);
+			void LoseBall(const RoundScreenUpdate &update);
+			void ReplaceBall();
+			void AddScore(uint32_t &score, int32_t points);
 			void ConsumeCredit(uint8_t& credits);
 			void AddCredit(uint8_t &credits);
 			std::optional<std::shared_ptr<PowerUp>> GeneratePowerUp(ICollidable::Info info);

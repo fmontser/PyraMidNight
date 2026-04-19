@@ -35,7 +35,7 @@ namespace pyramidnight {
 	ICollidable::Info ExtraCreditPuP::OnCollision(ICollidable &collider) {
 		if (collider.CollidableType == ICollidable::Type::BUMPER) {
 			auto& bumper = static_cast<Bumper&>(collider);
-			auto cpos = bumper.GetCollisionPoint(getGlobalBounds());
+			auto cpos = GetCollisionPoint(bumper.getGlobalBounds());
 
 			if (cpos != std::nullopt) {
 				auto sb = ResourceManager::GetAudio(PATH_AUD_COIN_IN);

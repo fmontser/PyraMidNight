@@ -47,23 +47,40 @@ namespace pyramidnight {
 	}
 
 	ICollidable::Info GhostPuP::OnCollision(ICollidable &collider) {
-		if (collider.CollidableType == ICollidable::Type::BUMPER) {
-			auto& bumper = static_cast<Bumper&>(collider);
-			auto cpos = bumper.GetCollisionPoint(getGlobalBounds());
-
-			if (cpos != std::nullopt && !mIsAttacking && !mIsDestroyed) {
-				auto sb = ResourceManager::GetAudio(PATH_AUD_GHOST_ATTACK);
-				AudioManager::Play({sb, VOL_AUD_GHOST_ATTACK, PolySound::Type::SFX, false});
-				mIsAttacking = true;
-				bumper.EnablePenaltyFlashEffect(PWRUP_GHOST_PENALTY_TIME);
-				EnableAttackFlashEffect();
-				return { CollidableType, mIsDestroyed, mBumperSpeedPenalty , cpos };
-			}
-			// stick to bumper while attacking
-			if (cpos != std::nullopt && !mIsDestroyed)
-				setPosition(*cpos);
+		switch (collider.CollidableType) {
+			case ICollidable::Type::BUMPER: return OnBumperCollision(collider);
+			case ICollidable::Type::MISILE: return OnMisileCollision(collider);
+			default: break;
 		}
+		return { CollidableType, false, 0, std::nullopt };
+	}
+
+	ICollidable::Info GhostPuP::OnBumperCollision(ICollidable &collider) {
+		auto& bumper = static_cast<Bumper&>(collider);
+		auto cpos = GetCollisionPoint(bumper.getGlobalBounds());
+
+		if (cpos != std::nullopt && !mIsAttacking && !mIsDestroyed) {
+			auto sb = ResourceManager::GetAudio(PATH_AUD_GHOST_ATTACK);
+			AudioManager::Play({sb, VOL_AUD_GHOST_ATTACK, PolySound::Type::SFX, false});
+			mIsAttacking = true;
+			EnableAttackFlashEffect();
+			return { CollidableType, mIsDestroyed, mBumperSpeedPenalty , cpos };
+		}
+		// stick to bumper while attacking
+		if (cpos != std::nullopt && !mIsDestroyed)
+			setPosition(*cpos);
+		
 		return { CollidableType, mIsDestroyed, mBumperSpeedPenalty, std::nullopt };
+	}
+
+	ICollidable::Info GhostPuP::OnMisileCollision(ICollidable &collider) {
+		auto& misile = static_cast<Misile&>(collider);
+		auto cpos = GetCollisionPoint(misile.getGlobalBounds());
+
+		if (cpos != std::nullopt && misile.MisileType == Misile::Type::HOLY_MISILE) {
+			Defeat();
+		}
+		return { CollidableType, false, 0, std::nullopt };
 	}
 
 	void GhostPuP::Defeat() {
@@ -75,9 +92,10 @@ namespace pyramidnight {
 		if (mIsAttacking)
 			return;
 		if (mIsDefeated) {
-			mDirection.y = -100; // will be inverted bellow
+			mDirection.y = -1; // will be inverted bellow
+			mSpeed *= ANI_GHOST_V_SPEED_DEFEAT_MOD;
 			mDiveTimer = mDiveLimit;
-			rotate(sf::degrees(mDirection.x * deltaTime.asSeconds() * 2.0f)); //TODO hardcoded mod
+			rotate(sf::degrees(mDirection.x * deltaTime.asSeconds() * ANI_GHOST_SPIN_SPEED_MOD));
 		}
 		auto deltaTimeSec = deltaTime.asSeconds();
 		mDeltaX += mDirection.x * ANI_GHOST_H_SPEED_MOD * deltaTimeSec;

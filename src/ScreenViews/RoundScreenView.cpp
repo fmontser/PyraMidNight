@@ -16,6 +16,7 @@ namespace pyramidnight {
 
 	RoundScreenView::RoundScreenView() : ScreenView() {
 		mLvlIsLoaded = false;
+		mIsLevelCompleted = false;
 		mElapsedTimePenalty = 0.0f;
 		mFont = ResourceManager::GetFont(PATH_FONT);
 
@@ -85,6 +86,7 @@ namespace pyramidnight {
 		mColdetVector.push_back(mWallLeft);
 		mColdetVector.push_back(mWallRight);
 		mColdetVector.push_back(mBumper);
+		mColdetVector.push_back(mBall);
 	}
 
 	bool RoundScreenView::LoadLevel(const uint8_t& roundId) {
@@ -97,17 +99,13 @@ namespace pyramidnight {
 				if (chara != '0') {
 					auto block = std::make_shared<Block>(*mBlockTex, chara - '0');
 					block->setPosition(actualPos);
-					mBlockVector.push_back(block);
+					mDrawables.push_back(block);
+					mColdetVector.push_back(block);
 				}
 				actualPos.x += offset.x;
 			}
 			actualPos.x = 32;
 			actualPos.y += offset.y;
-		}
-
-		for (const auto& block : mBlockVector) {
-			mDrawables.push_back(block);
-			mColdetVector.push_back(block);
 		}
 		return true;
 	}
@@ -115,31 +113,36 @@ namespace pyramidnight {
 	bool RoundScreenView::Update(const RoundScreenUpdate& update) {
  		if (!mLvlIsLoaded)
 			mLvlIsLoaded = LoadLevel(update.roundId);
-		if (!UpdateGame(update))
+		if (UpdateGame(update))
 			return false;
 		return true;
 	}
 
 	bool RoundScreenView::UpdateGame(const RoundScreenUpdate& update) {
+
+		for (const auto &collidable : mColdetVector) {
+			if (collidable->IsDynamic) {
+				for (const auto &collider : mColdetVector) {
+					if (collidable != collider && collidable->CollidableType != collider->CollidableType) {
+						ICollidable::Info info = collidable->OnCollision(*collider);
+						if (info.valueMod != 0)
+							ProcessInteractions(update, info, collidable);
+						if (info.collisionPoint != std::nullopt)
+							break;
+					}
+				}
+			}
+		}
+		if (UpdateBall(update.action, update.deltaTime) == Ball::State::DEAD)
+			LoseBall(update) ;
 		UpdateBumper(update);
-		UpdatePowerUps(update.credits, update.score, update.deltaTime);
+		UpdatePowerUps(update.deltaTime);
 		UpdateMisiles(update.deltaTime);
-		UpdateBall(update.action, update.score, update.deltaTime);
 		CleanObjectVectors();
 		UpdateTexts(update);
 		ScoreTimePenalty(update.score, update.deltaTime);
-
-		//Lose
-		if (mDeathArea->getGlobalBounds().contains(mBall->getPosition())) {
-			return LoseBall(update);;
-		}
-		//Win
-		if (mBlockVector.empty()) {
-			auto sb = ResourceManager::GetAudio(PATH_AUD_NEXTROUND);
-			AudioManager::Play({sb,VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
-			return false;
-		}
-		return true;
+		CheckWinLoseConditions();
+		return mIsLevelCompleted;
 	}
 
 	void RoundScreenView::UpdateBumper(const RoundScreenUpdate& update) {
@@ -151,74 +154,103 @@ namespace pyramidnight {
 			update.coarse,
 			update.deltaTime,
 			mDrawables,
-			mMisileVector
+			mColdetVector
 		};
 		mBumper->Update(bumperUpdate);
 	}
+	
+	Ball::State RoundScreenView::UpdateBall(bool action, const sf::Time &deltaTime) {
+		Ball::UpdateBall update {
+			action,
+			mBumper->getPosition(),
+			deltaTime,
+			*mDeathArea
+		};
+		return mBall->Update(update);
+	}
 
-	void RoundScreenView::UpdatePowerUps(uint8_t& credits, uint32_t& score, const sf::Time &deltaTime) {
-		for (const auto &obj : mPowerUpVector) {
-			ICollidable::Info info = obj->OnCollision(*mBumper);
-			obj->Update(deltaTime);
-			if (info.destroyed) {
-				mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
+	void RoundScreenView::UpdatePowerUps(const sf::Time &deltaTime) {
+		for (const auto &obj : mColdetVector) {
+			if (obj->CollidableType != ICollidable::Type::POWER_UP)
+				continue ;
+			auto& pup = static_cast<PowerUp&>(*obj);
+			pup.Update(deltaTime);
+		}
+	}
+
+	void RoundScreenView::ProcessInteractions(const RoundScreenUpdate& update, 
+		const ICollidable::Info& info, std::shared_ptr<ICollidable> collidable) {
+
+		switch (collidable->CollidableType) {
+			case ICollidable::Type::POWER_UP: ProcessPowerUpInteraction(update, info, collidable); break;
+			case ICollidable::Type::BLOCK: ProcessBlockInteraction(update, info, collidable); break;
+			case ICollidable::Type::MISILE: ProcessMisileInteraction(update, info, collidable); break;
+			default: break;
+		}
+	}
+
+	void RoundScreenView::ProcessPowerUpInteraction(const RoundScreenUpdate& update, 
+		const ICollidable::Info& info, std::shared_ptr<ICollidable> collidable) {
+
+		auto pup = std::static_pointer_cast<PowerUp>(collidable);
+		if (info.valueMod != 0) {
+			switch (pup->PowerUpType) {
+				case PowerUp::Type::SCORE: AddScore(update.score, info.valueMod); break;
+				case PowerUp::Type::CREDIT: AddCredit(update.credits); break;
+				case PowerUp::Type::GHOST: break;
+				case PowerUp::Type::MAGIC: break;
+				default: break;
 			}
-			if (info.valueMod != 0) {
-				switch (obj->PowerUpType) {
-					case PowerUp::Type::SCORE: AddScore(score, info.valueMod); break;
-					case PowerUp::Type::CREDIT: AddCredit(credits); break;
-					case PowerUp::Type::GHOST: mBumper->SetSpeedPenalty(info.valueMod); break;
-					case PowerUp::Type::MAGIC: mBumper->EnableMagic(info.valueMod); break;
-					default: break;
-				}
-			}
+		}
+		if (info.destroyed)
+			mDestroyedSprites.push_back(pup);
+	}
+
+	void RoundScreenView::ProcessMisileInteraction(const RoundScreenUpdate& update, 
+		const ICollidable::Info& info, std::shared_ptr<ICollidable> collidable) {
+
+		(void)update;
+		auto misile = std::static_pointer_cast<Misile>(collidable);
+		if (info.destroyed)
+			mDestroyedSprites.push_back(misile);
+	}
+
+	void RoundScreenView::ProcessBlockInteraction(const RoundScreenUpdate& update, 
+		const ICollidable::Info& info, std::shared_ptr<ICollidable> collidable) {
+
+		auto block = std::static_pointer_cast<Block>(collidable);
+		if (info.destroyed) {
+			AddScore(update.score, info.valueMod);
+			GeneratePowerUp(info);
+			mDestroyedSprites.push_back(block);
 		}
 	}
 
 	void RoundScreenView::UpdateMisiles(const sf::Time &deltaTime) {
-		for (const auto& obj : mMisileVector) {
-			for (const auto& pup : mPowerUpVector) {
-				if (pup->PowerUpType == PowerUp::Type::GHOST) {
-					auto& ghost = static_cast<GhostPuP&>(*pup);
-					ICollidable::Info info = obj->OnCollision(ghost);
-					obj->Update(deltaTime);
-
-					if (info.destroyed) {
-						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
-					}
-
-					if (info.valueMod != 0) {
-						switch (obj->MisileType) {
-							case Misile::Type::HOLY_MISILE: ghost.Defeat(); break;
-							default: break;
-						}
-					}
-					break;
-				}
-			}
+		for (const auto &obj : mColdetVector) {
+			if (obj->CollidableType != ICollidable::Type::MISILE)
+				continue ;
+			auto& misile = static_cast<Misile&>(*obj);
+			misile.Update(deltaTime);
 		}
 	}
 	
-	void RoundScreenView::UpdateBall(bool action, uint32_t& score, const sf::Time &deltaTime) {
-		if (mBall->GetState() == Ball::State::PLAYING) {
-			for (const auto &obj : mColdetVector) {
-				ICollidable::Info info = obj->OnCollision(*mBall);
-					if (info.destroyed) {
-						GeneratePowerUp(info);
-						mDestroyedSprites.push_back(std::dynamic_pointer_cast<sf::Sprite>(obj));
-					}
-					if (info.valueMod != 0)
-						AddScore(score, info.valueMod);
-			}
+	void RoundScreenView::CheckWinLoseConditions() {
+		auto it = std::find_if(mColdetVector.begin(), mColdetVector.end(),
+		[](const std::shared_ptr<ICollidable> collidable){
+			return collidable->CollidableType == ICollidable::Type::BLOCK;
+		});
+		if (it == mColdetVector.end())
+			mIsLevelCompleted = true;
+
+		if (mIsLevelCompleted) {
+			auto sb = ResourceManager::GetAudio(PATH_AUD_NEXTROUND);
+			AudioManager::Play({sb,VOL_AUD_NEXTROUND, PolySound::Type::SFX, false});
 		}
-		mBall->Update(action, mBumper->getPosition(), deltaTime);
 	}
 
 	void RoundScreenView::CleanObjectVectors() {
 		for (const auto& sprite : mDestroyedSprites) {
-			auto itBlock = std::find(mBlockVector.begin(), mBlockVector.end(), sprite);
-			if (itBlock != mBlockVector.end())
-				mBlockVector.erase(itBlock);
 
 			auto powerUp = std::dynamic_pointer_cast<PowerUp>(sprite);
 			auto itPowerUp = std::find(mPowerUpVector.begin(), mPowerUpVector.end(), powerUp);
@@ -242,7 +274,6 @@ namespace pyramidnight {
 		mDestroyedSprites.clear();
 	}
 
-
 	void RoundScreenView::UpdateTexts(const RoundScreenUpdate &update) {
 		mCreditsTxt->setString(std::string(ROUND_CREDITS_STR)
 			.append(std::to_string(update.credits)));
@@ -259,20 +290,26 @@ namespace pyramidnight {
 		}
 	}
 
-	bool RoundScreenView::LoseBall(const RoundScreenUpdate &update) {
+	void RoundScreenView::LoseBall(const RoundScreenUpdate &update) {
 		ConsumeCredit(update.credits);
-		AddScore(update.score, SCORE_LOSE_BALL);
+		AddScore(update.score, SCORE_LOSE_BALL_PENALTY);
 		if (update.credits == 0) {
 			auto sb = ResourceManager::GetAudio(PATH_AUD_GAMEOVER);
 			AudioManager::Play({sb,VOL_AUD_GAMEOVER, PolySound::Type::SFX, false});
-			return false;
+			mIsLevelCompleted = true;
 		}
-		mBall->ResetPos(mBumper->getPosition());
 		RenderManager::DisplayEffect(std::make_unique<ScreenShake>(EFF_SHAKE_LOSEBALL_TIME, EFF_SHAKE_LOSEBALL_POWER));
 		auto sb = ResourceManager::GetAudio(PATH_AUD_BALL_LOSE);
 		AudioManager::Play({sb, VOL_AUD_BALL_LOSE, PolySound::Type::SFX, false});
-		return true;
+		mDestroyedSprites.push_back(mBall);
+		ReplaceBall();
 	};
+
+	void RoundScreenView::ReplaceBall() {
+		mBall = std::make_shared<Ball>(*mBallTex);
+		mDrawables.push_back(mBall);
+		mColdetVector.push_back(mBall);
+	}
 
 	void RoundScreenView::AddScore(uint32_t& score, int32_t points) {
 		int64_t score64 = static_cast<int64_t>(score);
@@ -298,6 +335,9 @@ namespace pyramidnight {
 	}
 
 	std::optional<std::shared_ptr<PowerUp>> RoundScreenView::GeneratePowerUp(ICollidable::Info info) {
+		if (info.type != ICollidable::Type::BLOCK)
+			return std::nullopt;
+	
 		auto spawnType = mSpawner.RollSpawn();
 		std::shared_ptr<PowerUp> spawn = nullptr;
 
@@ -312,12 +352,12 @@ namespace pyramidnight {
 			default: break;
 		}
 		if (spawn != nullptr) {
-			spawn->Spawn(*info.collisionPoint, mDrawables);
-			mPowerUpVector.push_back(spawn);
+			spawn->Spawn(*info.collisionPoint, mDrawables, mColdetVector);
 			return spawn;
 		}
 		return std::nullopt;
 	}
+
 
 	void RoundScreenView::Log(const std::string &msg) {
 		(void)msg;

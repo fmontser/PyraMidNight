@@ -13,7 +13,8 @@ namespace pyramidnight {
 			void Update(const sf::Time &deltaTime) override;
 
 			ICollidable::Info OnCollision(ICollidable &collider) override;
-			
+
+
 		private:
 			bool          mFlashEnabled;
 			bool          mIsDestroyed;
@@ -22,6 +23,8 @@ namespace pyramidnight {
 			sf::IntRect   mSpriteRect;
 			sf::Vector2u  mTextureSize;
 
+			ICollidable::Info OnPowerUpCollision(ICollidable &collider);
+			ICollidable::Info OnGhostCollision(std::optional<sf::Vector2f> &cpos);
 			void AnimateFrame(const sf::Time &deltaTime);
 			void EnableFlashEffect();
 		};

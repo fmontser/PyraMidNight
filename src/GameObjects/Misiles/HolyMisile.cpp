@@ -19,7 +19,7 @@ namespace pyramidnight {
 		setTextureRect(mAnimationRect);
 		mSpriteRect = getTextureRect();
 		mTextureSize = getTexture().getSize();
-		setOrigin(getGlobalBounds().getCenter()); //TODO check?
+		setOrigin(getGlobalBounds().getCenter());
 		setScale({1.5f,-1.5f});
 	}
 
@@ -31,19 +31,32 @@ namespace pyramidnight {
 	}
 
 	ICollidable::Info HolyMisile::OnCollision(ICollidable &collider) {
-		if (collider.CollidableType == ICollidable::Type::POWER_UP) {
-			auto& powerUp = static_cast<PowerUp&>(collider);
-			auto cpos = powerUp.GetCollisionPoint(getGlobalBounds());
-
-			if (cpos != std::nullopt && powerUp.PowerUpType == PowerUp::Type::GHOST) {
-				//TODO impact sound effect
-				auto sb = ResourceManager::GetAudio(PATH_AUD_COIN_IN);
-				AudioManager::Play({sb, VOL_AUD_COIN_IN, PolySound::Type::SFX, false});
-				mIsDestroyed = true;
-				return { CollidableType, mIsDestroyed, 1.0f , cpos };
-			}
+		switch (collider.CollidableType) {
+			case ICollidable::Type::POWER_UP: return OnPowerUpCollision(collider);
+			default: break;
 		}
-		return { CollidableType, mIsDestroyed, 0.0f , std::nullopt };
+		return { CollidableType, false, 0, std::nullopt };
+	}
+
+	ICollidable::Info HolyMisile::OnPowerUpCollision(ICollidable &collider) {
+		auto& pup = static_cast<PowerUp&>(collider);
+		auto cpos = GetCollisionPoint(pup.getGlobalBounds());
+		if (cpos != std::nullopt) {
+			switch(pup.PowerUpType) {
+				case PowerUp::Type::GHOST: {return OnGhostCollision(cpos); break;}
+				default: break;
+			}
+			return { CollidableType, false, 0, cpos };
+		}
+		return { CollidableType, false, 0, std::nullopt };
+	}
+
+	ICollidable::Info HolyMisile::OnGhostCollision(std::optional<sf::Vector2f>& cpos) {
+		//TODO impact sound effect
+		auto sb = ResourceManager::GetAudio(PATH_AUD_COIN_IN);
+		AudioManager::Play({sb, VOL_AUD_COIN_IN, PolySound::Type::SFX, false});
+		mIsDestroyed = true;
+		return { CollidableType, mIsDestroyed, 1.0f , cpos };
 	}
 
 	void HolyMisile::AnimateFrame(const sf::Time &deltaTime) {

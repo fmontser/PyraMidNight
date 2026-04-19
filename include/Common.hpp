@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <limits>
 #include <SFML/Graphics.hpp>
+#include <iostream> //TODO delete after tests
 
 namespace pyramidnight {
 	//Game
@@ -37,7 +38,7 @@ namespace pyramidnight {
 
 	//Score
 	inline constexpr float   SCORE_BLOCK_MOD = 25.0f;
-	inline constexpr int32_t SCORE_LOSE_BALL = -100;
+	inline constexpr int32_t SCORE_LOSE_BALL_PENALTY = -100;
 	inline constexpr int32_t SCORE_TIME_PENALTY = -1;
 	inline constexpr int32_t SCORE_PWRUP_POINTS = 150;
 
@@ -50,7 +51,7 @@ namespace pyramidnight {
 	inline constexpr float     PWRUP_GHOST_SPEED = 50.0f;
 	inline constexpr float     PWRUP_GHOST_HOVER_TIME_MIN = 2.0f;
 	inline constexpr float     PWRUP_GHOST_HOVER_TIME_MAX = 5.0f;
-	inline constexpr float     PWRUP_GHOST_PENALTY_TIME = 3.0f;
+	inline constexpr float     PWRUP_GHOST_PENALTY_TIME = 1.5f;
 	inline constexpr float     PWRUP_GHOST_PENALTY_MOD = 0.66f;
 	inline constexpr sf::Color PWRUP_GHOST_COLOR = sf::Color({0, 255, 255, 64});
 	inline constexpr float     PWRUP_MAGIC_DURATION = 15.0f;
@@ -199,9 +200,11 @@ namespace pyramidnight {
 		
 		//Animation
 		inline constexpr float        ANI_GHOST_FRAMERATE = 0.15f;
+		inline constexpr float        ANI_GHOST_V_SPEED_DEFEAT_MOD = 3.0f;
 		inline constexpr float        ANI_GHOST_V_SPEED_MOD = 1.3f;
 		inline constexpr float        ANI_GHOST_H_SPEED_MOD = 5.0f;
 		inline constexpr float        ANI_GHOST_SWING_RANGE = 4.0f;
+		inline constexpr float        ANI_GHOST_SPIN_SPEED_MOD = 1000.0f;
 		inline constexpr float        ANI_COIN_FRAMERATE = 0.15f;
 		inline constexpr float        ANI_COIN_V_SPEED_MOD = 8.0f;
 		inline constexpr float        ANI_COIN_H_SPEED_MOD = 6.0f;

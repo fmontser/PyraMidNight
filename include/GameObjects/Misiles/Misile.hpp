@@ -19,20 +19,19 @@ namespace pyramidnight {
 
 				virtual ~Misile() = default;
 
-				void Spawn(
-					const sf::Vector2f& position,
-					std::vector<std::shared_ptr<sf::Drawable>>& drawables) override;
+				void Spawn(const sf::Vector2f &position,
+					std::vector<std::shared_ptr<sf::Drawable>> &drawables,
+					std::vector<std::shared_ptr<ICollidable>> &coldetVector) override;
 
 				virtual void Update(const sf::Time &deltaTime);
 
-				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect);
 
 				Misile::Type  MisileType;
 
 			protected:
 
 				Misile(const sf::Texture& texture);
-				Misile(const Misile& src) =  delete;
+				Misile(const Misile &src) = delete;
 				Misile& operator=(const Misile& src) = delete;
 				
 				bool         mIsSpawned;
@@ -40,6 +39,7 @@ namespace pyramidnight {
 				float        mSpeed;
 				sf::Vector2f mDirection;
 
+				std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect) override;
 				void ApplyMovement(const sf::Time &deltaTime);
 				void DestroyIfOutside() override;
 	};

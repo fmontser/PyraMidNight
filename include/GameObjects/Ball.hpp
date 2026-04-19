@@ -8,24 +8,21 @@ namespace pyramidnight {
 	class Ball : public sf::Sprite, public ICollidable {
 	public:
 		enum class State {
-			DOCKED, PLAYING
+			DOCKED, PLAYING, DEAD
+		};
+
+		struct UpdateBall {
+			bool                      action;
+			const sf::Vector2f&       bumperPos;
+			const sf::Time&           deltaTime;
+			const sf::RectangleShape& deathArea;
 		};
 
 		Ball(const sf::Texture& texture);
 
-		void Launch();
-		void ResetPos(const sf::Vector2f& bumperPos);
-		void Update(bool action, const sf::Vector2f &bumperPos, const sf::Time &deltaTime);
-		void Bounce(const sf::Sprite &obj);
-		void ApplyBumperMod(const sf::Sprite& bumper);
-
+		State Update(UpdateBall update);
 		Info OnCollision(ICollidable& collider) override;
-		std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect);
 
-		float GetBallDistance(const sf::Sprite &obj) const;
-		const State& GetState() const;
-		float GetRadius() const;
-		
 	private:
 		State           mState;
 		float           mSpeed;
@@ -33,9 +30,18 @@ namespace pyramidnight {
 		float           mRadius;
 		float           mDistance;
 
-		
-		void  Move(const sf::Time& deltaTime);
-		void  ResolveOverlap();
+		void Move(const sf::Time& deltaTime);
+		void CheckDeath(const sf::RectangleShape &deathArea);
+		void Launch(bool action);
+		void Dock(const sf::Vector2f& bumperPos);
+		void Bounce(const sf::Sprite &obj);
+		void ApplyBumperMod(const sf::Sprite& bumper);
+		void ResolveOverlap();
+		ICollidable::Info OnBlockCollision(ICollidable &collider);
+		ICollidable::Info OnObstacleCollision(ICollidable &collider);
+		ICollidable::Info OnBumperCollision(ICollidable &collider);
+		std::optional<sf::Vector2f> GetCollisionPoint(const sf::FloatRect &rect) override;
+
 	};
 
 }
