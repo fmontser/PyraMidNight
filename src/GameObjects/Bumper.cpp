@@ -6,6 +6,7 @@
 #include "HolyMisile.hpp"
 #include "RenderManager.hpp"
 #include "Flash.hpp"
+#include "BreathColor.hpp"
 
 namespace pyramidnight {
 
@@ -95,6 +96,8 @@ namespace pyramidnight {
 	void Bumper::EnableMagic(float duration) {
 		mIsMagicEnabled = true;
 		mMagicDuration = std::abs(duration);
+		RenderManager::DisplayEffect(std::make_unique<BreathColor>(
+			duration, EFF_BREATH_BMPR_LAPSE , EFF_BREATH_BMPR_COLOR, mTint, shared_from_this()));
 	}
 
 	void Bumper::FireMagic(BumperUpdate& update) {

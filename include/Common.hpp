@@ -204,6 +204,8 @@ namespace pyramidnight {
 		inline constexpr float        EFF_FLASH_BLK_LAPSE = 0.05f;
 		inline constexpr float        EFF_FLASH_BLK_TIME = 1.0f;
 		inline constexpr sf::Color    EFF_FLASH_BLK_COLOR = sf::Color::Green;
+		inline constexpr float        EFF_BREATH_BMPR_LAPSE = 0.2f;
+		inline constexpr sf::Color    EFF_BREATH_BMPR_COLOR = sf::Color::Cyan;
 		
 		//Animation
 		inline constexpr float        ANI_GHOST_FRAMERATE = 0.15f;
