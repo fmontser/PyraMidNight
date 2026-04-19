@@ -190,6 +190,10 @@ namespace pyramidnight {
 	inline constexpr sf::Vector2u     RNDR_RESOLUTION = {640, 896};
 	inline constexpr uint32_t         RNDR_FRAME_LIMIT = 60;
 		//Effects
+		inline constexpr float        EFF_TRAIL_BALL_LAPSE = 0.018f;
+		inline constexpr sf::Color    EFF_TRAIL_BALL_COLOR = sf::Color::Magenta;
+		inline constexpr float        EFF_TRAIL_ALPHA_MOD = 0.8f;
+		inline constexpr float        EFF_TRAIL_SCALE_MOD = 0.8f;
 		inline constexpr float        EFF_SHAKE_LOSEBALL_TIME = 0.5f;
 		inline constexpr float        EFF_SHAKE_LOSEBALL_POWER = 2.5f;
 		inline constexpr float        EFF_FLASH_SCOREPUP_LAPSE = 0.042f;

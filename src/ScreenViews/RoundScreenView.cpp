@@ -166,7 +166,8 @@ namespace pyramidnight {
 			action,
 			mBumper->getPosition(),
 			deltaTime,
-			*mDeathArea
+			*mDeathArea,
+			mDrawables
 		};
 		return mBall->Update(update);
 	}

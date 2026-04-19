@@ -70,6 +70,7 @@ set(APP_SOURCES
 	src/RenderEffects/Blink.cpp
 	src/RenderEffects/Flash.cpp
 	src/RenderEffects/BreathColor.cpp
+	src/RenderEffects/Trail.cpp
 )
 
 set(APP_LIBS
