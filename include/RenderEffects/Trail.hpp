@@ -14,7 +14,6 @@ namespace pyramidnight {
 			float Lapse;
 			
 		private:
-			bool                                        mTrailing;
 			float                                       mElapsedTime;
 			std::weak_ptr<sf::Sprite>                   mSprite;
 			std::vector<std::shared_ptr<sf::Drawable>>  mDrawableVector;

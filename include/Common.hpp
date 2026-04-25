@@ -3,7 +3,6 @@
 #include <cstdint>
 #include <limits>
 #include <SFML/Graphics.hpp>
-#include <iostream> //TODO delete after tests
 
 namespace pyramidnight {
 	//Game
