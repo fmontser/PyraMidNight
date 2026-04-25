@@ -27,7 +27,7 @@ namespace pyramidnight {
 	Ball::State Ball::Update(UpdateBall update) {
 		if (!mIsTrailing) {
 			RenderManager::DisplayEffect(std::make_unique<Trail>(
-				-1.0f, EFF_TRAIL_BALL_LAPSE, EFF_TRAIL_BALL_COLOR, shared_from_this(), update.drawablesVector));
+				-1.0f, EFF_TRAIL_BALL_LAPSE, EFF_TRAIL_BALL_COLOR, shared_from_this()));
 			mIsTrailing = true;
 		}
 

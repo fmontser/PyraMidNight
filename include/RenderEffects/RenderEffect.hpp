@@ -14,12 +14,13 @@ namespace pyramidnight {
 			bool Disposable;
 			
 			virtual void Update(const Context& context) = 0;
+
 			virtual ~RenderEffect() = default;
 		
 		protected:
-			RenderEffect(float durationSeconds);
-			
 			float mDuration;
 			bool  mLoop;
+
+			RenderEffect(float durationSeconds);
 	};
 }

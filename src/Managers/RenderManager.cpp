@@ -14,8 +14,8 @@ namespace pyramidnight {
 
 	void RenderManager::Update(std::vector<std::shared_ptr<sf::Drawable>>& drawables) {
 		instance().mDeltaTime = instance().mClock.restart();
+
 		instance().Draw(drawables);
-		instance().DrawEffects();
 	}
 
 	void RenderManager::PauseClock() { instance().mClock.stop(); }
@@ -24,6 +24,7 @@ namespace pyramidnight {
 
 	void RenderManager::Draw(std::vector<std::shared_ptr<sf::Drawable>> &drawables) {
 		mWindow.clear();
+		DrawEffects();
 		for (const auto &drw : drawables) {
 			mWindow.draw(*drw);
 		}
