@@ -65,7 +65,7 @@ namespace pyramidnight {
 
 	void Bumper::Move(BumperUpdate update) {
 		sf::Vector2 position = this->getPosition();
-		float direction;
+		float direction = 0.0f;
 		if (update.holdLeft)
 			direction = -1.0f;
 		else if (update.holdRight)

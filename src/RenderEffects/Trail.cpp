@@ -29,10 +29,10 @@ namespace pyramidnight {
 		}
 
 		if (mElapsedTime >= Lapse) {
-			auto trail = std::make_shared<sf::Sprite>(*obj);
-			trail->setColor(mTrailColor);
-			mTrails.push_back(trail); 
-			mDrawableVector.push_back(trail);
+			auto newTrail = std::make_shared<sf::Sprite>(*obj);
+			newTrail->setColor(mTrailColor);
+			mTrails.push_back(newTrail); 
+			mDrawableVector.push_back(newTrail);
 
 			auto trailsCpy = mTrails;
 			for (auto& trail : trailsCpy) {
