@@ -4,9 +4,8 @@
 
 namespace pyramidnight {
 
-	Trail::Trail(float duration, float lapse, sf::Color trail, std::weak_ptr<sf::Sprite> sprite,
-				std::vector<std::shared_ptr<sf::Drawable>>& drawableVector) :
-			RenderEffect(duration) , mSprite(sprite), mDrawableVector(drawableVector) {
+	Trail::Trail(float duration, float lapse, sf::Color trail, std::weak_ptr<sf::Sprite> sprite) :
+			RenderEffect(duration) , mSprite(sprite) {
 				Lapse = lapse;
 				mElapsedTime = 0.0f;
 				mTrailColor = trail;
@@ -60,7 +59,15 @@ namespace pyramidnight {
 			mElapsedTime = 0.0f;
 		}
 		MoveForward(obj);
+		Draw(context);
 	}
+
+	void Trail::Draw(const Context &context) {
+		for (const auto& drawable : mDrawableVector) {
+			context.window.draw(*drawable);
+		}
+	}
+
 	void Trail::Clean() {
 		for (const auto& drawable : mTrails) {
 			auto it = std::find(mDrawableVector.begin(), mDrawableVector.end(), drawable);
