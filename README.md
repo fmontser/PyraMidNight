@@ -21,7 +21,10 @@ Controls:
  - Classic arkanoid gameplay
  - Bumper hit position changes ball attack angle
  - Bumper fine and coarse control
- - Blocks with propierties
+ - Blocks with properties
+ - Power ups, including, extra score, extra credit, magic misile
+ - Ghost enemies
+ - Render effects
  - Credit and score system
  - Score ranking
  - Multiple levels
